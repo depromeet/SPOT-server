@@ -1,4 +1,4 @@
-package org.depromeet.spot;
+package org.depromeet.spot.application;
 
 public class Main {
 
