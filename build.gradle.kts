@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "3.0.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.diffplug.spotless") version "6.23.3"
 }
 
 allprojects {
@@ -18,6 +19,7 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "com.diffplug.spotless")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -34,6 +36,27 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation(platform("org.junit:junit-bom:5.9.1"))
         testImplementation("org.junit.jupiter:junit-jupiter")
+    }
+
+    // 코드 포맷터 spotless
+    spotless {
+        java {
+            // Google Java 포맷 적용
+            googleJavaFormat().aosp()
+            // 아래 순서로 import문 정렬
+            importOrder("java", "javax", "jakarta", "org", "com")
+            // 사용하지 않는 import 제거
+            removeUnusedImports()
+            // 각 라인 끝에 있는 공백을 제거
+            trimTrailingWhitespace()
+            // 파일 끝에 새로운 라인 추가
+            endWithNewline()
+        }
+    }
+
+    // 컴파일할 때 자동으로 spotless 돌도록 설정
+    tasks.named<JavaCompile>("compileJava") {
+        dependsOn("spotlessApply")
     }
 
     tasks.test {

@@ -1,7 +1,9 @@
 package org.depromeet.spot.application;
 
-import jakarta.annotation.PostConstruct;
 import java.util.TimeZone;
+
+import jakarta.annotation.PostConstruct;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -18,5 +20,4 @@ public class SpotApplication {
     public void init() {
         TimeZone.setDefault(TimeZone.getTimeZone(DEFAULT_TIMEZONE_KST));
     }
-
 }
