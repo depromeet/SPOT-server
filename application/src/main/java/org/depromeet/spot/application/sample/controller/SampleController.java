@@ -1,5 +1,7 @@
 package org.depromeet.spot.application.sample.controller;
 
+import java.util.*;
+
 import org.depromeet.spot.application.sample.controller.request.SampleRequest;
 import org.depromeet.spot.application.sample.controller.response.SampleResponse;
 import org.springframework.http.HttpStatus;
