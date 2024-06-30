@@ -59,6 +59,16 @@ subprojects {
         dependsOn("spotlessApply")
     }
 
+    // git commit시 자동으로 spotless 적용되도록 설정
+    // 최초 적용시 && script 변경시 ./gradlew compileJava 한번 실행해주세요
+    tasks.register<Exec>("makeGitHooksExecutable") {
+        commandLine("chmod", "+x", "${rootProject.rootDir}/.githooks/pre-commit")
+    }
+
+    tasks.named<JavaCompile>("compileJava") {
+        dependsOn("makeGitHooksExecutable")
+    }
+
     tasks.test {
         useJUnitPlatform()
     }
