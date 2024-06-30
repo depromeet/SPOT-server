@@ -1,19 +1,16 @@
-plugins {
-    id("java")
-}
-
-group = "org.depromeet.spot"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation(project(":domain"))
+
+    // spring
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework:spring-aspects")
+
+    // swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+// spring boot main application이므로 실행 가능한 jar를 생성한다.
+tasks.bootJar { enabled = true }
+tasks.jar { enabled = true }

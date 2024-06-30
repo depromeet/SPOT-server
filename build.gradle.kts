@@ -24,10 +24,11 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    // subproject 모두에 필요한 의존성을 관리합니다.
     dependencies {
-        // spring
-        implementation("org.springframework.boot:spring-boot-starter")
-        implementation("org.springframework.boot:spring-boot-starter-web")
+        // lombok
+        compileOnly("org.projectlombok:lombok:1.18.30")
+        annotationProcessor("org.projectlombok:lombok:1.18.30")
 
         // test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -38,9 +39,6 @@ subprojects {
     tasks.test {
         useJUnitPlatform()
     }
-
-    tasks.bootJar { enabled = false }
-    tasks.jar { enabled = true }
 }
 
 // root 모듈은 실행 파일이 없으므로 bootJar를 생성하지 않는다.

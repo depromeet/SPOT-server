@@ -1,0 +1,9 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  # swagger를 이용해 API 명세서 생성
+  doc:
+    swagger-ui:
+      path: /swagger-ui.html
