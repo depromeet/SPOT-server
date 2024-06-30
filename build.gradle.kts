@@ -55,9 +55,9 @@ subprojects {
     }
 
     // 컴파일할 때 자동으로 spotless 돌도록 설정
-    tasks.named<JavaCompile>("compileJava") {
-        dependsOn("spotlessApply")
-    }
+//    tasks.named<JavaCompile>("compileJava") {
+//        dependsOn("spotlessApply")
+//    }
 
     // git commit시 자동으로 spotless 적용되도록 설정
     // 최초 적용시 && script 변경시 ./gradlew compileJava 한번 실행해주세요
