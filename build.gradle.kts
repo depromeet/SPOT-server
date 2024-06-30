@@ -24,8 +24,16 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    // subproject 모두에 필요한 의존성을 관리합니다.
     dependencies {
-        // subproject 모두에 필요한 의존성을 관리합니다.
+        // lombok
+        compileOnly("org.projectlombok:lombok:1.18.30")
+        annotationProcessor("org.projectlombok:lombok:1.18.30")
+
+        // test
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation(platform("org.junit:junit-bom:5.9.1"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
     }
 
     tasks.test {
