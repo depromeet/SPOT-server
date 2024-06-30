@@ -25,22 +25,12 @@ subprojects {
     }
 
     dependencies {
-        // spring
-        implementation("org.springframework.boot:spring-boot-starter")
-        implementation("org.springframework.boot:spring-boot-starter-web")
-
-        // test
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testImplementation(platform("org.junit:junit-bom:5.9.1"))
-        testImplementation("org.junit.jupiter:junit-jupiter")
+        // subproject 모두에 필요한 의존성을 관리합니다.
     }
 
     tasks.test {
         useJUnitPlatform()
     }
-
-    tasks.bootJar { enabled = false }
-    tasks.jar { enabled = true }
 }
 
 // root 모듈은 실행 파일이 없으므로 bootJar를 생성하지 않는다.
