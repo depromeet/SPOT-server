@@ -9,7 +9,7 @@ stagedFiles=$(git diff --staged --name-only)
 echo "Running spotlessApply. Formatting code..."
 cd $PROJECT_ROOT && ./gradlew spotlessApply
 
-if [ $? -ne 0]; then
+if [ $? -ne 0 ]; then
   echo "Spotless apply failed!"
   exit 1
 fi
