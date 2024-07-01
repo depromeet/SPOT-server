@@ -1,8 +1,8 @@
 plugins {
     id("java")
-    id("org.springframework.boot") version "3.0.1"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.diffplug.spotless") version "6.21.0"
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    id("com.diffplug.spotless")
 }
 
 allprojects {
@@ -29,12 +29,12 @@ subprojects {
     // subproject 모두에 필요한 의존성을 관리합니다.
     dependencies {
         // lombok
-        compileOnly("org.projectlombok:lombok:1.18.30")
-        annotationProcessor("org.projectlombok:lombok:1.18.30")
+        compileOnly("org.projectlombok:lombok:_")
+        annotationProcessor("org.projectlombok:lombok:_")
 
         // test
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testImplementation(platform("org.junit:junit-bom:5.9.1"))
+        testImplementation("org.springframework.boot:spring-boot-starter-test:_")
+        testImplementation(platform("org.junit:junit-bom:_"))
         testImplementation("org.junit.jupiter:junit-jupiter")
     }
 
