@@ -1,0 +1,24 @@
+# docker-compose.yml
+
+services:
+  mysql:
+    container_name: SPOT-db
+    image: mysql:8 # 선호하는 버전 있을 경우 선정 예정!
+    ports:
+      - 3306:3306 # 혹시나 기존에 MySQL 사용 중일 경우 앞자리를 다른 포트로 바꿔야함.
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql # 기존 데이터 파일과 격리를 위해 db/mysql/data 로 설정함!
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    environment:
+      MYSQL_DATABASE: spot # DB 이름 선정 시 변경 예정.
+      MYSQL_USER: test1234		# 임시 유저
+      MYSQL_PASSWORD: test1234		# 임시 비밀번호
+  server:
+    container_name: SPOT-server
+    image: ubuntu:20.04
+    ports:
+      - 80:80 # 80번 - 80번 매칭
+    volumes:
+      - ./app:./app
