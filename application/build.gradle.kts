@@ -8,7 +8,7 @@ dependencies {
     implementation("org.springframework:spring-aspects")
 
     // swagger
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:_")
 }
 
 // spring boot main application이므로 실행 가능한 jar를 생성한다.
