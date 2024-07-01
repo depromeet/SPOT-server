@@ -3,6 +3,9 @@ server:
   shutdown: graceful
 
 spring:
+  # 서브모듈 profile
+  profiles:
+    include: jpa
   # swagger를 이용해 API 명세서 생성
   doc:
     swagger-ui:
