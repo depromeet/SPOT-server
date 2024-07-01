@@ -1,4 +1,4 @@
-package org.depromeet.spot.application.member.controller.port;
+package org.depromeet.spot.application.member.service.port;
 
 import org.depromeet.spot.domain.member.Member;
 

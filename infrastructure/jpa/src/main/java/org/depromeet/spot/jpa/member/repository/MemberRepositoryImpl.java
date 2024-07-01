@@ -1,9 +1,8 @@
-package org.depromeet.spot.jpa.member.repository.impl;
+package org.depromeet.spot.jpa.member.repository;
 
-import org.depromeet.spot.application.member.service.port.MemberRepository;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.jpa.member.entity.MemberEntity;
-import org.depromeet.spot.jpa.member.repository.MemberJpaRepository;
+import org.depromeet.spot.jpa.member.repository.port.MemberRepository;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
