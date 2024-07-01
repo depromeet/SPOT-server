@@ -7,3 +7,6 @@ plugins {
 
 include("domain")
 include("application")
+include("infrastructure")
+include("infrastructure:jpa")
+findProject(":infrastructure:jpa")?.name = "jpa"
