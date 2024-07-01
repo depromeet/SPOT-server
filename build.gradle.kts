@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "3.0.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.diffplug.spotless") version "6.21.0"
 }
 
 allprojects {
@@ -18,6 +19,7 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "com.diffplug.spotless")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -34,6 +36,38 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation(platform("org.junit:junit-bom:5.9.1"))
         testImplementation("org.junit.jupiter:junit-jupiter")
+    }
+
+    // 코드 포맷터 spotless
+    spotless {
+        java {
+            // Google Java 포맷 적용
+            googleJavaFormat().aosp()
+            // 아래 순서로 import문 정렬
+            importOrder("java", "javax", "jakarta", "org", "com")
+            // 사용하지 않는 import 제거
+            removeUnusedImports()
+            // 각 라인 끝에 있는 공백을 제거
+            trimTrailingWhitespace()
+            // 파일 끝에 새로운 라인 추가
+            endWithNewline()
+        }
+    }
+
+    // git commit시 자동으로 spotless 적용되도록 설정
+    // 최초 적용시 && script 변경시 ./gradlew compileJava 한번 실행해주세요
+    tasks.register<Copy>("updateGitHooks") {
+        from(file("${rootProject.rootDir}/.githooks/pre-commit"))
+        into(file("${rootProject.rootDir}/.git/hooks"))
+    }
+
+    tasks.register<Exec>("makeGitHooksExecutable") {
+        commandLine("chmod", "+x", "${rootProject.rootDir}/.git/hooks/pre-commit")
+        dependsOn("updateGitHooks")
+    }
+
+    tasks.named<JavaCompile>("compileJava") {
+        dependsOn("makeGitHooksExecutable")
     }
 
     tasks.test {
