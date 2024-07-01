@@ -1,5 +1,6 @@
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":infrastructure:jpa"))
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
