@@ -1,7 +1,7 @@
-package org.depromeet.spot.usecase.usecase;
+package org.depromeet.spot.usecase.service;
 
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.usecase.port.in.MemberService;
+import org.depromeet.spot.usecase.port.in.MemberUsecase;
 import org.depromeet.spot.usecase.port.out.MemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import lombok.val;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberService implements MemberUsecase {
 
     private final MemberRepository memberRepository;
 
