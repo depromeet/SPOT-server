@@ -1,8 +1,8 @@
-package org.depromeet.spot.application.member.service;
+package org.depromeet.spot.usecase.usecase;
 
-import org.depromeet.spot.application.member.service.port.MemberService;
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.jpa.member.repository.port.MemberRepository;
+import org.depromeet.spot.usecase.port.in.MemberService;
+import org.depromeet.spot.usecase.port.out.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

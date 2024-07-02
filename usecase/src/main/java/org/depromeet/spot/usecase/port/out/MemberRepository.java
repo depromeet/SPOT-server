@@ -1,4 +1,4 @@
-package org.depromeet.spot.jpa.member.repository.port;
+package org.depromeet.spot.usecase.port.out;
 
 import org.depromeet.spot.domain.member.Member;
 

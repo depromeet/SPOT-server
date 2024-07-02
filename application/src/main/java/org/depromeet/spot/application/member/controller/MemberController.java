@@ -1,8 +1,8 @@
 package org.depromeet.spot.application.member.controller;
 
-import org.depromeet.spot.application.member.controller.request.MemberRequest;
-import org.depromeet.spot.application.member.controller.response.MemberResponse;
-import org.depromeet.spot.application.member.service.port.MemberService;
+import org.depromeet.spot.application.member.dto.request.MemberRequest;
+import org.depromeet.spot.application.member.dto.response.MemberResponse;
+import org.depromeet.spot.usecase.port.in.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

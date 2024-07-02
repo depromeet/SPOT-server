@@ -1,4 +1,4 @@
-package org.depromeet.spot.application.member.service.port;
+package org.depromeet.spot.usecase.port.in;
 
 import org.depromeet.spot.domain.member.Member;
 

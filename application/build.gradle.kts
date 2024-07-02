@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":infrastructure:jpa"))
+    implementation(project(":usecase"))
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter")

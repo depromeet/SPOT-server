@@ -1,4 +1,4 @@
-package org.depromeet.spot.application.member.controller.response;
+package org.depromeet.spot.application.member.dto.response;
 
 import org.depromeet.spot.domain.member.Member;
 
