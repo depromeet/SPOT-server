@@ -12,6 +12,7 @@ services:
       - '--character-set-server=utf8mb4'
       - '--collation-server=utf8mb4_unicode_ci'
     environment:
+      TZ : "Asia/Seoul"
       MYSQL_DATABASE: spot # DB 이름 선정 시 변경 예정.
       MYSQL_USER: test1234		# 임시 유저
       MYSQL_PASSWORD: test1234		# 임시 비밀번호
@@ -19,6 +20,6 @@ services:
     container_name: SPOT-server
     image: ubuntu:20.04
     ports:
-      - 80:80 # 80번 - 80번 매칭
+      - 8080:80 # 80번 - 80번 매칭
     volumes:
       - ./app:./app
