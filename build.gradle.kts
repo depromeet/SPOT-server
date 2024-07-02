@@ -62,7 +62,11 @@ subprojects {
     }
 
     tasks.register<Exec>("makeGitHooksExecutable") {
-        commandLine("chmod", "+x", "${rootProject.rootDir}/.git/hooks/pre-commit")
+        if (System.getProperty("os.name").contains("Windows")) {
+            commandLine("attrib", "+x", "${rootProject.rootDir}/.git/hooks/pre-commit")
+        } else {
+            commandLine("chmod", "+x", "${rootProject.rootDir}/.git/hooks/pre-commit")
+        }
         dependsOn("updateGitHooks")
     }
 
