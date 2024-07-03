@@ -10,10 +10,6 @@ on:
       - dev
       - main
 
-concurrency:
-  group: deploy_dev
-  cancel-in-progress: true
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
