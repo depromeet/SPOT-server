@@ -1,3 +1,6 @@
+# dockerfile 실행 전 server wiki를 참고하여 명령어를 사용해주세요.
+# spring boot 애플리케이션이 빌드되어야 실행 가능해요!
+
 # ubuntu 20.04 버전을 기반으로 합니다.
 FROM ubuntu:20.04
 
@@ -6,14 +9,14 @@ FROM ubuntu:20.04
 # RUN은 빌드 시 적용 -> 도커 이미지에 반영됨!
 RUN apt update && apt install -y openjdk-17-jdk
 
-# 작업하게 될 디렉토리입니다. 없을 경우 생성!
+# 컨테이너 내의 작업 디렉토리 설정
 WORKDIR /spot
 
-# 서버를 빌드하는 명령어
-CMD ["./gradlew", "clean", "build"]
+# 빌드 결과물 복사
+COPY build/libs/*.jar spot-server.jar
 
 # 8080 포트 사용
 EXPOSE 8080
 
 # 컨테이너 실행과 함께 spot-server.jar (서버 jar 파일)을 실행
-ENTRYPOINT ["java","-jar","/spot/spot-server.jar"]
+ENTRYPOINT ["java","-jar","spot-server.jar"]
