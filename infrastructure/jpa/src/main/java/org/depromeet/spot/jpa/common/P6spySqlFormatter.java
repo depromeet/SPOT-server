@@ -11,8 +11,8 @@ import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 @Configuration
 public class P6spySqlFormatter implements MessageFormattingStrategy {
 
-    private static String JPA_PACKAGE = "org.depromeet.spot.jpa";
-    private static String P6SPY_PACKAGE = "org.depromeet.spot.jpa.config.P6spySqlFormatter";
+    private static String JPA_PACKAGE = "org.depromeet.spot";
+    private static String P6SPY_PACKAGE = "org.depromeet.spot.jpa.common.P6spySqlFormatter";
 
     @Override
     public String formatMessage(
