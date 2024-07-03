@@ -17,7 +17,7 @@ services:
       MYSQL_USER: test1234		# 임시 유저
       MYSQL_PASSWORD: test1234		# 임시 비밀번호
   server:
-    container_name: SPOT-server
+    container_name: spot-server-docker
     image: ubuntu:20.04
     ports:
       - 8080:80 # 80번 - 80번 매칭
