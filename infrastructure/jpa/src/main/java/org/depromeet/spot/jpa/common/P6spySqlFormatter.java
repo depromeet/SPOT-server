@@ -11,7 +11,7 @@ import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 @Configuration
 public class P6spySqlFormatter implements MessageFormattingStrategy {
 
-    private static String JPA_PACKAGE = "org.depromeet.spot";
+    private static String ROOT_PACKAGE = "org.depromeet.spot";
     private static String P6SPY_PACKAGE = "org.depromeet.spot.jpa.common.P6spySqlFormatter";
 
     @Override
@@ -61,7 +61,7 @@ public class P6spySqlFormatter implements MessageFormattingStrategy {
 
         for (StackTraceElement element : stackTraces) {
             String trace = element.toString();
-            if (trace.startsWith(JPA_PACKAGE) && !trace.contains(P6SPY_PACKAGE)) {
+            if (trace.startsWith(ROOT_PACKAGE) && !trace.contains(P6SPY_PACKAGE)) {
                 sb.append("\n\t\t").append(order++).append(".").append(trace);
             }
         }
