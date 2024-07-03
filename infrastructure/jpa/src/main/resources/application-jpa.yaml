@@ -17,3 +17,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
