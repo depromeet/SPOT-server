@@ -1,4 +1,4 @@
-name: Development Auto Deployment
+name: Build And Test
 
 on:
   push:
@@ -10,9 +10,9 @@ on:
       - dev
       - main
 
-concurrency:
-  group: deploy_dev
-  cancel-in-progress: true
+#concurrency:
+#  group: deploy_dev
+#  cancel-in-progress: true
 
 jobs:
   build-and-test:

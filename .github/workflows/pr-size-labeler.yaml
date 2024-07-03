@@ -1,8 +1,6 @@
 name: PR-size-labeler
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+on: [pull_request]
 
 jobs:
   labeler:
