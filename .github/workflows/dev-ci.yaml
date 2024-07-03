@@ -10,9 +10,9 @@ on:
       - dev
       - main
 
-#concurrency:
-#  group: deploy_dev
-#  cancel-in-progress: true
+concurrency:
+  group: deploy_dev
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
