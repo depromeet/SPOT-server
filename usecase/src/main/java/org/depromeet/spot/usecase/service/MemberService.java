@@ -1,5 +1,7 @@
 package org.depromeet.spot.usecase.service;
 
+import java.util.List;
+
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.MemberUsecase;
 import org.depromeet.spot.usecase.port.out.MemberRepository;
@@ -18,5 +20,10 @@ public class MemberService implements MemberUsecase {
     public Member create(final String name) {
         val member = new Member(null, name);
         return memberRepository.save(member);
+    }
+
+    @Override
+    public List<Member> findByName(final String name) {
+        return memberRepository.findByName(name);
     }
 }
