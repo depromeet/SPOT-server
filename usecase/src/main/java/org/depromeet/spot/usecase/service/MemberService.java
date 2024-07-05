@@ -2,13 +2,13 @@ package org.depromeet.spot.usecase.service;
 
 import java.util.List;
 
+import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.MemberUsecase;
 import org.depromeet.spot.usecase.port.out.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 
 @Service
 @RequiredArgsConstructor
@@ -18,12 +18,16 @@ public class MemberService implements MemberUsecase {
 
     @Override
     public Member create(final String name) {
-        val member = new Member(null, name);
+        var member = new Member(null, name);
         return memberRepository.save(member);
     }
 
     @Override
     public List<Member> findByName(final String name) {
-        return memberRepository.findByName(name);
+        var members = memberRepository.findByName(name);
+        if (members.isEmpty()) {
+            throw new MemberNotFoundException("name : " + name);
+        }
+        return members;
     }
 }
