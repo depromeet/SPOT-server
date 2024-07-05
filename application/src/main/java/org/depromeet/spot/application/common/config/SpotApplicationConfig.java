@@ -1,4 +1,4 @@
-package org.depromeet.spot.application.config;
+package org.depromeet.spot.application.common.config;
 
 import org.depromeet.spot.jpa.config.JpaConfig;
 import org.depromeet.spot.usecase.config.UsecaseConfig;
