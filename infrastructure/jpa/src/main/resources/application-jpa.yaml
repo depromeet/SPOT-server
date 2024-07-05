@@ -1,19 +1,31 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:spot
-    username: sa
-    password:
+    url: jdbc:mysql://mysql:3306/spot
+    username: test1234
+    password: test1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
-    database: h2
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
-    database-platform: org.hibernate.dialect.H2Dialect
-    open-in-view: false
-    defer-datasource-initialization: true
+      ddl-auto: update  # 주의: 프로덕션 환경에서는 'validate' 사용 권장
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+  sql:
+    init:
+      mode: always  # 필요한 경우 'never'로 변경
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# 필요한 경우 추가 설정
