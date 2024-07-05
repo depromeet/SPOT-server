@@ -26,7 +26,7 @@ public class MemberService implements MemberUsecase {
     public List<Member> findByName(final String name) {
         var members = memberRepository.findByName(name);
         if (members.isEmpty()) {
-            throw new MemberNotFoundException(name);
+            throw new MemberNotFoundException("name : " + name);
         }
         return members;
     }
