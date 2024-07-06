@@ -2,7 +2,7 @@
 
 services:
   mysql:
-    container_name: SPOT-db
+    container_name: spot-mysql
     image: mysql:8 # 선호하는 버전 있을 경우 선정 예정!
     ports:
       - 3306:3306 # 혹시나 기존에 MySQL 사용 중일 경우 앞자리를 다른 포트로 바꿔야함.
@@ -24,7 +24,7 @@ services:
 
   server:
     build: . # 디렉토리에 있는 도커파일 이용해서 이미지 빌드
-    container_name: spot-server-docker
+    container_name: spot-spring-server
     ports:
       - 8080:8080
     depends_on: # 항상 mysql 실행하고 서버 실행되게 함.
