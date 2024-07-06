@@ -17,13 +17,19 @@ services:
       MYSQL_DATABASE: spot # DB 이름 선정 시 변경 예정.
       MYSQL_USER: test1234		# 임시 유저
       MYSQL_PASSWORD: test1234		# 임시 비밀번호
+    healthcheck: # 생명주기? 확인 옵션 추가
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 20s
+        retries: 10
+
   server:
     build: . # 디렉토리에 있는 도커파일 이용해서 이미지 빌드
     container_name: spot-server-docker
     ports:
       - 8080:8080
     depends_on: # 항상 mysql 실행하고 서버 실행되게 함.
-      - mysql
+      mysql:
+          condition: service_healthy # mysql 컨테이너의 healthcheck가 정상일 때까지 대기!
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/spot
       SPRING_DATASOURCE_USERNAME: test1234
