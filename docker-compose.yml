@@ -1,0 +1,42 @@
+# docker-compose.yml
+
+services:
+  mysql:
+    container_name: spot-mysql
+    image: mysql:8 # 선호하는 버전 있을 경우 선정 예정!
+    ports:
+      - 3306:3306 # 혹시나 기존에 MySQL 사용 중일 경우 앞자리를 다른 포트로 바꿔야함.
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql # 기존 데이터 파일과 격리를 위해 db/mysql/data 로 설정함!
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    environment:
+      TZ : "Asia/Seoul"
+      MYSQL_ROOT_PASSWORD: test1234  # 임시 비밀번호
+      MYSQL_DATABASE: spot # DB 이름 선정 시 변경 예정.
+      MYSQL_USER: test1234		# 임시 유저
+      MYSQL_PASSWORD: test1234		# 임시 비밀번호
+    healthcheck: # MySQL 서비스 상태 확인
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 20s
+        retries: 10
+
+  server:
+    build: # 디렉토리에 있는 도커파일 이용해서 이미지 빌드
+        context: .
+        dockerfile: Dockerfile.dev
+    container_name: spot-spring-server
+    ports:
+      - 8080:8080
+    depends_on: # 항상 mysql 실행하고 서버 실행되게 함.
+      mysql:
+          condition: service_healthy # mysql 컨테이너의 healthcheck가 정상일 때까지 대기!
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/spot
+      SPRING_DATASOURCE_USERNAME: test1234
+      SPRING_DATASOURCE_PASSWORD: test1234
+    volumes:
+      - ./:/app
+      - ~/.gradle:/root/.gradle
+    command: ./gradlew :application:bootRun
