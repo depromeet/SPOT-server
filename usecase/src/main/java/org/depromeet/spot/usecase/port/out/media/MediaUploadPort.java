@@ -4,5 +4,7 @@ import org.depromeet.spot.domain.media.Media;
 
 public interface MediaUploadPort {
 
-    Media upload();
+    Media forReview();
+
+    Media forStadium();
 }
