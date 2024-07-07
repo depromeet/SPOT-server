@@ -32,6 +32,9 @@ subprojects {
         compileOnly("org.projectlombok:lombok:_")
         annotationProcessor("org.projectlombok:lombok:_")
 
+        // configuration processor
+        annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:_")
+
         // test
         testImplementation("org.springframework.boot:spring-boot-starter-test:_")
         testImplementation(platform("org.junit:junit-bom:_"))
