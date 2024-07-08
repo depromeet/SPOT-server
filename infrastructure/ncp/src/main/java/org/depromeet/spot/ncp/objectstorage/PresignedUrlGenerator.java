@@ -1,7 +1,6 @@
 package org.depromeet.spot.ncp.objectstorage;
 
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.depromeet.spot.domain.media.Media;
@@ -10,7 +9,7 @@ import org.depromeet.spot.domain.media.ReviewMediaExtension;
 import org.depromeet.spot.domain.media.StadiumMediaExtension;
 import org.depromeet.spot.ncp.property.ReviewStorageProperties;
 import org.depromeet.spot.ncp.property.StadiumStorageProperties;
-import org.depromeet.spot.usecase.port.out.media.MediaUploadPort;
+import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.HttpMethod;
@@ -23,13 +22,14 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MediaUploadService implements MediaUploadPort {
+public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     private final AmazonS3 amazonS3;
+    private final FileNameGenerator fileNameGenerator;
     private final ReviewStorageProperties reviewStorageProperties;
     private final StadiumStorageProperties stadiumStorageProperties;
 
-    private static final long EXPIRE_MS = 1000 * 60 * 2;
+    private static final long EXPIRE_MS = 1000 * 60 * 2L;
 
     @Override
     public Media forReview(final Long userId, PresignedUrlRequest request) {
@@ -37,7 +37,7 @@ public class MediaUploadService implements MediaUploadPort {
 
         final ReviewMediaExtension fileExtension =
                 ReviewMediaExtension.from(request.getFileExtension());
-        final String fileName = createReviewFileName(userId, fileExtension);
+        final String fileName = fileNameGenerator.createReviewFileName(userId, fileExtension);
         final URL url = createPresignedUrl(reviewStorageProperties.bucketName(), fileName);
 
         return new Media(url.toString(), fileName);
@@ -53,27 +53,13 @@ public class MediaUploadService implements MediaUploadPort {
         }
     }
 
-    private String createReviewFileName(
-            final Long userId, final ReviewMediaExtension fileExtension) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append(MediaProperty.REVIEW)
-                .append("/user/")
-                .append(userId)
-                .append("/")
-                .append(LocalDateTime.now())
-                .append("/")
-                .append(fileExtension.getValue());
-        return stringBuilder.toString();
-    }
-
     @Override
     public Media forStadium(PresignedUrlRequest request) {
         isValidStadiumMedia(request.getProperty(), request.getFileExtension());
 
         final StadiumMediaExtension fileExtension =
                 StadiumMediaExtension.from(request.getFileExtension());
-        final String fileName = createStadiumFileName(fileExtension);
+        final String fileName = fileNameGenerator.createStadiumFileName(fileExtension);
         final URL url = createPresignedUrl(stadiumStorageProperties.bucketName(), fileName);
 
         return new Media(url.toString(), fileName);
@@ -87,17 +73,6 @@ public class MediaUploadService implements MediaUploadPort {
         if (!ReviewMediaExtension.isValidReviewMedia(fileExtension)) {
             throw new IllegalArgumentException("경기장 좌석배치도는 사진만 가능합니다.");
         }
-    }
-
-    private String createStadiumFileName(final StadiumMediaExtension fileExtension) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append(MediaProperty.STADIUM)
-                .append("/")
-                .append(LocalDateTime.now())
-                .append("/")
-                .append(fileExtension.getValue());
-        return stringBuilder.toString();
     }
 
     private URL createPresignedUrl(final String bucketName, final String fileName) {
