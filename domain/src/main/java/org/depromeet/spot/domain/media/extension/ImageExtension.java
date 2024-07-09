@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 public enum ImageExtension {
-    JPG("jpeg"),
+    JPG("jpg"),
     JPEG("jpeg"),
     PNG("png"),
     ;

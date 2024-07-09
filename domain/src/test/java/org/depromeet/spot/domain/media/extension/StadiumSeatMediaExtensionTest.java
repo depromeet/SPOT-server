@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
 import org.junit.jupiter.api.Test;
 
-public class StadiumSeatMediaExtensionTest {
+class StadiumSeatMediaExtensionTest {
 
     @Test
     public void 유효한_좌석_미디어_확장자인지_판별할_수_있다() {
