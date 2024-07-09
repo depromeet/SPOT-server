@@ -31,6 +31,8 @@ subprojects {
         // lombok
         compileOnly("org.projectlombok:lombok:_")
         annotationProcessor("org.projectlombok:lombok:_")
+        testCompileOnly("org.projectlombok:lombok:_")
+        testAnnotationProcessor("org.projectlombok:lombok:_")
 
         // configuration processor
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:_")

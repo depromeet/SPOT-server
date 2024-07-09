@@ -6,9 +6,11 @@ import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
 import org.depromeet.spot.usecase.port.in.util.TimeUsecase;
 import org.springframework.stereotype.Service;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class FileNameGenerator {
 
