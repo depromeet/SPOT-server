@@ -1,4 +1,4 @@
-package org.depromeet.spot.domain.media;
+package org.depromeet.spot.domain.media.extension;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -7,27 +7,27 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
-public enum StadiumMediaExtension {
+public enum StadiumSeatMediaExtension {
     SVG("svg"),
     ;
 
     private final String value;
 
-    private static final Map<String, StadiumMediaExtension> cachedStadiumMedia =
-            Arrays.stream(StadiumMediaExtension.values())
+    private static final Map<String, StadiumSeatMediaExtension> cachedStadiumMedia =
+            Arrays.stream(StadiumSeatMediaExtension.values())
                     .collect(
                             Collectors.toMap(extension -> extension.value, extension -> extension));
 
-    StadiumMediaExtension(final String value) {
+    StadiumSeatMediaExtension(final String value) {
         this.value = value;
     }
 
-    public static boolean isValidVideoExtension(final String reqExtension) {
+    public static boolean isValid(final String reqExtension) {
         return cachedStadiumMedia.containsKey(reqExtension);
     }
 
-    public static StadiumMediaExtension from(final String reqExtension) {
-        StadiumMediaExtension extension = cachedStadiumMedia.get(reqExtension);
+    public static StadiumSeatMediaExtension from(final String reqExtension) {
+        StadiumSeatMediaExtension extension = cachedStadiumMedia.get(reqExtension);
         if (extension == null) {
             throw new IllegalStateException("지원하지 않는 경기장 첨부파일 확장자입니다.");
         }

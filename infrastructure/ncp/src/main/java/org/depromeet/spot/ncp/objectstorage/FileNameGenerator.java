@@ -1,8 +1,8 @@
 package org.depromeet.spot.ncp.objectstorage;
 
 import org.depromeet.spot.domain.media.MediaProperty;
-import org.depromeet.spot.domain.media.ReviewMediaExtension;
-import org.depromeet.spot.domain.media.StadiumMediaExtension;
+import org.depromeet.spot.domain.media.extension.ImageExtension;
+import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
 import org.depromeet.spot.usecase.port.in.util.TimeUsecase;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,7 @@ public class FileNameGenerator {
 
     private final TimeUsecase timeUsecase;
 
-    public String createReviewFileName(
-            final Long userId, final ReviewMediaExtension fileExtension) {
+    public String createReviewFileName(final Long userId, final ImageExtension fileExtension) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(MediaProperty.REVIEW)
@@ -28,7 +27,7 @@ public class FileNameGenerator {
         return stringBuilder.toString();
     }
 
-    public String createStadiumFileName(final StadiumMediaExtension fileExtension) {
+    public String createStadiumFileName(final StadiumSeatMediaExtension fileExtension) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(MediaProperty.STADIUM)

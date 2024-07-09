@@ -5,8 +5,8 @@ import java.util.Date;
 
 import org.depromeet.spot.domain.media.Media;
 import org.depromeet.spot.domain.media.MediaProperty;
-import org.depromeet.spot.domain.media.ReviewMediaExtension;
-import org.depromeet.spot.domain.media.StadiumMediaExtension;
+import org.depromeet.spot.domain.media.extension.ImageExtension;
+import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
 import org.depromeet.spot.ncp.property.ReviewStorageProperties;
 import org.depromeet.spot.ncp.property.StadiumStorageProperties;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
@@ -35,30 +35,30 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     public Media forReview(final Long userId, PresignedUrlRequest request) {
         isValidReviewMedia(request.getProperty(), request.getFileExtension());
 
-        final ReviewMediaExtension fileExtension =
-                ReviewMediaExtension.from(request.getFileExtension());
+        final ImageExtension fileExtension = ImageExtension.from(request.getFileExtension());
         final String fileName = fileNameGenerator.createReviewFileName(userId, fileExtension);
         final URL url = createPresignedUrl(reviewStorageProperties.bucketName(), fileName);
 
         return new Media(url.toString(), fileName);
     }
 
+    // 1차 MVP에서 사진만 허용
     private void isValidReviewMedia(final MediaProperty property, final String fileExtension) {
         if (property != MediaProperty.REVIEW) {
             throw new IllegalArgumentException("리뷰와 관련된 미디어가 아닙니다.");
         }
 
-        if (!ReviewMediaExtension.isValidReviewMedia(fileExtension)) {
-            throw new IllegalArgumentException("리뷰 첨부파일은 사진 혹은 비디오만 가능합니다.");
+        if (!ImageExtension.isValid(fileExtension)) {
+            throw new IllegalArgumentException("리뷰 첨부파일은 사진만 가능합니다.");
         }
     }
 
     @Override
-    public Media forStadium(PresignedUrlRequest request) {
+    public Media forStadiumSeat(PresignedUrlRequest request) {
         isValidStadiumMedia(request.getProperty(), request.getFileExtension());
 
-        final StadiumMediaExtension fileExtension =
-                StadiumMediaExtension.from(request.getFileExtension());
+        final StadiumSeatMediaExtension fileExtension =
+                StadiumSeatMediaExtension.from(request.getFileExtension());
         final String fileName = fileNameGenerator.createStadiumFileName(fileExtension);
         final URL url = createPresignedUrl(stadiumStorageProperties.bucketName(), fileName);
 
@@ -70,7 +70,7 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
             throw new IllegalArgumentException("경기장과 관련된 미디어가 아닙니다.");
         }
 
-        if (!ReviewMediaExtension.isValidReviewMedia(fileExtension)) {
+        if (!StadiumSeatMediaExtension.isValid(fileExtension)) {
             throw new IllegalArgumentException("경기장 좌석배치도는 사진만 가능합니다.");
         }
     }
