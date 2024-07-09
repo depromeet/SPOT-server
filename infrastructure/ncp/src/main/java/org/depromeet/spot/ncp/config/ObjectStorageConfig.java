@@ -3,6 +3,7 @@ package org.depromeet.spot.ncp.config;
 import org.depromeet.spot.ncp.property.ObjectStorageProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -13,6 +14,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@Profile("!test")
 @RequiredArgsConstructor
 public class ObjectStorageConfig {
 
