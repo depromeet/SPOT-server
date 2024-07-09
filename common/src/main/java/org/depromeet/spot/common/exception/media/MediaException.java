@@ -29,4 +29,10 @@ public abstract class MediaException extends BusinessException {
             super(MediaErrorCode.INVALID_REVIEW_MEDIA);
         }
     }
+
+    public static class InvalidMediaException extends MediaException {
+        public InvalidMediaException() {
+            super(MediaErrorCode.INVALID_MEDIA);
+        }
+    }
 }
