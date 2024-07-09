@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
+
 import lombok.Getter;
 
 @Getter
@@ -31,7 +33,7 @@ public enum ImageExtension {
     public static ImageExtension from(final String reqExtension) {
         ImageExtension extension = cachedImageExtension.get(reqExtension);
         if (extension == null) {
-            throw new IllegalStateException("지원하지 않는 리뷰 첨부파일 확장자입니다.");
+            throw new InvalidExtensionException(reqExtension);
         }
         return extension;
     }

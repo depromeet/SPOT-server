@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
+
 import lombok.Getter;
 
 @Getter
@@ -29,7 +31,7 @@ public enum StadiumSeatMediaExtension {
     public static StadiumSeatMediaExtension from(final String reqExtension) {
         StadiumSeatMediaExtension extension = cachedStadiumMedia.get(reqExtension);
         if (extension == null) {
-            throw new IllegalStateException("지원하지 않는 경기장 첨부파일 확장자입니다.");
+            throw new InvalidExtensionException(reqExtension);
         }
         return extension;
     }

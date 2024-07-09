@@ -3,6 +3,9 @@ package org.depromeet.spot.ncp.objectstorage;
 import java.net.URL;
 import java.util.Date;
 
+import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
+import org.depromeet.spot.common.exception.media.MediaException.InvalidReviewMediaException;
+import org.depromeet.spot.common.exception.media.MediaException.InvalidStadiumMediaException;
 import org.depromeet.spot.domain.media.Media;
 import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
@@ -45,11 +48,11 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     // 1차 MVP에서 사진만 허용
     private void isValidReviewMedia(final MediaProperty property, final String fileExtension) {
         if (property != MediaProperty.REVIEW) {
-            throw new IllegalArgumentException("리뷰와 관련된 미디어가 아닙니다.");
+            throw new InvalidReviewMediaException();
         }
 
         if (!ImageExtension.isValid(fileExtension)) {
-            throw new IllegalArgumentException("리뷰 첨부파일은 사진만 가능합니다.");
+            throw new InvalidExtensionException(fileExtension);
         }
     }
 
@@ -67,11 +70,11 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     private void isValidStadiumMedia(final MediaProperty property, final String fileExtension) {
         if (property != MediaProperty.STADIUM) {
-            throw new IllegalArgumentException("경기장과 관련된 미디어가 아닙니다.");
+            throw new InvalidStadiumMediaException();
         }
 
         if (!StadiumSeatMediaExtension.isValid(fileExtension)) {
-            throw new IllegalArgumentException("경기장 좌석배치도는 사진만 가능합니다.");
+            throw new InvalidExtensionException(fileExtension);
         }
     }
 
