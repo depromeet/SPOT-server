@@ -10,6 +10,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework:spring-aspects")
 
+    // security
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
     // swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:_")
 }
