@@ -1,3 +1,11 @@
 package org.depromeet.spot.usecase.port.out.stadium;
 
-public interface StadiumRepository {}
+import java.util.List;
+
+import org.depromeet.spot.domain.stadium.Stadium;
+
+public interface StadiumRepository {
+    Stadium findById(Long id);
+
+    List<Stadium> findAll();
+}

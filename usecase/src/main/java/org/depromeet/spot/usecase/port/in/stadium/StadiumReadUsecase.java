@@ -5,6 +5,7 @@ import java.util.List;
 import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase.HomeTeamInfo;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 public interface StadiumReadUsecase {
@@ -26,6 +27,7 @@ public interface StadiumReadUsecase {
     }
 
     @Getter
+    @Builder
     @AllArgsConstructor
     class StadiumInfoWithSeatChart {
         private final Long id;

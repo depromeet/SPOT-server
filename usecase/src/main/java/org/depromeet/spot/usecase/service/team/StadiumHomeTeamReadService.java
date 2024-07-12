@@ -1,7 +1,9 @@
 package org.depromeet.spot.usecase.service.team;
 
 import java.util.List;
+import java.util.Map;
 
+import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
@@ -21,5 +23,10 @@ public class StadiumHomeTeamReadService implements StadiumHomeTeamReadUsecase {
         return teams.stream()
                 .map(t -> new HomeTeamInfo(t.getId(), t.getAlias(), t.getLabelRgbCode()))
                 .toList();
+    }
+
+    @Override
+    public Map<Stadium, List<BaseballTeam>> findAllStadiumHomeTeam() {
+        return baseballTeamRepository.findAllStadiumHomeTeam();
     }
 }
