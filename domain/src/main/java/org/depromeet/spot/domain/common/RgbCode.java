@@ -1,5 +1,7 @@
 package org.depromeet.spot.domain.common;
 
+import org.depromeet.spot.common.exception.util.UtilException.InvalidRgbCodeException;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,8 +22,7 @@ public class RgbCode {
 
     private static void isValidRgb(Integer red, Integer green, Integer blue) {
         if (red == null || green == null || blue == null) {
-            // FIXME: custom exception 대체
-            throw new IllegalArgumentException();
+            throw new InvalidRgbCodeException();
         }
     }
 }
