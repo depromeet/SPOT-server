@@ -32,17 +32,22 @@ public class StadiumEntity {
     @Column(name = "labeled_seating_chart_image", length = 255)
     private String labeledSeatingChartImage;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
+
     public StadiumEntity(
             Long id,
             String name,
             String mainImage,
             String seatingChartImage,
-            String labeledSeatingChartImage) {
+            String labeledSeatingChartImage,
+            boolean isActive) {
         this.id = id;
         this.name = name;
         this.mainImage = mainImage;
         this.seatingChartImage = seatingChartImage;
         this.labeledSeatingChartImage = labeledSeatingChartImage;
+        this.isActive = isActive;
     }
 
     public static StadiumEntity from(Stadium stadium) {
@@ -51,10 +56,18 @@ public class StadiumEntity {
                 stadium.getName(),
                 stadium.getMainImage(),
                 stadium.getSeatingChartImage(),
-                stadium.getLabeledSeatingChartImage());
+                stadium.getLabeledSeatingChartImage(),
+                stadium.isActive());
     }
 
     public Stadium toDomain() {
-        return new Stadium(id, name, mainImage, seatingChartImage, labeledSeatingChartImage);
+        return Stadium.builder()
+                .id(id)
+                .name(name)
+                .mainImage(mainImage)
+                .seatingChartImage(seatingChartImage)
+                .labeledSeatingChartImage(labeledSeatingChartImage)
+                .isActive(isActive)
+                .build();
     }
 }
