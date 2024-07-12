@@ -17,7 +17,7 @@ public class StadiumReadService implements StadiumReadUsecase {
     }
 
     @Override
-    public List<StadiumNameInfo> findAllName() {
+    public List<StadiumNameInfo> findAllNames() {
         return null;
     }
 
