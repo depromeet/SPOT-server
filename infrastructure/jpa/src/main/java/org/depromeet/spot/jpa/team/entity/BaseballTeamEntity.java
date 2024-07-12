@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.common.RgbCode;
 import org.depromeet.spot.domain.team.BaseballTeam;
 
 import lombok.NoArgsConstructor;
@@ -56,17 +57,19 @@ public class BaseballTeamEntity {
     }
 
     public static BaseballTeamEntity from(BaseballTeam baseballTeam) {
+        RgbCode labelRgbCode = baseballTeam.getLabelRgbCode();
         return new BaseballTeamEntity(
                 baseballTeam.getId(),
                 baseballTeam.getName(),
                 baseballTeam.getAlias(),
                 baseballTeam.getLogo(),
-                baseballTeam.getRed(),
-                baseballTeam.getGreen(),
-                baseballTeam.getBlue());
+                labelRgbCode.getRed(),
+                labelRgbCode.getGreen(),
+                labelRgbCode.getBlue());
     }
 
     public BaseballTeam toDomain() {
-        return new BaseballTeam(id, name, alias, logo, red, green, blue);
+        RgbCode labelRgbCode = RgbCode.builder().red(red).green(green).blue(blue).build();
+        return new BaseballTeam(id, name, alias, logo, labelRgbCode);
     }
 }
