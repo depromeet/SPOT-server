@@ -11,7 +11,7 @@ public interface StadiumReadUsecase {
 
     List<StadiumHomeTeamInfo> findAllStadiums();
 
-    List<StadiumNameInfo> findAllName();
+    List<StadiumNameInfo> findAllNames();
 
     StadiumInfoWithSeatChart findWithSeatChartById(Long id);
 
