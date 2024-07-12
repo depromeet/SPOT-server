@@ -1,7 +1,5 @@
 package org.depromeet.spot.domain.team;
 
-import org.depromeet.spot.domain.stadium.Stadium;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,6 +8,6 @@ import lombok.Getter;
 public class StadiumHomeTeam {
 
     private final Long id;
-    private final Stadium stadium;
-    private final BaseballTeam baseballTeam;
+    private final Long stadiumId;
+    private final Long teamId;
 }

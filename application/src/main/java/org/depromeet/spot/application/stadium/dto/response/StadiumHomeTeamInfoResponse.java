@@ -5,9 +5,7 @@ import java.util.List;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase.StadiumHomeTeamInfo;
 
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 @Builder
 public record StadiumHomeTeamInfoResponse(
         Long id,
