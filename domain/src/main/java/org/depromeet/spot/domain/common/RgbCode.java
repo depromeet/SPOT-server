@@ -1,8 +1,10 @@
 package org.depromeet.spot.domain.common;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class RgbCode {
 
     private final Integer red;
