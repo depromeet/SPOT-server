@@ -24,7 +24,7 @@ public class ReviewImageEntity extends BaseEntity {
     @Column(name = "url", nullable = false, length = 255)
     private String url;
 
-    @Column(name = "deleted_at", nullable = false, length = 15)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     public static ReviewImageEntity from(ReviewImage reviewImage) {
