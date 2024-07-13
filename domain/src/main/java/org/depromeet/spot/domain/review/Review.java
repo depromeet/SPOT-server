@@ -11,6 +11,7 @@ public class Review {
 
     private final Long id;
     private final Long userId;
+    private final Long stadiumId;
     private final Long blockId;
     private final Long seatId;
     private final Long rowId;
