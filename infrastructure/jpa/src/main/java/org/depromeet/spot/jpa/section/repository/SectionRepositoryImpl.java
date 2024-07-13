@@ -20,4 +20,10 @@ public class SectionRepositoryImpl implements SectionRepository {
         List<SectionEntity> entities = sectionJpaRepository.findAllByStadiumId(stadiumId);
         return entities.stream().map(SectionEntity::toDomain).toList();
     }
+
+    @Override
+    public Section save(Section section) {
+        // TODO: test를 위해 추가 -> 구역 생성 티켓 작업할 때 구현 예정
+        return null;
+    }
 }

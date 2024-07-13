@@ -7,4 +7,6 @@ import org.depromeet.spot.domain.section.Section;
 public interface SectionRepository {
 
     List<Section> findAllByStadium(Long stadiumId);
+
+    Section save(Section section);
 }

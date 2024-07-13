@@ -8,4 +8,6 @@ public interface StadiumRepository {
     Stadium findById(Long id);
 
     List<Stadium> findAll();
+
+    Stadium save(Stadium stadium);
 }
