@@ -2,9 +2,11 @@ package org.depromeet.spot.domain.section;
 
 import org.depromeet.spot.domain.common.RgbCode;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Section {
 
     private final Long id;

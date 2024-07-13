@@ -29,4 +29,10 @@ public class StadiumRepositoryImpl implements StadiumRepository {
         List<StadiumEntity> entities = stadiumJpaRepository.findAll();
         return entities.stream().map(StadiumEntity::toDomain).toList();
     }
+
+    @Override
+    public Stadium save(Stadium stadium) {
+        // TODO: test를 위해 추가 -> 구장 저장 API 티켓때 구현 예정
+        return null;
+    }
 }

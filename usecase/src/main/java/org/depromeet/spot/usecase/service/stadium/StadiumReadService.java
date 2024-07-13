@@ -12,9 +12,11 @@ import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase.HomeTe
 import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
 import org.springframework.stereotype.Service;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class StadiumReadService implements StadiumReadUsecase {
 
@@ -66,5 +68,10 @@ public class StadiumReadService implements StadiumReadUsecase {
                 .homeTeams(homeTeams)
                 .seatChartWithLabel(stadium.getLabeledSeatingChartImage())
                 .build();
+    }
+
+    @Override
+    public Stadium findById(final Long id) {
+        return stadiumRepository.findById(id);
     }
 }

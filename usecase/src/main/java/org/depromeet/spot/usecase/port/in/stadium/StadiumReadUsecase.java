@@ -2,6 +2,7 @@ package org.depromeet.spot.usecase.port.in.stadium;
 
 import java.util.List;
 
+import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase.HomeTeamInfo;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +16,8 @@ public interface StadiumReadUsecase {
     List<StadiumNameInfo> findAllNames();
 
     StadiumInfoWithSeatChart findWithSeatChartById(Long id);
+
+    Stadium findById(Long id);
 
     @Getter
     @AllArgsConstructor
