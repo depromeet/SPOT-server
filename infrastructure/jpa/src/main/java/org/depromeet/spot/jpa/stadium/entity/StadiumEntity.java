@@ -2,23 +2,19 @@ package org.depromeet.spot.jpa.stadium.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.stadium.Stadium;
+import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "stadiums")
 @NoArgsConstructor
-public class StadiumEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+@AllArgsConstructor
+public class StadiumEntity extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -35,24 +31,8 @@ public class StadiumEntity {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
-    public StadiumEntity(
-            Long id,
-            String name,
-            String mainImage,
-            String seatingChartImage,
-            String labeledSeatingChartImage,
-            boolean isActive) {
-        this.id = id;
-        this.name = name;
-        this.mainImage = mainImage;
-        this.seatingChartImage = seatingChartImage;
-        this.labeledSeatingChartImage = labeledSeatingChartImage;
-        this.isActive = isActive;
-    }
-
     public static StadiumEntity from(Stadium stadium) {
         return new StadiumEntity(
-                stadium.getId(),
                 stadium.getName(),
                 stadium.getMainImage(),
                 stadium.getSeatingChartImage(),
@@ -62,7 +42,7 @@ public class StadiumEntity {
 
     public Stadium toDomain() {
         return Stadium.builder()
-                .id(id)
+                .id(this.getId())
                 .name(name)
                 .mainImage(mainImage)
                 .seatingChartImage(seatingChartImage)

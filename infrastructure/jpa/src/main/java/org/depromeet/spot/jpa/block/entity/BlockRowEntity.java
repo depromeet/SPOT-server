@@ -2,24 +2,19 @@ package org.depromeet.spot.jpa.block.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.block.BlockRow;
+import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "block_rows")
 @NoArgsConstructor
-public class BlockRowEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
+@AllArgsConstructor
+public class BlockRowEntity extends BaseEntity {
     @Column(name = "block_id", nullable = false)
     private Long blockId;
 
@@ -29,22 +24,12 @@ public class BlockRowEntity {
     @Column(name = "max_seats", nullable = false)
     private Long maxSeats;
 
-    public BlockRowEntity(Long id, Long blockId, Long number, Long maxSeats) {
-        this.id = id;
-        this.blockId = blockId;
-        this.number = number;
-        this.maxSeats = maxSeats;
-    }
-
     public static BlockRowEntity from(BlockRow blockRow) {
         return new BlockRowEntity(
-                blockRow.getId(),
-                blockRow.getBlockId(),
-                blockRow.getNumber(),
-                blockRow.getMaxSeats());
+                blockRow.getBlockId(), blockRow.getNumber(), blockRow.getMaxSeats());
     }
 
     public BlockRow toDomain() {
-        return new BlockRow(id, blockId, number, maxSeats);
+        return new BlockRow(this.getId(), blockId, number, maxSeats);
     }
 }
