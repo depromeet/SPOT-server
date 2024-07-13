@@ -67,4 +67,9 @@ public class StadiumReadService implements StadiumReadUsecase {
                 .seatChartWithLabel(stadium.getLabeledSeatingChartImage())
                 .build();
     }
+
+    @Override
+    public Stadium findById(final Long id) {
+        return stadiumRepository.findById(id);
+    }
 }
