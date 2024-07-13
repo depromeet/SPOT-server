@@ -15,7 +15,7 @@ public class Review {
     private final Long seatId;
     private final Long rowId;
     private final Long seatNumber;
-    private final LocalDateTime date; // 시간은 미표기
+    private final LocalDateTime dateTime; // 시간은 미표기
     private final String content;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;

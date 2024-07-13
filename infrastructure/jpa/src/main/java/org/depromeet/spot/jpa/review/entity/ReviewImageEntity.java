@@ -4,23 +4,19 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.review.ReviewImage;
+import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "review_images")
 @NoArgsConstructor
-public class ReviewImageEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+@AllArgsConstructor
+public class ReviewImageEntity extends BaseEntity {
 
     @Column(name = "review_id", nullable = false)
     private Long reviewId;
@@ -28,31 +24,21 @@ public class ReviewImageEntity {
     @Column(name = "url", nullable = false, length = 255)
     private String url;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "status", nullable = false, length = 15)
-    private String status;
-
-    public ReviewImageEntity(
-            Long id, Long reviewId, String url, LocalDateTime createdAt, String status) {
-        this.id = id;
-        this.reviewId = reviewId;
-        this.url = url;
-        this.createdAt = createdAt;
-        this.status = status;
-    }
+    @Column(name = "deleted_at", nullable = false, length = 15)
+    private LocalDateTime deletedAt;
 
     public static ReviewImageEntity from(ReviewImage reviewImage) {
         return new ReviewImageEntity(
-                reviewImage.getId(),
-                reviewImage.getReviewId(),
-                reviewImage.getUrl(),
-                reviewImage.getCreatedAt(),
-                reviewImage.getStatus());
+                reviewImage.getReviewId(), reviewImage.getUrl(), reviewImage.getDeletedAt());
     }
 
     public ReviewImage toDomain() {
-        return new ReviewImage(id, reviewId, url, createdAt, status);
+        return ReviewImage.builder()
+                .id(this.getId())
+                .reviewId(reviewId)
+                .url(url)
+                .createdAt(this.getCreatedAt())
+                .deletedAt(deletedAt)
+                .build();
     }
 }
