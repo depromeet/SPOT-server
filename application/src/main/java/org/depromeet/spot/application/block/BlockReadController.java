@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 
 import org.depromeet.spot.application.block.dto.response.BlockCodeInfoResponse;
 import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase;
+import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase.BlockCodeInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,5 +41,8 @@ public class BlockReadController {
                     @NotNull
                     @Positive
                     @Parameter(name = "sectionId", description = "구역 PK", required = true)
-                    final Long sectionId) {}
+                    final Long sectionId) {
+        List<BlockCodeInfo> infos = blockReadUsecase.findCodeInfosByStadium(stadiumId, sectionId);
+        return infos.stream().map(BlockCodeInfoResponse::from).toList();
+    }
 }
