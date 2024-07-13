@@ -30,6 +30,6 @@ public class SectionReadService implements SectionReadUsecase {
 
     @Override
     public boolean existsInStadium(final Long stadiumId, final Long sectionId) {
-        return false;
+        return sectionRepository.existsInStadium(stadiumId, sectionId);
     }
 }
