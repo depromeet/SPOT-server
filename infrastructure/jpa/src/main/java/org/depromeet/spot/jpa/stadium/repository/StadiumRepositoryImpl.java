@@ -35,4 +35,9 @@ public class StadiumRepositoryImpl implements StadiumRepository {
         // TODO: test를 위해 추가 -> 구장 저장 API 티켓때 구현 예정
         return null;
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return stadiumJpaRepository.existsById(id);
+    }
 }
