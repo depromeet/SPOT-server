@@ -16,8 +16,8 @@ public class BlockRepositoryImpl implements BlockRepository {
     private final BlockJpaRepository blockJpaRepository;
 
     @Override
-    public List<Block> findAllByStadium(final Long stadiumId) {
-        List<BlockEntity> entities = blockJpaRepository.findAllByStadiumId(stadiumId);
+    public List<Block> findAllBySection(final Long sectionId) {
+        List<BlockEntity> entities = blockJpaRepository.findAllBySectionId(sectionId);
         return entities.stream().map(BlockEntity::toDomain).toList();
     }
 }

@@ -6,5 +6,5 @@ import org.depromeet.spot.domain.block.Block;
 
 public interface BlockRepository {
 
-    List<Block> findAllByStadium(Long stadiumId);
+    List<Block> findAllBySection(Long sectionId);
 }

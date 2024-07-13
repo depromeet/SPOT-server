@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BlockJpaRepository extends JpaRepository<BlockEntity, Long> {
 
-    List<BlockEntity> findAllByStadiumId(Long stadiumId);
+    List<BlockEntity> findAllBySectionId(Long sectionId);
 }

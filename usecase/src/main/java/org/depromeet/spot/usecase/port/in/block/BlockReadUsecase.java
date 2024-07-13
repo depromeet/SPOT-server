@@ -7,7 +7,7 @@ import lombok.Getter;
 
 public interface BlockReadUsecase {
 
-    List<BlockCodeInfo> findCodeInfosByStadium(Long stadiumId);
+    List<BlockCodeInfo> findCodeInfosByStadium(Long stadiumId, Long sectionId);
 
     @Getter
     @AllArgsConstructor

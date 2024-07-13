@@ -13,6 +13,8 @@ public interface SectionReadUsecase {
 
     StadiumSections findAllByStadium(Long stadiumId);
 
+    boolean existsInStadium(Long stadiumId, Long sectionId);
+
     @Getter
     @AllArgsConstructor
     class StadiumSections {
