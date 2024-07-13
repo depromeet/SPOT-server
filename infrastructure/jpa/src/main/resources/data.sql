@@ -24,7 +24,7 @@ VALUES (1, 1, '오렌지석', '응원석', 255, 255, 255),
        (3, 1, '레드석', null, 100, 0, 0);
 
 -- Section Blocks
-INSERT INTO blocks (id, stadium_id, section_id, code, maxRows)
+INSERT INTO blocks (id, stadium_id, section_id, code, max_rows)
 VALUES (1, 1, 1, "207", 18),
        (2, 1, 1, "208", 39),
        (3, 1, 2, "108", 10);
