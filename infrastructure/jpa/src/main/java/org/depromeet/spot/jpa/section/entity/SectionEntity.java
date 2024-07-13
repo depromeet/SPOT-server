@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.common.RgbCode;
 import org.depromeet.spot.domain.section.Section;
 
 import lombok.NoArgsConstructor;
@@ -56,17 +57,19 @@ public class SectionEntity {
     }
 
     public static SectionEntity from(Section section) {
+        RgbCode labelRgbCode = section.getLabelRgbCode();
         return new SectionEntity(
                 section.getId(),
                 section.getStadiumId(),
                 section.getName(),
                 section.getAlias(),
-                section.getRed(),
-                section.getGreen(),
-                section.getBlue());
+                labelRgbCode.getRed(),
+                labelRgbCode.getGreen(),
+                labelRgbCode.getBlue());
     }
 
     public Section toDomain() {
-        return new Section(id, stadiumId, name, alias, red, green, blue);
+        RgbCode rgbCode = RgbCode.builder().red(red).green(green).blue(blue).build();
+        return new Section(id, stadiumId, name, alias, rgbCode);
     }
 }
