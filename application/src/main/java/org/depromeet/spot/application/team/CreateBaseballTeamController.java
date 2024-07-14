@@ -32,6 +32,6 @@ public class CreateBaseballTeamController {
     @Operation(summary = "신규 야구 팀(구단) 정보를 생성한다.")
     public void create(@RequestBody @Valid @NotEmpty List<CreateBaseballTeamReq> requests) {
         List<BaseballTeam> teams = requests.stream().map(CreateBaseballTeamReq::toDomain).toList();
-        createBaseballTeamUsecase.createAll(teams);
+        createBaseballTeamUsecase.saveAll(teams);
     }
 }

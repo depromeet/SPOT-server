@@ -33,15 +33,18 @@ public class BaseballTeam {
     }
 
     private void isValidName(final String name) {
-        if (name == null || name.length() > MAX_NAME_LENGTH) {
+        if (isNullOrBlank(name) || name.length() > MAX_NAME_LENGTH) {
             throw new InvalidBaseballTeamNameException();
         }
     }
 
     private void isValidAlias(final String alias) {
-        if (alias == null) return;
-        if (alias.length() > MAX_ALIAS_LENGTH) {
+        if (isNullOrBlank(alias) || alias.length() > MAX_ALIAS_LENGTH) {
             throw new InvalidBaseballAliasNameException();
         }
+    }
+
+    private boolean isNullOrBlank(String str) {
+        return str == null || str.isBlank();
     }
 }
