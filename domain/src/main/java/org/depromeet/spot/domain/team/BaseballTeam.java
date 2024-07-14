@@ -2,9 +2,11 @@ package org.depromeet.spot.domain.team;
 
 import org.depromeet.spot.domain.common.RgbCode;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class BaseballTeam {
 
     private final Long id;

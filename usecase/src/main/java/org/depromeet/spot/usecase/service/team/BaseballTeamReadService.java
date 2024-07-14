@@ -7,9 +7,11 @@ import org.depromeet.spot.usecase.port.in.team.BaseballTeamReadUsecase;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
 import org.springframework.stereotype.Service;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class BaseballTeamReadService implements BaseballTeamReadUsecase {
 
