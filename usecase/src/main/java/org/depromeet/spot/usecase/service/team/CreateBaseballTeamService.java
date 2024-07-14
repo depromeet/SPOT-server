@@ -8,9 +8,11 @@ import org.depromeet.spot.usecase.port.in.team.CreateBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
 import org.springframework.stereotype.Service;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class CreateBaseballTeamService implements CreateBaseballTeamUsecase {
 

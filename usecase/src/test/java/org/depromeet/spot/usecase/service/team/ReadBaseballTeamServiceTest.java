@@ -11,7 +11,7 @@ import org.depromeet.spot.usecase.service.fake.FakeBaseballTeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class BaseballTeamReadServiceTest {
+class ReadBaseballTeamServiceTest {
 
     private ReadBaseballTeamService baseballTeamReadService;
 
