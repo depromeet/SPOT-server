@@ -31,4 +31,10 @@ public abstract class TeamException extends BusinessException {
             super(TeamErrorCode.DUPLICATE_TEAM_NAME);
         }
     }
+
+    public static class EmptyTeamLogoException extends TeamException {
+        public EmptyTeamLogoException() {
+            super(TeamErrorCode.EMPTY_TEAM_LOGO);
+        }
+    }
 }

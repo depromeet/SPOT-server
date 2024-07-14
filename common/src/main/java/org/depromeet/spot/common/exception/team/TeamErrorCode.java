@@ -11,6 +11,7 @@ public enum TeamErrorCode implements ErrorCode {
     INVALID_TEAM_NAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "T002", "구단명이 잘못되었습니다."),
     INVALID_TEAM_ALIAS_NOT_FOUND(HttpStatus.BAD_REQUEST, "T003", "구단 별칭이 잘못되었습니다."),
     DUPLICATE_TEAM_NAME(HttpStatus.CONFLICT, "T004", "이미 등록된 구단입니다."),
+    EMPTY_TEAM_LOGO(HttpStatus.BAD_REQUEST, "T005", "구단 로고를 등록해주세요."),
     ;
 
     private final HttpStatus status;

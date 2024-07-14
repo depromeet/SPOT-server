@@ -1,5 +1,6 @@
 package org.depromeet.spot.domain.team;
 
+import org.depromeet.spot.common.exception.team.TeamException.EmptyTeamLogoException;
 import org.depromeet.spot.common.exception.team.TeamException.InvalidBaseballAliasNameException;
 import org.depromeet.spot.common.exception.team.TeamException.InvalidBaseballTeamNameException;
 import org.depromeet.spot.domain.common.RgbCode;
@@ -20,10 +21,10 @@ public class BaseballTeam {
     private static final int MAX_NAME_LENGTH = 20;
     private static final int MAX_ALIAS_LENGTH = 10;
 
-    // TODO: @Builder을 썼을 때 이 생성자를 사용하는지 테스트 필요함
     public BaseballTeam(Long id, String name, String alias, String logo, RgbCode labelRgbCode) {
-        isValidName(name);
-        isValidAlias(alias);
+        checkValidName(name);
+        checkValidAlias(alias);
+        checkValidLogo(logo);
 
         this.id = id;
         this.name = name;
@@ -32,15 +33,21 @@ public class BaseballTeam {
         this.labelRgbCode = labelRgbCode;
     }
 
-    private void isValidName(final String name) {
+    private void checkValidName(final String name) {
         if (isNullOrBlank(name) || name.length() > MAX_NAME_LENGTH) {
             throw new InvalidBaseballTeamNameException();
         }
     }
 
-    private void isValidAlias(final String alias) {
+    private void checkValidAlias(final String alias) {
         if (isNullOrBlank(alias) || alias.length() > MAX_ALIAS_LENGTH) {
             throw new InvalidBaseballAliasNameException();
+        }
+    }
+
+    private void checkValidLogo(final String logo) {
+        if (isNullOrBlank(logo)) {
+            throw new EmptyTeamLogoException();
         }
     }
 
