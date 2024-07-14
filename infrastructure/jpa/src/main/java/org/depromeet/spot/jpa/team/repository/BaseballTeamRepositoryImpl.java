@@ -18,6 +18,13 @@ import lombok.RequiredArgsConstructor;
 public class BaseballTeamRepositoryImpl implements BaseballTeamRepository {
 
     private final StadiumHomeTeamCustomRepository stadiumHomeTeamCustomRepository;
+    private final BaseballTeamJpaRepository baseballTeamJpaRepository;
+
+    @Override
+    public List<BaseballTeam> findAll() {
+        List<BaseballTeamEntity> entities = baseballTeamJpaRepository.findAll();
+        return entities.stream().map(BaseballTeamEntity::toDomain).toList();
+    }
 
     @Override
     public List<BaseballTeam> findAllHomeTeamByStadium(final Long stadiumId) {
