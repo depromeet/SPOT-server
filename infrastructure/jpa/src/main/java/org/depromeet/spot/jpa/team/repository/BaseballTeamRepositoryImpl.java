@@ -20,6 +20,7 @@ public class BaseballTeamRepositoryImpl implements BaseballTeamRepository {
 
     private final StadiumHomeTeamCustomRepository stadiumHomeTeamCustomRepository;
     private final BaseballTeamJpaRepository baseballTeamJpaRepository;
+    private final BaseballTeamJdbcRepository baseballTeamJdbcRepository;
 
     @Override
     public BaseballTeam findById(final Long id) {
@@ -58,13 +59,17 @@ public class BaseballTeamRepositoryImpl implements BaseballTeamRepository {
     }
 
     @Override
-    public BaseballTeam save(BaseballTeam team) {
-        // TODO: 구단 등록할 때 구현 예정
-        return null;
+    public void saveAll(List<BaseballTeam> teams) {
+        baseballTeamJdbcRepository.createBaseballTeams(teams);
     }
 
     @Override
     public void createHomeTeam(Long stadiumId, List<Long> teamIds) {
         // TODO: 홈 팀 등록할 때 구현 예정
+    }
+
+    @Override
+    public boolean existsByNameIn(List<String> names) {
+        return baseballTeamJpaRepository.existsByNameIn(names);
     }
 }

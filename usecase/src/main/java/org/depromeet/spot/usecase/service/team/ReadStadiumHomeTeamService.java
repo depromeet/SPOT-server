@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
-import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase;
+import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class StadiumHomeTeamReadService implements StadiumHomeTeamReadUsecase {
+public class ReadStadiumHomeTeamService implements ReadStadiumHomeTeamUsecase {
 
     private final BaseballTeamRepository baseballTeamRepository;
 

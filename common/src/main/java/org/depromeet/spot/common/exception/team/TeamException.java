@@ -13,4 +13,22 @@ public abstract class TeamException extends BusinessException {
             super(TeamErrorCode.BASEBALL_TEAM_NOT_FOUND);
         }
     }
+
+    public static class InvalidBaseballTeamNameException extends TeamException {
+        public InvalidBaseballTeamNameException() {
+            super(TeamErrorCode.INVALID_TEAM_NAME_NOT_FOUND);
+        }
+    }
+
+    public static class InvalidBaseballAliasNameException extends TeamException {
+        public InvalidBaseballAliasNameException() {
+            super(TeamErrorCode.INVALID_TEAM_ALIAS_NOT_FOUND);
+        }
+    }
+
+    public static class DuplicateTeamNameException extends TeamException {
+        public DuplicateTeamNameException() {
+            super(TeamErrorCode.DUPLICATE_TEAM_NAME);
+        }
+    }
 }

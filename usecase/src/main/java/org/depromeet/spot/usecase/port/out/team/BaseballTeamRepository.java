@@ -15,7 +15,9 @@ public interface BaseballTeamRepository {
 
     Map<Stadium, List<BaseballTeam>> findAllStadiumHomeTeam();
 
-    BaseballTeam save(BaseballTeam team);
+    void saveAll(List<BaseballTeam> teams);
 
     void createHomeTeam(Long stadiumId, List<Long> teamIds);
+
+    boolean existsByNameIn(List<String> names);
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.depromeet.spot.domain.team.BaseballTeam;
 
-public interface BaseballTeamReadUsecase {
+public interface ReadBaseballTeamUsecase {
 
     List<BaseballTeam> findAll();
 }

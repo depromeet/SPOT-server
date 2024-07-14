@@ -49,7 +49,6 @@ public class FakeBaseballTeamRepository implements BaseballTeamRepository {
         return homeTeamMap;
     }
 
-    @Override
     public BaseballTeam save(BaseballTeam team) {
         if (team.getId() == null || team.getId() == 0) {
             BaseballTeam newTeam =
@@ -70,6 +69,11 @@ public class FakeBaseballTeamRepository implements BaseballTeamRepository {
     }
 
     @Override
+    public void saveAll(List<BaseballTeam> teams) {
+        teams.forEach(this::save);
+    }
+
+    @Override
     public void createHomeTeam(Long stadiumId, List<Long> teamIds) {
         Stadium stadium = Stadium.builder().id(stadiumId).build();
         List<BaseballTeam> newTeams =
@@ -82,5 +86,10 @@ public class FakeBaseballTeamRepository implements BaseballTeamRepository {
                     existingTeams.addAll(teams);
                     return existingTeams;
                 });
+    }
+
+    @Override
+    public boolean existsByNameIn(List<String> names) {
+        return data.stream().map(BaseballTeam::getName).anyMatch(names::contains);
     }
 }

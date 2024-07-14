@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 
 class BaseballTeamReadServiceTest {
 
-    private BaseballTeamReadService baseballTeamReadService;
+    private ReadBaseballTeamService baseballTeamReadService;
 
     @BeforeEach
     void init() {
         FakeBaseballTeamRepository fakeBaseballTeamRepository = new FakeBaseballTeamRepository();
         this.baseballTeamReadService =
-                BaseballTeamReadService.builder()
+                ReadBaseballTeamService.builder()
                         .baseballTeamRepository(fakeBaseballTeamRepository)
                         .build();
 
