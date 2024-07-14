@@ -3,6 +3,8 @@ package org.depromeet.spot.jpa.review.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.review.ReviewException;
+import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDataException;
 import org.depromeet.spot.domain.review.KeywordCount;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewImage;
@@ -26,6 +28,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         List<ReviewEntity> reviews =
                 reviewCustomRepository.findByBlockIdWithFilters(
                         stadiumId, blockId, rowId, seatNumber, offset, limit);
+        if (reviews.isEmpty()) {
+            throw new ReviewException.ReviewNotFoundException(
+                    "No review found for blockId:" + blockId);
+        }
         return reviews.stream().map(this::fetchReviewDetails).collect(Collectors.toList());
     }
 
@@ -53,6 +59,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                         .collect(Collectors.toList());
 
         Review review = reviewEntity.toDomain();
+        if (review == null) {
+            throw new InvalidReviewDataException(
+                    "Failed to convert entity to domain for reviewId: " + reviewEntity.getId());
+        }
         return Review.builder()
                 .id(review.getId())
                 .userId(review.getUserId())
