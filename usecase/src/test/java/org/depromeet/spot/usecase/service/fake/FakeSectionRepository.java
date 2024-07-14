@@ -38,4 +38,11 @@ public class FakeSectionRepository implements SectionRepository {
             return section;
         }
     }
+
+    @Override
+    public boolean existsInStadium(Long stadiumId, Long sectionId) {
+        return data.stream()
+                .filter(section -> section.getStadiumId().equals(sectionId))
+                .anyMatch(section -> section.getId().equals(sectionId));
+    }
 }

@@ -74,4 +74,9 @@ public class StadiumReadService implements StadiumReadUsecase {
     public Stadium findById(final Long id) {
         return stadiumRepository.findById(id);
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return stadiumRepository.existsById(id);
+    }
 }

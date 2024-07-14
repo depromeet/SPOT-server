@@ -10,4 +10,6 @@ public interface StadiumRepository {
     List<Stadium> findAll();
 
     Stadium save(Stadium stadium);
+
+    boolean existsById(Long id);
 }

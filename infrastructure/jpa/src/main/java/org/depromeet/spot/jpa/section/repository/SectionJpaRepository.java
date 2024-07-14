@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SectionJpaRepository extends JpaRepository<SectionEntity, Long> {
 
     List<SectionEntity> findAllByStadiumId(Long stadiumId);
+
+    boolean existsByStadiumIdAndId(Long stadiumId, Long id);
 }
