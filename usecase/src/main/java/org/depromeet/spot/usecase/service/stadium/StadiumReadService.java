@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
-import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase;
-import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase.HomeTeamInfo;
+import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
+import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
 import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +20,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StadiumReadService implements StadiumReadUsecase {
 
-    private final StadiumHomeTeamReadUsecase stadiumHomeTeamReadUsecase;
+    private final ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
     private final StadiumRepository stadiumRepository;
 
     @Override
     public List<StadiumHomeTeamInfo> findAllStadiums() {
         Map<Stadium, List<BaseballTeam>> stadiumHomeTeams =
-                stadiumHomeTeamReadUsecase.findAllStadiumHomeTeam();
+                readStadiumHomeTeamUsecase.findAllStadiumHomeTeam();
         return stadiumHomeTeams.entrySet().stream()
                 .map(
                         entry -> {
@@ -61,7 +61,7 @@ public class StadiumReadService implements StadiumReadUsecase {
     @Override
     public StadiumInfoWithSeatChart findWithSeatChartById(final Long id) {
         Stadium stadium = stadiumRepository.findById(id);
-        List<HomeTeamInfo> homeTeams = stadiumHomeTeamReadUsecase.findByStadium(id);
+        List<HomeTeamInfo> homeTeams = readStadiumHomeTeamUsecase.findByStadium(id);
         return StadiumInfoWithSeatChart.builder()
                 .id(stadium.getId())
                 .name(stadium.getName())
@@ -73,5 +73,10 @@ public class StadiumReadService implements StadiumReadUsecase {
     @Override
     public Stadium findById(final Long id) {
         return stadiumRepository.findById(id);
+    }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return stadiumRepository.existsById(id);
     }
 }

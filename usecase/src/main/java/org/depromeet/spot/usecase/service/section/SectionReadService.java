@@ -27,4 +27,9 @@ public class SectionReadService implements SectionReadUsecase {
         List<SectionInfo> sectionInfos = sections.stream().map(SectionInfo::from).toList();
         return new StadiumSections(stadium.getSeatingChartImage(), sectionInfos);
     }
+
+    @Override
+    public boolean existsInStadium(final Long stadiumId, final Long sectionId) {
+        return sectionRepository.existsInStadium(stadiumId, sectionId);
+    }
 }

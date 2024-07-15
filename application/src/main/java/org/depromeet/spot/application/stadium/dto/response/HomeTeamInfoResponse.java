@@ -2,7 +2,7 @@ package org.depromeet.spot.application.stadium.dto.response;
 
 import org.depromeet.spot.application.common.dto.RgbCodeResponse;
 import org.depromeet.spot.domain.common.RgbCode;
-import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase.HomeTeamInfo;
+import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
 
 public record HomeTeamInfoResponse(Long id, String alias, RgbCodeResponse color) {
 

@@ -2,24 +2,20 @@ package org.depromeet.spot.jpa.team.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.common.RgbCode;
 import org.depromeet.spot.domain.team.BaseballTeam;
+import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "baseball_teams")
 @NoArgsConstructor
-public class BaseballTeamEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+@AllArgsConstructor
+public class BaseballTeamEntity extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 20)
     private String name;
@@ -39,27 +35,9 @@ public class BaseballTeamEntity {
     @Column(name = "blue")
     private Integer blue;
 
-    public BaseballTeamEntity(
-            Long id,
-            String name,
-            String alias,
-            String logo,
-            Integer red,
-            Integer green,
-            Integer blue) {
-        this.id = id;
-        this.name = name;
-        this.alias = alias;
-        this.logo = logo;
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-    }
-
     public static BaseballTeamEntity from(BaseballTeam baseballTeam) {
         RgbCode labelRgbCode = baseballTeam.getLabelRgbCode();
         return new BaseballTeamEntity(
-                baseballTeam.getId(),
                 baseballTeam.getName(),
                 baseballTeam.getAlias(),
                 baseballTeam.getLogo(),
@@ -70,6 +48,6 @@ public class BaseballTeamEntity {
 
     public BaseballTeam toDomain() {
         RgbCode labelRgbCode = RgbCode.builder().red(red).green(green).blue(blue).build();
-        return new BaseballTeam(id, name, alias, logo, labelRgbCode);
+        return new BaseballTeam(this.getId(), name, alias, logo, labelRgbCode);
     }
 }

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
 import org.depromeet.spot.domain.stadium.Stadium;
-import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase;
+import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.service.fake.FakeStadiumRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class StadiumReadServiceTest {
 
     private StadiumReadService stadiumReadService;
-    private StadiumHomeTeamReadUsecase stadiumHomeTeamReadUsecase;
+    private ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
 
     @BeforeEach
     void init() {
@@ -23,7 +23,7 @@ class StadiumReadServiceTest {
 
         this.stadiumReadService =
                 StadiumReadService.builder()
-                        .stadiumHomeTeamReadUsecase(stadiumHomeTeamReadUsecase)
+                        .readStadiumHomeTeamUsecase(readStadiumHomeTeamUsecase)
                         .stadiumRepository(fakeStadiumRepository)
                         .build();
 

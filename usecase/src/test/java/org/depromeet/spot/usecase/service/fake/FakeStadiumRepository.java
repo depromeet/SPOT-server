@@ -50,4 +50,9 @@ public class FakeStadiumRepository implements StadiumRepository {
             return stadium;
         }
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return data.stream().anyMatch(stadium -> stadium.getId().equals(id));
+    }
 }

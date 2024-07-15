@@ -3,7 +3,7 @@ package org.depromeet.spot.usecase.port.in.stadium;
 import java.util.List;
 
 import org.depromeet.spot.domain.stadium.Stadium;
-import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase.HomeTeamInfo;
+import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +18,8 @@ public interface StadiumReadUsecase {
     StadiumInfoWithSeatChart findWithSeatChartById(Long id);
 
     Stadium findById(Long id);
+
+    boolean existsById(Long id);
 
     @Getter
     @AllArgsConstructor

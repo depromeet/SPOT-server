@@ -9,4 +9,6 @@ public interface SectionRepository {
     List<Section> findAllByStadium(Long stadiumId);
 
     Section save(Section section);
+
+    boolean existsInStadium(Long stadiumId, Long sectionId);
 }
