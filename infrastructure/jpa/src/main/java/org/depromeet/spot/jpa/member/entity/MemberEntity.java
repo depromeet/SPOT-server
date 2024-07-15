@@ -1,41 +1,80 @@
 package org.depromeet.spot.jpa.member.entity;
 
-/* JPA 설정 확인용 샘플 엔티티. 실제 피처 개발 시작할 때 삭제 예정! */
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import org.depromeet.spot.domain.member.Member;
-
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.depromeet.spot.domain.member.Member;
+import org.depromeet.spot.domain.member.enums.MemberRole;
+import org.depromeet.spot.domain.member.enums.SnsProvider;
+import org.depromeet.spot.jpa.common.entity.BaseEntity;
+
 
 @Entity
-@Table(name = "member")
+@Table(name = "members")
 @NoArgsConstructor
-public class MemberEntity {
+@AllArgsConstructor
+public class MemberEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @Column(name = "email", nullable = false, unique = true, length = 50)
+    private String email;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
 
-    public MemberEntity(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    @Column(name = "nickname", nullable = false, unique = true, length = 10)
+    private String nickname;
+
+    @Column(name = "phone_number", nullable = false, unique = true, length = 13)
+    private String phoneNumber;
+
+    @Column(name = "level", nullable = false)
+    private Integer level;
+
+    @Column(name = "profile_image", length = 255)
+    private String profileImage;
+
+    @Column(name = "sns_provider", nullable = false, length = 20)
+    private String snsProvider;
+
+    @Column(name = "id_token", nullable = false, unique = true, length = 255)
+    private String idToken;
+
+    @Column(name = "team_id", nullable = false, length = 10)
+    private Long teamId;
+
+    @Column(name = "role", nullable = false)
+    private String role;
 
     public static MemberEntity from(Member member) {
-        return new MemberEntity(member.getId(), member.getName());
+        return new MemberEntity(
+            member.getEmail(),
+            member.getName(),
+            member.getNickname(),
+            member.getPhoneNumber(),
+            member.getLevel(),
+            member.getProfileImage(),
+            member.getSnsProvider().getValue(),
+            member.getIdToken(),
+            member.getTeamId(),
+            member.getRole().getValue());
     }
 
     public Member toDomain() {
-        return new Member(id, name);
+        return new Member(
+            this.getId(),
+            email,
+            name,
+            nickname,
+            phoneNumber,
+            level,
+            profileImage,
+            SnsProvider.valueOf(snsProvider),
+            idToken,
+            teamId,
+            MemberRole.valueOf(role),
+            this.getCreatedAt(),
+            this.getDeletedAt());
     }
-}
+    }
