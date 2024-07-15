@@ -12,7 +12,7 @@ import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase.SectionInfo;
 import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase.StadiumSections;
-import org.depromeet.spot.usecase.port.in.team.StadiumHomeTeamReadUsecase;
+import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.service.fake.FakeSectionRepository;
 import org.depromeet.spot.usecase.service.fake.FakeStadiumRepository;
 import org.depromeet.spot.usecase.service.stadium.StadiumReadService;
@@ -23,7 +23,7 @@ public class SectionReadServiceTest {
 
     private SectionReadService sectionReadService;
     private StadiumReadService stadiumReadService;
-    private StadiumHomeTeamReadUsecase stadiumHomeTeamReadUsecase;
+    private ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
 
     @BeforeEach
     void init() {
@@ -32,7 +32,7 @@ public class SectionReadServiceTest {
 
         this.stadiumReadService =
                 StadiumReadService.builder()
-                        .stadiumHomeTeamReadUsecase(stadiumHomeTeamReadUsecase)
+                        .readStadiumHomeTeamUsecase(readStadiumHomeTeamUsecase)
                         .stadiumRepository(fakeStadiumRepository)
                         .build();
 

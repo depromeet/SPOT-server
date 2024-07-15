@@ -10,7 +10,7 @@ import org.depromeet.spot.domain.team.BaseballTeam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public interface StadiumHomeTeamReadUsecase {
+public interface ReadStadiumHomeTeamUsecase {
 
     List<HomeTeamInfo> findByStadium(Long stadiumId);
 
