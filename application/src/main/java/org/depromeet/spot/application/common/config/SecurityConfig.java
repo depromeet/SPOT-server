@@ -1,13 +1,22 @@
 package org.depromeet.spot.application.common.config;
 
+import lombok.RequiredArgsConstructor;
+import org.depromeet.spot.application.common.jwt.JwtAuthenticationFilter;
+import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -22,7 +31,10 @@ public class SecurityConfig {
                 authorize -> authorize
                     // 테스트, 개발 중엔 모든 경로 오픈.
                     .requestMatchers("/**").permitAll()
-            );
+            )
+            // UsernamePasswordAuthenticationFilter 필터 전에 jwt 필터가 먼저 동작하도록함.
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 }
