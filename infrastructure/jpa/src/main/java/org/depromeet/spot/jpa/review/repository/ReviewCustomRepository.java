@@ -87,21 +87,21 @@ public class ReviewCustomRepository {
                 .fetch();
     }
 
-    public List<ReviewImageEntity> findImagesByReviewId(Long reviewId) {
+    public List<ReviewImageEntity> findImagesByReviewIds(List<Long> reviewIds) {
         return queryFactory
                 .selectFrom(reviewImageEntity)
                 .where(
                         reviewImageEntity
                                 .reviewId
-                                .eq(reviewId)
+                                .in(reviewIds)
                                 .and(reviewImageEntity.deletedAt.isNull()))
                 .fetch();
     }
 
-    public List<ReviewKeywordEntity> findKeywordsByReviewId(Long reviewId) {
+    public List<ReviewKeywordEntity> findKeywordsByReviewIds(List<Long> reviewIds) {
         return queryFactory
                 .selectFrom(reviewKeywordEntity)
-                .where(reviewKeywordEntity.reviewId.eq(reviewId))
+                .where(reviewKeywordEntity.reviewId.in(reviewIds))
                 .fetch();
     }
 }
