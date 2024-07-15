@@ -16,6 +16,9 @@ dependencies {
 
     // p6spy
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:_")
+
+    // webflux (HTTP 요청에 사용)
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 tasks.bootJar { enabled = false }
