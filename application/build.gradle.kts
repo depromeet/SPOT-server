@@ -15,6 +15,13 @@ dependencies {
 
     // swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:_")
+
+    // jwt
+//    implementation("io.jsonwebtoken:jjwt:_")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
 }
 
 // spring boot main application이므로 실행 가능한 jar를 생성한다.
