@@ -16,15 +16,17 @@ import lombok.RequiredArgsConstructor;
 public class ReviewReadService implements ReviewReadUsecase {
     private final ReviewRepository reviewRepository;
 
+    private static final int TOP_KEYWORDS_LIMIT = 5;
+
     @Override
     public ReviewListResult findReviewsByBlockId(
             Long stadiumId, Long blockId, Long rowId, Long seatNumber, int offset, int limit) {
         List<Review> reviews =
                 reviewRepository.findByBlockId(
                         stadiumId, blockId, rowId, seatNumber, offset, limit);
-        int totalCount = reviewRepository.countByBlockId(stadiumId, blockId, rowId, seatNumber);
+        Long totalCount = reviewRepository.countByBlockId(stadiumId, blockId, rowId, seatNumber);
         List<KeywordCount> topKeywords =
-                reviewRepository.findTopKeywordsByBlockId(stadiumId, blockId, 5);
+                reviewRepository.findTopKeywordsByBlockId(stadiumId, blockId, TOP_KEYWORDS_LIMIT);
 
         return new ReviewListResult(reviews, topKeywords, totalCount, offset, limit);
     }
