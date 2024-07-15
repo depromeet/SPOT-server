@@ -8,7 +8,7 @@ import org.depromeet.spot.domain.review.ReviewListResult;
 public record ReviewListResponse(
         List<KeywordCountResponse> keywords,
         List<ReviewResponse> reviews,
-        int totalCount,
+        Long totalCount,
         int filteredCount,
         int offset,
         int limit,
