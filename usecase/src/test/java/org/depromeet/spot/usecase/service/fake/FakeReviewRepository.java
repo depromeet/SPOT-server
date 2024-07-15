@@ -41,19 +41,15 @@ public class FakeReviewRepository implements ReviewRepository {
     }
 
     @Override
-    public int countByBlockId(Long stadiumId, Long blockId, Long rowId, Long seatNumber) {
-        return (int)
-                data.stream()
-                        .filter(
-                                review ->
-                                        review.getStadiumId().equals(stadiumId)
-                                                && review.getBlockId().equals(blockId))
-                        .filter(review -> rowId == null || review.getRowId().equals(rowId))
-                        .filter(
-                                review ->
-                                        seatNumber == null
-                                                || review.getSeatNumber().equals(seatNumber))
-                        .count();
+    public Long countByBlockId(Long stadiumId, Long blockId, Long rowId, Long seatNumber) {
+        return data.stream()
+                .filter(
+                        review ->
+                                review.getStadiumId().equals(stadiumId)
+                                        && review.getBlockId().equals(blockId))
+                .filter(review -> rowId == null || review.getRowId().equals(rowId))
+                .filter(review -> seatNumber == null || review.getSeatNumber().equals(seatNumber))
+                .count();
     }
 
     @Override
