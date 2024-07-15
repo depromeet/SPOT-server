@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewKeywordEntity extends BaseEntity {
+
     @Column(name = "review_id", nullable = false)
     private Long reviewId;
 
@@ -32,6 +33,11 @@ public class ReviewKeywordEntity extends BaseEntity {
     }
 
     public ReviewKeyword toDomain() {
-        return new ReviewKeyword(this.getId(), reviewId, keywordId, isPositive);
+        return ReviewKeyword.builder()
+                .id(this.getId())
+                .reviewId(reviewId)
+                .keywordId(keywordId)
+                .isPositive(isPositive)
+                .build();
     }
 }

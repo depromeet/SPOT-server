@@ -1,5 +1,7 @@
 package org.depromeet.spot.jpa.review.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -22,15 +24,21 @@ public class ReviewImageEntity extends BaseEntity {
     @Column(name = "url", nullable = false, length = 255)
     private String url;
 
-    @Column(name = "status", nullable = false, length = 15)
-    private String status;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     public static ReviewImageEntity from(ReviewImage reviewImage) {
         return new ReviewImageEntity(
-                reviewImage.getReviewId(), reviewImage.getUrl(), reviewImage.getStatus());
+                reviewImage.getReviewId(), reviewImage.getUrl(), reviewImage.getDeletedAt());
     }
 
     public ReviewImage toDomain() {
-        return new ReviewImage(this.getId(), reviewId, url, this.getCreatedAt(), status);
+        return ReviewImage.builder()
+                .id(this.getId())
+                .reviewId(reviewId)
+                .url(url)
+                .createdAt(this.getCreatedAt())
+                .deletedAt(deletedAt)
+                .build();
     }
 }

@@ -33,6 +33,11 @@ public class BlockTopKeywordEntity extends BaseEntity {
     }
 
     public BlockTopKeyword toDomain() {
-        return new BlockTopKeyword(this.getId(), blockId, keywordId, count);
+        return BlockTopKeyword.builder()
+                .id(this.getId())
+                .blockId(blockId)
+                .keywordId(keywordId)
+                .count(count)
+                .build();
     }
 }

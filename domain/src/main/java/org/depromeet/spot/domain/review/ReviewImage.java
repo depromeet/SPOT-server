@@ -2,8 +2,10 @@ package org.depromeet.spot.domain.review;
 
 import java.time.LocalDateTime;
 
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class ReviewImage {
 
@@ -11,13 +13,5 @@ public class ReviewImage {
     private final Long reviewId;
     private final String url;
     private final LocalDateTime createdAt;
-    private final String status;
-
-    public ReviewImage(Long id, Long reviewId, String url, LocalDateTime createdAt, String status) {
-        this.id = id;
-        this.reviewId = reviewId;
-        this.url = url;
-        this.createdAt = createdAt;
-        this.status = status;
-    }
+    private final LocalDateTime deletedAt;
 }
