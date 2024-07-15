@@ -33,7 +33,7 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "seat_number", nullable = false)
     private Long seatNumber;
 
-    @Column(name = "dateTime", nullable = false)
+    @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
     @Column(name = "content", length = 300)
