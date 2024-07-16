@@ -8,7 +8,7 @@ import org.depromeet.spot.common.exception.media.MediaException.UploadFailExcept
 import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
 import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
-import org.depromeet.spot.ncp.property.ObjectStorageProperties;
+import org.depromeet.spot.ncp.config.ObjectStorageConfig;
 import org.depromeet.spot.usecase.port.out.media.ImageUploadPort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ImageUploader implements ImageUploadPort {
 
     private final AmazonS3 amazonS3;
-    private final ObjectStorageProperties objectStorageProperties;
 
     @Override
     public String upload(String targetName, MultipartFile file, MediaProperty property) {
@@ -38,7 +37,7 @@ public class ImageUploader implements ImageUploadPort {
 
         final String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         checkValidExtension(fileExtension, property);
-        final String bucketName = objectStorageProperties.bucketName();
+        final String bucketName = ObjectStorageConfig.BUCKET_NAME;
         final String folderName = property.getFolderName();
         final String fileName = createFileName(targetName, folderName, fileExtension);
 
@@ -48,13 +47,13 @@ public class ImageUploader implements ImageUploadPort {
 
         try (InputStream inputStream = file.getInputStream()) {
             amazonS3.putObject(
-                    new PutObjectRequest("spot-image-bucket", fileName, inputStream, objectMetadata)
+                    new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
                             .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
             throw new UploadFailException();
         }
 
-        return amazonS3.getUrl("spot-image-bucket", fileName).toString();
+        return amazonS3.getUrl(bucketName, fileName).toString();
     }
 
     private void checkValidExtension(final String fileExtension, MediaProperty property) {

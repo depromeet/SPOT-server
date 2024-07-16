@@ -21,6 +21,7 @@ public class ObjectStorageConfig {
     private final ObjectStorageProperties objectStorageProperties;
     private static final String ENDPOINT = "https://kr.object.ncloudstorage.com";
     private static final String REGION = "kr-standard";
+    public static final String BUCKET_NAME = "spot-image-bucket";
 
     @Bean
     public AmazonS3 getAmazonS3() {

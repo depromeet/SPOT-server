@@ -8,7 +8,6 @@ import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.ncp.mock.FakeAmazonS3Config;
 import org.depromeet.spot.ncp.mock.FakeTimeUsecase;
 import org.depromeet.spot.ncp.property.ObjectStorageProperties;
-import org.depromeet.spot.ncp.property.ReviewStorageProperties;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort.PresignedUrlRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +22,6 @@ class PresignedUrlGeneratorTest {
                 new ObjectStorageProperties("accessKey", "secretKey", "bucketName");
         FakeAmazonS3Config amazonS3 = new FakeAmazonS3Config(objectStorageProperties);
 
-        ReviewStorageProperties reviewStorageProperties =
-                new ReviewStorageProperties("review", "folder");
-
         FakeTimeUsecase fakeTimeUsecase = new FakeTimeUsecase("2024-07-09 21:00:00");
         FileNameGenerator fileNameGenerator =
                 FileNameGenerator.builder().timeUsecase(fakeTimeUsecase).build();
@@ -34,7 +30,7 @@ class PresignedUrlGeneratorTest {
                 PresignedUrlGenerator.builder()
                         .amazonS3(amazonS3.getAmazonS3())
                         .fileNameGenerator(fileNameGenerator)
-                        .reviewStorageProperties(reviewStorageProperties)
+                        .properties(objectStorageProperties)
                         .build();
     }
 
