@@ -14,7 +14,6 @@ spring:
             hibernate:
                 use_sql_comments: true
         defer-datasource-initialization: true
-
     sql:
         init:
             mode: never  # 필요한 경우 'never'로 변경

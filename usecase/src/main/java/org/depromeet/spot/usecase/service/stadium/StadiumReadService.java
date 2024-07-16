@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
@@ -78,5 +79,12 @@ public class StadiumReadService implements StadiumReadUsecase {
     @Override
     public boolean existsById(final Long id) {
         return stadiumRepository.existsById(id);
+    }
+
+    @Override
+    public void checkIsExistsBy(Long stadiumId) {
+        if (!existsById(stadiumId)) {
+            throw new StadiumNotFoundException();
+        }
     }
 }

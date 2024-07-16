@@ -1,8 +1,10 @@
 package org.depromeet.spot.domain.block;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Block {
 
     private final Long id;
@@ -10,6 +12,8 @@ public class Block {
     private final Long sectionId;
     private final String code;
     private final Integer maxRows;
+
+    public static final int BLOCK_SEAT_START_NUM = 1;
 
     public Block(Long id, Long stadiumId, Long sectionId, String code, Integer maxRows) {
         this.id = id;
