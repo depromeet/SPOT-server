@@ -18,7 +18,10 @@ public class MemberService implements MemberUsecase {
 
     @Override
     public Member create(final String name) {
-        var member = new Member(null, name);
+        var member =
+                new Member(
+                        null, null, name, null, null, null, null, null, null, null, null, null,
+                        null);
         return memberRepository.save(member);
     }
 

@@ -1,10 +1,12 @@
 dependencies {
+    implementation(project(":common"))
     implementation(project(":domain"))
     implementation(project(":usecase"))
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:_")
 
+    // mysql
     runtimeOnly("com.mysql:mysql-connector-j")
 
     // queryDSL
