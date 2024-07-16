@@ -6,6 +6,8 @@ public interface OauthRepository {
 
     String getKakaoAccessToken(String idCode);
 
-    Member getUserInfo(String accesstoken, Member member);
+    Member getRegisterUserInfo(String accesstoken, Member member);
+
+    Member getLoginUserInfo(String accesstoken);
 
 }
