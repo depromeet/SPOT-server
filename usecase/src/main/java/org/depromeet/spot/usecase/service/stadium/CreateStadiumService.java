@@ -23,12 +23,10 @@ public class CreateStadiumService implements CreateStadiumUsecase {
                 imageUploadPort.upload(name, request.mainImage(), MediaProperty.STADIUM);
         final String seatChartUrl =
                 imageUploadPort.upload(
-                        name + " 좌석 배치도", request.seatingChartImage(), MediaProperty.STADIUM_SEAT);
+                        name, request.seatingChartImage(), MediaProperty.STADIUM_SEAT);
         final String labelSeatChartUrl =
                 imageUploadPort.upload(
-                        name + " label 좌석 배치도",
-                        request.labeledSeatingChartImage(),
-                        MediaProperty.STADIUM_SEAT_LABEL);
+                        name, request.labeledSeatingChartImage(), MediaProperty.STADIUM_SEAT_LABEL);
         Stadium stadium =
                 Stadium.builder()
                         .name(name)

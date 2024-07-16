@@ -31,29 +31,36 @@ public class ImageUploader implements ImageUploadPort {
 
     @Override
     public String upload(String targetName, MultipartFile file, MediaProperty property) {
-        if (file == null || file.isEmpty()) {
-            return null;
-        }
+        if (file == null || file.isEmpty()) return null;
 
         final String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         checkValidExtension(fileExtension, property);
-        final String bucketName = ObjectStorageConfig.BUCKET_NAME;
-        final String folderName = property.getFolderName();
-        final String fileName = createFileName(targetName, folderName, fileExtension);
 
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentLength(file.getSize());
-        objectMetadata.setContentType(file.getContentType());
+        final String bucketName = ObjectStorageConfig.BUCKET_NAME;
+        final String fileName = createFileName(targetName, property.getFolderName(), fileExtension);
+        ObjectMetadata objectMetadata = createObjectMetadata(file);
 
         try (InputStream inputStream = file.getInputStream()) {
-            amazonS3.putObject(
-                    new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
-                            .withCannedAcl(CannedAccessControlList.PublicRead));
+            uploadToS3(bucketName, fileName, inputStream, objectMetadata);
         } catch (IOException e) {
             throw new UploadFailException();
         }
 
         return amazonS3.getUrl(bucketName, fileName).toString();
+    }
+
+    private ObjectMetadata createObjectMetadata(MultipartFile file) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+        return metadata;
+    }
+
+    private void uploadToS3(
+            String bucketName, String fileName, InputStream inputStream, ObjectMetadata metadata) {
+        amazonS3.putObject(
+                new PutObjectRequest(bucketName, fileName, inputStream, metadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
     private void checkValidExtension(final String fileExtension, MediaProperty property) {
