@@ -2,6 +2,7 @@ package org.depromeet.spot.usecase.service.section;
 
 import java.util.List;
 
+import org.depromeet.spot.common.exception.section.SectionException.SectionNotBelongStadiumException;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase;
@@ -26,6 +27,13 @@ public class SectionReadService implements SectionReadUsecase {
         List<Section> sections = sectionRepository.findAllByStadium(stadiumId);
         List<SectionInfo> sectionInfos = sections.stream().map(SectionInfo::from).toList();
         return new StadiumSections(stadium.getSeatingChartImage(), sectionInfos);
+    }
+
+    @Override
+    public void checkIsExistsInStadium(final Long stadiumId, final Long sectionId) {
+        if (!existsInStadium(stadiumId, sectionId)) {
+            throw new SectionNotBelongStadiumException();
+        }
     }
 
     @Override

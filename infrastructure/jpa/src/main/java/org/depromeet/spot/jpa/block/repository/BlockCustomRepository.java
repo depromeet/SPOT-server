@@ -28,6 +28,7 @@ public class BlockCustomRepository {
                 .join(blockEntity)
                 .on(blockRowEntity.block.id.eq(blockEntity.id))
                 .where(blockEntity.sectionId.eq(sectionId))
+                .orderBy(blockRowEntity.number.asc())
                 .transform(groupBy(blockEntity).as(list(blockRowEntity)));
     }
 }

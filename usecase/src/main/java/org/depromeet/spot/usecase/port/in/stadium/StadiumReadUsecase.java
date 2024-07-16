@@ -21,6 +21,8 @@ public interface StadiumReadUsecase {
 
     boolean existsById(Long id);
 
+    void checkIsExistsBy(Long stadiumId);
+
     @Getter
     @AllArgsConstructor
     class StadiumHomeTeamInfo {

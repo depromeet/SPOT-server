@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.depromeet.spot.common.exception.section.SectionException.SectionNotBelongStadiumException;
-import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase;
@@ -32,35 +29,29 @@ public class BlockReadService implements BlockReadUsecase {
 
     @Override
     public List<BlockCodeInfo> findCodeInfosByStadium(final Long stadiumId, final Long sectionId) {
-        if (!stadiumReadUsecase.existsById(stadiumId)) {
-            throw new StadiumNotFoundException();
-        }
-        if (!sectionReadUsecase.existsInStadium(stadiumId, sectionId)) {
-            throw new SectionNotBelongStadiumException();
-        }
+        stadiumReadUsecase.checkIsExistsBy(stadiumId);
+        sectionReadUsecase.checkIsExistsInStadium(stadiumId, sectionId);
         List<Block> blocks = blockRepository.findAllBySection(sectionId);
         return blocks.stream().map(b -> new BlockCodeInfo(b.getId(), b.getCode())).toList();
     }
 
     @Override
     public List<BlockInfo> findAllBlockInfoBy(final Long stadiumId, final Long sectionId) {
-        List<BlockInfo> result = new ArrayList<>();
-        if (!stadiumReadUsecase.existsById(sectionId)) {
-            throw new StadiumNotFoundException();
-        }
-
-        if (!sectionReadUsecase.existsInStadium(stadiumId, sectionId)) {
-            throw new SectionNotBelongStadiumException();
-        }
+        stadiumReadUsecase.checkIsExistsBy(stadiumId);
+        sectionReadUsecase.checkIsExistsInStadium(stadiumId, sectionId);
 
         Map<Block, List<BlockRow>> blockRows = blockRepository.findRowInfosBy(sectionId);
-        for (Entry<Block, List<BlockRow>> entry : blockRows.entrySet()) {
-            Block block = entry.getKey();
-            List<RowInfo> rowInfos = getBlockRowInfos(entry.getValue());
-            result.add(new BlockInfo(block.getId(), block.getCode(), rowInfos));
-        }
+        List<BlockInfo> result =
+                blockRows.entrySet().stream()
+                        .map(
+                                entry -> {
+                                    Block block = entry.getKey();
+                                    List<RowInfo> rowInfos = getBlockRowInfos(entry.getValue());
+                                    return new BlockInfo(block.getId(), block.getCode(), rowInfos);
+                                })
+                        .sorted(Comparator.comparing(BlockInfo::getId))
+                        .toList();
 
-        result.sort(Comparator.comparing(BlockInfo::getId));
         result.forEach(block -> block.getRowInfo().sort(Comparator.comparing(RowInfo::getNumber)));
 
         return result;
