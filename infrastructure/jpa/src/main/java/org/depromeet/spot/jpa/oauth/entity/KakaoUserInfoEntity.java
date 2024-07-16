@@ -109,7 +109,7 @@ public class KakaoUserInfoEntity extends BaseEntity {
 
     public Member toLoginDomain(){
         return Member.builder()
-            .email(kakaoAccount.email)
+            .idToken(getId().toString())
             .build();
     }
 
