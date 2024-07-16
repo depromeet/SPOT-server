@@ -12,3 +12,5 @@ include("infrastructure:jpa")
 findProject(":infrastructure:jpa")?.name = "jpa"
 include("usecase")
 include("common")
+include("infrastructure:ncp")
+findProject(":infrastructure:ncp")?.name = "ncp"

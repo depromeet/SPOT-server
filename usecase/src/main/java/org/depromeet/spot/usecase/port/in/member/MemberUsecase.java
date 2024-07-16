@@ -1,4 +1,4 @@
-package org.depromeet.spot.usecase.port.in;
+package org.depromeet.spot.usecase.port.in.member;
 
 import java.util.List;
 

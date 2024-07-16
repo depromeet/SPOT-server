@@ -1,10 +1,10 @@
-package org.depromeet.spot.usecase.service;
+package org.depromeet.spot.usecase.service.member;
 
 import java.util.List;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.usecase.port.in.MemberUsecase;
+import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
 import org.depromeet.spot.usecase.port.out.MemberRepository;
 import org.springframework.stereotype.Service;
 
