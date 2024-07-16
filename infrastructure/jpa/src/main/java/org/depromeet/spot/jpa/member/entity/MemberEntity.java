@@ -83,4 +83,4 @@ public class MemberEntity extends BaseEntity {
             this.getCreatedAt(),
             this.getDeletedAt());
     }
-    }
+}

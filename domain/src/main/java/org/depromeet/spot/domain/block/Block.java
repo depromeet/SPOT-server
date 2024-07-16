@@ -1,0 +1,21 @@
+package org.depromeet.spot.domain.block;
+
+import lombok.Getter;
+
+@Getter
+public class Block {
+
+    private final Long id;
+    private final Long stadiumId;
+    private final Long sectionId;
+    private final String code;
+    private final Integer maxRows;
+
+    public Block(Long id, Long stadiumId, Long sectionId, String code, Integer maxRows) {
+        this.id = id;
+        this.stadiumId = stadiumId;
+        this.sectionId = sectionId;
+        this.code = code;
+        this.maxRows = maxRows;
+    }
+}

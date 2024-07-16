@@ -10,11 +10,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update  # 주의: 프로덕션 환경에서는 'validate' 사용 권장
-    show-sql: true
     properties:
       hibernate:
-        format_sql: true
         use_sql_comments: true
+    defer-datasource-initialization: true
 
   sql:
     init:

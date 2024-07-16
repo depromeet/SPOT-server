@@ -1,6 +1,5 @@
 package org.depromeet.spot.domain.member;
 
-import lombok.Builder;
 import lombok.Getter;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
