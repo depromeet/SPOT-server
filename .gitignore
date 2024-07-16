@@ -381,3 +381,5 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,intellij,intellij+iml,intellij+all,visualstudiocode,java,gradle,kotlin
 /db/
+
+.env
