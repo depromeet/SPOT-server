@@ -8,16 +8,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.application.member.dto.request.RegisterReq;
-import org.depromeet.spot.application.member.dto.response.MemberResponse;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,22 +29,39 @@ public class MemberController {
 
     private final MemberUsecase memberUsecase;
 
+    private final JwtTokenUtil jwtTokenUtil;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Member 생성 API")
-    public MemberResponse create(@RequestBody MemberRequest request) {
-        val member = memberUsecase.create(request.name());
-        return MemberResponse.from(member);
+    @Operation(summary = "Member 회원가입 API")
+    public HttpHeaders create(@RequestBody @Valid RegisterReq request) {
+
+        Member member = request.toDomain();
+        Member memberResult = memberUsecase.create(member);
+
+        return jwtTokenUtil.getJWTToken(memberResult);
+        }
+
+    @GetMapping("/{idCode}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Member 로그인 API")
+    public HttpHeaders login(@PathVariable("idCode")
+    @Parameter(name = "idCode", description = "sns idCode", required = true) String idCode) {
+
+        Member member = memberUsecase.login(idCode);
+
+        return jwtTokenUtil.getJWTToken(member);
     }
 
-    @GetMapping("/duplicatedNickname")
+    @GetMapping("/duplicatedNickname/{nickname}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "닉네임 중복확인 API")
     public Boolean duplicatedNickname(
-        @RequestParam("nickname")
+        @PathVariable("nickname")
         @Parameter(name = "nickname", description = "닉네임", required = true)
         String nickname) {
         Boolean result = memberUsecase.duplicatedNickname(nickname);
         return result;
     }
+
 }
