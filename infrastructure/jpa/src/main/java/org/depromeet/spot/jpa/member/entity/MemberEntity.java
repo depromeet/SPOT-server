@@ -9,6 +9,7 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
+import org.hibernate.annotations.ColumnDefault;
 
 
 @Entity
@@ -17,19 +18,24 @@ import org.depromeet.spot.jpa.common.entity.BaseEntity;
 @AllArgsConstructor
 public class MemberEntity extends BaseEntity {
 
-    @Column(name = "email", nullable = false, unique = true, length = 50)
+    // TODO : email 받아온 후 nullable = false로 바꿔야함.
+    @Column(name = "email", nullable = true, unique = true, length = 50)
     private String email;
 
-    @Column(name = "name", nullable = false, length = 20)
+    // TODO : 이름 받아온 후 nullable = false로 바꿔야함.
+    @Column(name = "name", nullable = true, length = 20)
     private String name;
 
     @Column(name = "nickname", nullable = false, unique = true, length = 10)
     private String nickname;
 
-    @Column(name = "phone_number", nullable = false, unique = true, length = 13)
+    // TODO : phone_number 받아온 후 nullable = false로 바꿔야함.
+    @Column(name = "phone_number", nullable = true, unique = true, length = 13)
     private String phoneNumber;
 
-    @Column(name = "level", nullable = false)
+    // TODO : ERD nullable로 변경
+    @Column(name = "level")
+    @ColumnDefault("1")
     private Integer level;
 
     @Column(name = "profile_image", length = 255)
