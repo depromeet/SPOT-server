@@ -5,12 +5,9 @@ import java.util.Date;
 
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
 import org.depromeet.spot.common.exception.media.MediaException.InvalidReviewMediaException;
-import org.depromeet.spot.common.exception.media.MediaException.InvalidStadiumMediaException;
 import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
-import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
 import org.depromeet.spot.ncp.property.ReviewStorageProperties;
-import org.depromeet.spot.ncp.property.StadiumStorageProperties;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +28,6 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     private final AmazonS3 amazonS3;
     private final FileNameGenerator fileNameGenerator;
     private final ReviewStorageProperties reviewStorageProperties;
-    private final StadiumStorageProperties stadiumStorageProperties;
 
     private static final long EXPIRE_MS = 1000 * 60 * 5L;
 
@@ -55,29 +51,6 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
         }
 
         if (!ImageExtension.isValid(fileExtension)) {
-            throw new InvalidExtensionException(fileExtension);
-        }
-    }
-
-    @Override
-    public String forStadiumSeat(PresignedUrlRequest request) {
-        isValidStadiumMedia(request.getProperty(), request.getFileExtension());
-
-        final StadiumSeatMediaExtension fileExtension =
-                StadiumSeatMediaExtension.from(request.getFileExtension());
-        final String folderName = stadiumStorageProperties.folderName();
-        final String fileName = fileNameGenerator.createStadiumFileName(fileExtension, folderName);
-        final URL url = createPresignedUrl(stadiumStorageProperties.bucketName(), fileName);
-
-        return url.toString();
-    }
-
-    private void isValidStadiumMedia(final MediaProperty property, final String fileExtension) {
-        if (property != MediaProperty.STADIUM) {
-            throw new InvalidStadiumMediaException();
-        }
-
-        if (!StadiumSeatMediaExtension.isValid(fileExtension)) {
             throw new InvalidExtensionException(fileExtension);
         }
     }

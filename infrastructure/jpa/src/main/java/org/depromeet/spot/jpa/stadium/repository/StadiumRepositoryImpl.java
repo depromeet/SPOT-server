@@ -9,7 +9,9 @@ import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class StadiumRepositoryImpl implements StadiumRepository {

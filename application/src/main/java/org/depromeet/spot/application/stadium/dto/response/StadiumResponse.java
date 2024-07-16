@@ -18,9 +18,9 @@ public record StadiumResponse(
                 .id(stadium.getId())
                 .name(stadium.getName())
                 .mainImage(stadium.getMainImage())
-                .seatingChartImage(builder().seatingChartImage)
-                .labeledSeatingChartImage(builder().labeledSeatingChartImage)
-                .isActive(builder().isActive)
+                .seatingChartImage(stadium.getSeatingChartImage())
+                .labeledSeatingChartImage(stadium.getLabeledSeatingChartImage())
+                .isActive(stadium.isActive())
                 .build();
     }
 }

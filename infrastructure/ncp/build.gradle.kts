@@ -5,6 +5,7 @@ dependencies {
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
 
     // ncp
     implementation("org.springframework.cloud:spring-cloud-starter-aws:_") {
