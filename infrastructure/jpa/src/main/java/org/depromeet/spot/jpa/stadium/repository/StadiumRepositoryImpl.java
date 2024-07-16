@@ -32,8 +32,8 @@ public class StadiumRepositoryImpl implements StadiumRepository {
 
     @Override
     public Stadium save(Stadium stadium) {
-        // TODO: test를 위해 추가 -> 구장 저장 API 티켓때 구현 예정
-        return null;
+        StadiumEntity entity = stadiumJpaRepository.save(StadiumEntity.from(stadium));
+        return entity.toDomain();
     }
 
     @Override
