@@ -14,7 +14,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member save(Member member) {
-        val memberEntity = memberJpaRepository.save(MemberEntity.from(member));
+        MemberEntity memberEntity = memberJpaRepository.save(MemberEntity.from(member));
         return memberEntity.toDomain();
     }
 

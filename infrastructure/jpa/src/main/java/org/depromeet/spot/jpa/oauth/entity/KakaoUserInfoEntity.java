@@ -92,17 +92,24 @@ public class KakaoUserInfoEntity extends BaseEntity {
         }
     }
 
-    public Member toKakaoDomain(){
+    public Member toKakaoDomain(Member member){
         return Member.builder()
             .email(kakaoAccount.email)
             .name(kakaoAccount.name)
-            .nickname(kakaoAccount.getProfile().nickName)
+            .nickname(member.getNickname())
             .phoneNumber(kakaoAccount.phoneNumber)
             .profileImage(kakaoAccount.profile.profileImageUrl)
             .snsProvider(SnsProvider.KAKAO)
-            .idToken(id)
-            .role(MemberRole.USER)
+            .idToken(getId().toString())
+            .role(MemberRole.ROLE_USER)
+            .teamId(member.getTeamId())
             .createdAt(toLocalDateTime(connectedAt))
+            .build();
+    }
+
+    public Member toLoginDomain(){
+        return Member.builder()
+            .email(kakaoAccount.email)
             .build();
     }
 

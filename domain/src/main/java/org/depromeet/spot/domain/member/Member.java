@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Member {
 
-    private final Long userId;
+    private final Long id;
     private final String email;
     private final String name;
     private final String nickname;
@@ -25,7 +25,7 @@ public class Member {
     private final LocalDateTime deletedAt;
 
     public Member(
-        Long userId,
+        Long id,
         String email,
         String name,
         String nickname,
@@ -38,7 +38,7 @@ public class Member {
         MemberRole role,
         LocalDateTime createdAt,
         LocalDateTime deletedAt) {
-        this.userId = userId;
+        this.id = id;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
