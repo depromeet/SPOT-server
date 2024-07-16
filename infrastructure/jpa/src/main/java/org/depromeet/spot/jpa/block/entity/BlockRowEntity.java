@@ -19,10 +19,10 @@ public class BlockRowEntity extends BaseEntity {
     private Long blockId;
 
     @Column(name = "number", nullable = false)
-    private Long number;
+    private Integer number;
 
     @Column(name = "max_seats", nullable = false)
-    private Long maxSeats;
+    private Integer maxSeats;
 
     public static BlockRowEntity from(BlockRow blockRow) {
         return new BlockRowEntity(
