@@ -41,17 +41,17 @@ public class OauthRepositoryImpl implements OauthRepository {
             .block();
 
 
-        log.info(" [Kakao Service] Access Token ------> {}", kakaoTokenEntity.getAccessToken());
-        log.info(" [Kakao Service] Refresh Token ------> {}", kakaoTokenEntity.getRefreshToken());
+        log.info("Access Token : {}", kakaoTokenEntity.getAccessToken());
+        log.info("Refresh Token : {}", kakaoTokenEntity.getRefreshToken());
 //        //제공 조건: OpenID Connect가 활성화 된 앱의 토큰 발급 요청인 경우 또는 scope에 openid를 포함한 추가 항목 동의 받기 요청을 거친 토큰 발급 요청인 경우
-//        log.info(" [Kakao Service] Id Token ------> {}", kakaoTokenResponseDto.getIdToken());
-//        log.info(" [Kakao Service] Scope ------> {}", kakaoTokenResponseDto.getScope());
+//        log.info("Id Token : {}", kakaoTokenResponseDto.getIdToken());
+//        log.info("Scope : {}", kakaoTokenResponseDto.getScope());
 
         return kakaoTokenEntity.getAccessToken();
     }
 
     @Override
-    public Member getUserInfo(String accessToken) {
+    public Member getUserInfo(String accessToken, Member member) {
         // 엑세스 토큰으로 카카오에서 유저 정보 받아오기
         String KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
 
@@ -70,13 +70,13 @@ public class OauthRepositoryImpl implements OauthRepository {
             .bodyToMono(KakaoUserInfoEntity.class)
             .block();
 
-        log.info("kakao AuthId : \n {} ", userInfo.getId());
-        log.info("nickname : \n {} ", userInfo.getKakaoAccount().getProfile().getNickName());
-        log.info("ProfileImageUrl : \n {} ", userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
-        log.info("kakao user info : \n {}", userInfo.toString());
+        log.info("kakao AuthId : {} ", userInfo.getId());
+        log.info("nickname : {} ", userInfo.getKakaoAccount().getProfile().getNickName());
+        log.info("ProfileImageUrl : {} ", userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
+        log.info("kakao user info : {}", userInfo);
 
         // member로 변환해서 리턴.
-        return userInfo.toKakaoDomain();
+        return userInfo.toKakaoDomain(member);
     }
 }
 
