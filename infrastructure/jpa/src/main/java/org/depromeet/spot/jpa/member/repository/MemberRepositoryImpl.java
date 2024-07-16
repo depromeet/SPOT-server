@@ -1,21 +1,16 @@
 package org.depromeet.spot.jpa.member.repository;
 
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.jpa.member.entity.MemberEntity;
-import org.depromeet.spot.usecase.port.out.MemberRepository;
+import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.springframework.stereotype.Repository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.val;
 
 @Repository
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepository {
 
     private final MemberJpaRepository memberJpaRepository;
-    private final MemberCustomRepository memberCustomRepository;
 
     @Override
     public Member save(Member member) {
@@ -28,4 +23,11 @@ public class MemberRepositoryImpl implements MemberRepository {
         val memberEntities = memberCustomRepository.findByName(name);
         return memberEntities.stream().map(MemberEntity::toDomain).toList();
     }
+
+    @Override
+    public Boolean existsByNickname(String nickname) {
+        return memberJpaRepository.existsByNickname(nickname);
+    }
+
+
 }
