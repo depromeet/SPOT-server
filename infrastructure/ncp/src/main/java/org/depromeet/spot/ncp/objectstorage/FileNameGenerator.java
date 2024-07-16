@@ -16,26 +16,32 @@ public class FileNameGenerator {
 
     private final TimeUsecase timeUsecase;
 
-    public String createReviewFileName(final Long userId, final ImageExtension fileExtension) {
+    public String createReviewFileName(
+            final Long userId, final ImageExtension fileExtension, final String folderName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
+                .append(folderName)
+                .append("/")
                 .append(MediaProperty.REVIEW)
-                .append("/user/")
+                .append("_user_")
                 .append(userId)
-                .append("/")
+                .append("_")
                 .append(timeUsecase.getNow())
-                .append("/")
+                .append(".")
                 .append(fileExtension.getValue());
         return stringBuilder.toString();
     }
 
-    public String createStadiumFileName(final StadiumSeatMediaExtension fileExtension) {
+    public String createStadiumFileName(
+            final StadiumSeatMediaExtension fileExtension, final String folderName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
+                .append(folderName)
+                .append("/")
                 .append(MediaProperty.STADIUM)
-                .append("/")
+                .append("_")
                 .append(timeUsecase.getNow())
-                .append("/")
+                .append(".")
                 .append(fileExtension.getValue());
         return stringBuilder.toString();
     }

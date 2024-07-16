@@ -19,14 +19,13 @@ import lombok.RequiredArgsConstructor;
 public class ObjectStorageConfig {
 
     private final ObjectStorageProperties objectStorageProperties;
+    private static final String ENDPOINT = "https://kr.object.ncloudstorage.com";
+    private static final String REGION = "kr-standard";
 
     @Bean
     public AmazonS3 getAmazonS3() {
         return AmazonS3ClientBuilder.standard()
-                .withEndpointConfiguration(
-                        new EndpointConfiguration(
-                                objectStorageProperties.endPoint(),
-                                objectStorageProperties.region()))
+                .withEndpointConfiguration(new EndpointConfiguration(ENDPOINT, REGION))
                 .withCredentials(
                         new AWSStaticCredentialsProvider(
                                 new BasicAWSCredentials(

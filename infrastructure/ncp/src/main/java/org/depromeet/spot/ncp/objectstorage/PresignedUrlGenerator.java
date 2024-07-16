@@ -33,14 +33,16 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     private final ReviewStorageProperties reviewStorageProperties;
     private final StadiumStorageProperties stadiumStorageProperties;
 
-    private static final long EXPIRE_MS = 1000 * 60 * 2L;
+    private static final long EXPIRE_MS = 1000 * 60 * 5L;
 
     @Override
     public String forReview(final Long userId, PresignedUrlRequest request) {
         isValidReviewMedia(request.getProperty(), request.getFileExtension());
 
         final ImageExtension fileExtension = ImageExtension.from(request.getFileExtension());
-        final String fileName = fileNameGenerator.createReviewFileName(userId, fileExtension);
+        final String folderName = reviewStorageProperties.folderName();
+        final String fileName =
+                fileNameGenerator.createReviewFileName(userId, fileExtension, folderName);
         final URL url = createPresignedUrl(reviewStorageProperties.bucketName(), fileName);
 
         return url.toString();
@@ -63,7 +65,8 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
         final StadiumSeatMediaExtension fileExtension =
                 StadiumSeatMediaExtension.from(request.getFileExtension());
-        final String fileName = fileNameGenerator.createStadiumFileName(fileExtension);
+        final String folderName = stadiumStorageProperties.folderName();
+        final String fileName = fileNameGenerator.createStadiumFileName(fileExtension, folderName);
         final URL url = createPresignedUrl(stadiumStorageProperties.bucketName(), fileName);
 
         return url.toString();
@@ -89,7 +92,6 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
                 new GeneratePresignedUrlRequest(bucket, fileName)
                         .withMethod(HttpMethod.PUT)
-                        .withKey(fileName)
                         .withExpiration(createPreSignedUrlExpiration());
 
         generatePresignedUrlRequest.addRequestParameter(

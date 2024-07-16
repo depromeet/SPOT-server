@@ -1,12 +1,10 @@
 ncp:
     object-storage:
-        access-key: ${NCP_OBJECT_STORAGE_ACCESS_KEY}
-        secret-key: ${NCP_OBJECT_STORAGE_SECRET_KEY}
-        region: kr-standard
-        end-point: https://kr.object.ncloudstorage.com
+        accessKey: ${NCP_OBJECT_STORAGE_ACCESS_KEY}
+        secretKey: ${NCP_OBJECT_STORAGE_SECRET_KEY}
     review-storage:
-        bucket-name: spot-image-bucket
-        folder-name: review-images
+        bucketName: "spot-image-bucket"
+        folderName: "review-images"
     stadium-storage:
-        bucket-name: spot-image-bucket
-        folder-name: stadium-images
+        bucketName: "spot-image-bucket"
+        folderName: "stadium-images"
