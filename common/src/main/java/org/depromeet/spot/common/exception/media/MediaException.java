@@ -35,4 +35,10 @@ public abstract class MediaException extends BusinessException {
             super(MediaErrorCode.INVALID_MEDIA);
         }
     }
+
+    public static class UploadFailException extends MediaException {
+        public UploadFailException() {
+            super(MediaErrorCode.UPLOAD_FAIL);
+        }
+    }
 }

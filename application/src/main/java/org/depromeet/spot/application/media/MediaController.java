@@ -36,15 +36,4 @@ public class MediaController {
         String presignedUrl = createPresignedUrlPort.forReview(memberId, command);
         return new MediaUrlResponse(presignedUrl);
     }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "/stadiums/images")
-    @Operation(summary = "공연장 이미지 업로드 url을 생성합니다.")
-    public MediaUrlResponse createStadiumSeatUploadUrl(
-            @RequestBody @Valid CreatePresignedUrlRequest request) {
-        PresignedUrlRequest command =
-                new PresignedUrlRequest(request.fileExtension(), request.property());
-        String presignedUrl = createPresignedUrlPort.forStadiumSeat(command);
-        return new MediaUrlResponse(presignedUrl);
-    }
 }

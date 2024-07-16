@@ -5,12 +5,9 @@ import java.util.Date;
 
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
 import org.depromeet.spot.common.exception.media.MediaException.InvalidReviewMediaException;
-import org.depromeet.spot.common.exception.media.MediaException.InvalidStadiumMediaException;
 import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
-import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
-import org.depromeet.spot.ncp.property.ReviewStorageProperties;
-import org.depromeet.spot.ncp.property.StadiumStorageProperties;
+import org.depromeet.spot.ncp.config.ObjectStorageConfig;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +19,9 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Builder
 @RequiredArgsConstructor
@@ -30,8 +29,6 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     private final AmazonS3 amazonS3;
     private final FileNameGenerator fileNameGenerator;
-    private final ReviewStorageProperties reviewStorageProperties;
-    private final StadiumStorageProperties stadiumStorageProperties;
 
     private static final long EXPIRE_MS = 1000 * 60 * 5L;
 
@@ -40,10 +37,10 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
         isValidReviewMedia(request.getProperty(), request.getFileExtension());
 
         final ImageExtension fileExtension = ImageExtension.from(request.getFileExtension());
-        final String folderName = reviewStorageProperties.folderName();
+        final String folderName = request.getProperty().getFolderName();
         final String fileName =
                 fileNameGenerator.createReviewFileName(userId, fileExtension, folderName);
-        final URL url = createPresignedUrl(reviewStorageProperties.bucketName(), fileName);
+        final URL url = createPresignedUrl(fileName);
 
         return url.toString();
     }
@@ -59,38 +56,14 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
         }
     }
 
-    @Override
-    public String forStadiumSeat(PresignedUrlRequest request) {
-        isValidStadiumMedia(request.getProperty(), request.getFileExtension());
-
-        final StadiumSeatMediaExtension fileExtension =
-                StadiumSeatMediaExtension.from(request.getFileExtension());
-        final String folderName = stadiumStorageProperties.folderName();
-        final String fileName = fileNameGenerator.createStadiumFileName(fileExtension, folderName);
-        final URL url = createPresignedUrl(stadiumStorageProperties.bucketName(), fileName);
-
-        return url.toString();
+    private URL createPresignedUrl(final String fileName) {
+        return amazonS3.generatePresignedUrl(createGeneratePreSignedUrlRequest(fileName));
     }
 
-    private void isValidStadiumMedia(final MediaProperty property, final String fileExtension) {
-        if (property != MediaProperty.STADIUM) {
-            throw new InvalidStadiumMediaException();
-        }
-
-        if (!StadiumSeatMediaExtension.isValid(fileExtension)) {
-            throw new InvalidExtensionException(fileExtension);
-        }
-    }
-
-    private URL createPresignedUrl(final String bucketName, final String fileName) {
-        return amazonS3.generatePresignedUrl(
-                createGeneratePreSignedUrlRequest(bucketName, fileName));
-    }
-
-    private GeneratePresignedUrlRequest createGeneratePreSignedUrlRequest(
-            final String bucket, final String fileName) {
+    private GeneratePresignedUrlRequest createGeneratePreSignedUrlRequest(final String fileName) {
+        final String bucketName = ObjectStorageConfig.BUCKET_NAME;
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(bucket, fileName)
+                new GeneratePresignedUrlRequest(bucketName, fileName)
                         .withMethod(HttpMethod.PUT)
                         .withExpiration(createPreSignedUrlExpiration());
 
