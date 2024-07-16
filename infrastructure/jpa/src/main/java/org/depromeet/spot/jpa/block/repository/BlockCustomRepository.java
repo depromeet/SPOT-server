@@ -1,16 +1,15 @@
-package org.depromeet.spot.jpa.seat.repository;
+package org.depromeet.spot.jpa.block.repository;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 import static org.depromeet.spot.jpa.block.entity.QBlockEntity.blockEntity;
 import static org.depromeet.spot.jpa.block.entity.QBlockRowEntity.blockRowEntity;
-import static org.depromeet.spot.jpa.seat.entity.QSeatEntity.seatEntity;
 
 import java.util.List;
 import java.util.Map;
 
 import org.depromeet.spot.jpa.block.entity.BlockEntity;
-import org.depromeet.spot.jpa.seat.entity.SeatEntity;
+import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,18 +18,16 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class SeatCustomRepository {
+public class BlockCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public Map<BlockEntity, List<SeatEntity>> findBlockSeatsBy(final Long sectionId) {
+    public Map<BlockEntity, List<BlockRowEntity>> findRowInfosBy(final Long sectionId) {
         return queryFactory
-                .from(seatEntity)
+                .from(blockRowEntity)
                 .join(blockEntity)
-                .on(seatEntity.blockId.eq(blockEntity.id))
-                .join(blockRowEntity)
-                .on(seatEntity.rowId.eq(blockRowEntity.id))
-                .where(seatEntity.sectionId.eq(sectionId))
-                .transform(groupBy(blockEntity).as(list(seatEntity)));
+                .on(blockRowEntity.block.id.eq(blockEntity.id))
+                .where(blockEntity.sectionId.eq(sectionId))
+                .transform(groupBy(blockEntity).as(list(blockRowEntity)));
     }
 }

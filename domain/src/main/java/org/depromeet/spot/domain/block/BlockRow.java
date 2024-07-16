@@ -10,7 +10,7 @@ import lombok.Getter;
 public class BlockRow {
 
     private final Long id;
-    private final Long blockId;
+    private final Block block;
     private final Integer number;
     private final Integer maxSeats;
 }

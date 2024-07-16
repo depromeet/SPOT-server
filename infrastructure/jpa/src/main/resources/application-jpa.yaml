@@ -17,7 +17,7 @@ spring:
 
   sql:
     init:
-      mode: always  # 필요한 경우 'never'로 변경
+      mode: never  # 필요한 경우 'never'로 변경
 
 server:
   port: 8080

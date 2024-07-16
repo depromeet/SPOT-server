@@ -23,6 +23,21 @@ VALUES (1, 1, '오렌지석', '응원석', 255, 255, 255),
        (2, 1, '네이비석', '프리미엄석', 100, 100, 100),
        (3, 1, '레드석', null, 100, 0, 0);
 
+-- Block
+INSERT INTO blocks (id, stadium_id, section_id, code, max_rows)
+VALUES (1, 1, 1, "207", 3),
+       (2, 1, 1, "208", 2),
+       (3, 1, 1, "209", 1);
+
+-- Row
+INSERT INTO block_rows (id, block_id, number, max_seats)
+VALUES (1, 1, 1, 3),
+       (2, 1, 2, 5),
+       (3, 1, 3, 10),
+       (4, 2, 1, 13),
+       (5, 2, 2, 20),
+       (6, 3, 1, 15);
+
 -- Reviews
 INSERT INTO reviews (id, user_id, stadium_id, block_id, row_id, seat_number, date_time, content, created_at, updated_at)
 VALUES
