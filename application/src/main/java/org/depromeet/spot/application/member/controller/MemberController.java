@@ -1,11 +1,13 @@
 package org.depromeet.spot.application.member.controller;
 
-import java.util.List;
-
-import org.depromeet.spot.application.member.dto.request.MemberRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
+import org.depromeet.spot.application.member.dto.request.RegisterReq;
 import org.depromeet.spot.application.member.dto.response.MemberResponse;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
