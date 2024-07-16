@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.depromeet.spot.application.member.dto.request.MemberRequest;
 import org.depromeet.spot.application.member.dto.response.MemberResponse;
-import org.depromeet.spot.usecase.port.in.MemberUsecase;
+import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
