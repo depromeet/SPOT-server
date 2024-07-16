@@ -19,7 +19,7 @@ class PresignedUrlGeneratorTest {
     @BeforeEach
     void init() {
         ObjectStorageProperties objectStorageProperties =
-                new ObjectStorageProperties("accessKey", "secretKey", "bucketName");
+                new ObjectStorageProperties("accessKey", "secretKey");
         FakeAmazonS3Config amazonS3 = new FakeAmazonS3Config(objectStorageProperties);
 
         FakeTimeUsecase fakeTimeUsecase = new FakeTimeUsecase("2024-07-09 21:00:00");
@@ -30,7 +30,6 @@ class PresignedUrlGeneratorTest {
                 PresignedUrlGenerator.builder()
                         .amazonS3(amazonS3.getAmazonS3())
                         .fileNameGenerator(fileNameGenerator)
-                        .properties(objectStorageProperties)
                         .build();
     }
 
