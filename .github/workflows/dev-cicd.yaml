@@ -102,6 +102,7 @@ jobs:
                 host: ${{ secrets.DEV_NCP_SERVER_HOST }}
                 username: ${{ secrets.DEV_NCP_SERVER_USERNAME }}
                 password: ${{ secrets.DEV_NCP_SERVER_PASSWORD }}
+                port: ${{ secrets.DEV_NCP_SERVER_PORT }}
                 script: |
                     docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                     docker stop spot-server-dev || true
