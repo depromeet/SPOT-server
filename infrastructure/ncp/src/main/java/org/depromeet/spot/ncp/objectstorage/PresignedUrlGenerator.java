@@ -6,7 +6,6 @@ import java.util.Date;
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
 import org.depromeet.spot.common.exception.media.MediaException.InvalidReviewMediaException;
 import org.depromeet.spot.common.exception.media.MediaException.InvalidStadiumMediaException;
-import org.depromeet.spot.domain.media.Media;
 import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
 import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
@@ -37,14 +36,14 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     private static final long EXPIRE_MS = 1000 * 60 * 2L;
 
     @Override
-    public Media forReview(final Long userId, PresignedUrlRequest request) {
+    public String forReview(final Long userId, PresignedUrlRequest request) {
         isValidReviewMedia(request.getProperty(), request.getFileExtension());
 
         final ImageExtension fileExtension = ImageExtension.from(request.getFileExtension());
         final String fileName = fileNameGenerator.createReviewFileName(userId, fileExtension);
         final URL url = createPresignedUrl(reviewStorageProperties.bucketName(), fileName);
 
-        return new Media(url.toString(), fileName);
+        return url.toString();
     }
 
     // 1차 MVP에서 사진만 허용
@@ -59,7 +58,7 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     }
 
     @Override
-    public Media forStadiumSeat(PresignedUrlRequest request) {
+    public String forStadiumSeat(PresignedUrlRequest request) {
         isValidStadiumMedia(request.getProperty(), request.getFileExtension());
 
         final StadiumSeatMediaExtension fileExtension =
@@ -67,7 +66,7 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
         final String fileName = fileNameGenerator.createStadiumFileName(fileExtension);
         final URL url = createPresignedUrl(stadiumStorageProperties.bucketName(), fileName);
 
-        return new Media(url.toString(), fileName);
+        return url.toString();
     }
 
     private void isValidStadiumMedia(final MediaProperty property, final String fileExtension) {
