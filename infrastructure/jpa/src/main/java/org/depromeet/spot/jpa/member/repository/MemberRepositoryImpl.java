@@ -19,9 +19,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public List<Member> findByName(String name) {
-        val memberEntities = memberCustomRepository.findByName(name);
-        return memberEntities.stream().map(MemberEntity::toDomain).toList();
+    public Member findByIdToken(String idToken){
+        return memberJpaRepository.findByIdToken(idToken).toDomain();
     }
 
     @Override
