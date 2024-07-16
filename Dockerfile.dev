@@ -1,0 +1,7 @@
+FROM gradle:7.4-jdk17
+
+WORKDIR /app
+
+COPY . .
+
+CMD ["./gradlew", ":application:bootRun"]
