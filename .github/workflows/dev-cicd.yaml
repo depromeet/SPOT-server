@@ -1,0 +1,115 @@
+name: Build And Test
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "corretto"
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test --stacktrace --parallel
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+
+      - name: JUnit Report Action
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
+      - name: Store test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results
+          path: '**/build/test-results/test/TEST-*.xml'
+
+      - name: Test Report Summary
+        if: always()
+        run: |
+          echo '## Test Report Summary' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ./gradlew test --console=plain || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  deploy:
+      needs: build-and-test
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      runs-on: ubuntu-latest
+
+      steps:
+          -   name: Checkout code
+              uses: actions/checkout@v4
+
+          -   name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+
+          -   name: Login to DockerHub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+          -   name: Build and push Docker image
+              uses: docker/build-push-action@v4
+              with:
+                  context: .
+                  push: true
+                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:${{ github.sha }}
+
+          - name: Deploy to Dev NCP Server
+            uses: appleboy/ssh-action@master
+            with:
+                host: ${{ secrets.DEV_NCP_SERVER_HOST }}
+                username: ${{ secrets.DEV_NCP_SERVER_USERNAME }}
+                password: ${{ secrets.DEV_NCP_SERVER_PASSWORD }}
+                script: |
+                    docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                    docker stop spot-server-dev || true
+                    docker rm spot-server-dev || true
+                    docker run -d --name spot-server-dev \
+                      -p 8080:8080 \
+                      -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
+                      -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
+                      -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
+                      -e TZ=Asia/Seoul \
+                      ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                    docker system prune -af
