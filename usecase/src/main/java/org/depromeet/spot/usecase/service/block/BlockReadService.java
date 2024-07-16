@@ -18,9 +18,11 @@ import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.out.block.BlockRepository;
 import org.springframework.stereotype.Service;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class BlockReadService implements BlockReadUsecase {
 

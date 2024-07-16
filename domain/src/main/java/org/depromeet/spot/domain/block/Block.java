@@ -1,8 +1,10 @@
 package org.depromeet.spot.domain.block;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Block {
 
     private final Long id;
