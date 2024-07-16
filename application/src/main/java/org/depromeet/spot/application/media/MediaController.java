@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1")
+@RequestMapping("/api/v1")
 @Tag(name = "미디어 (이미지, 영상)")
 public class MediaController {
 
