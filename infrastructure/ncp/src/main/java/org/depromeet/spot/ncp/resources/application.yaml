@@ -1,0 +1,10 @@
+ncp:
+    object-storage:
+        accessKey: ${NCP_OBJECT_STORAGE_ACCESS_KEY}
+        secretKey: ${NCP_OBJECT_STORAGE_SECRET_KEY}
+    review-storage:
+        bucketName: "spot-image-bucket"
+        folderName: "review-images"
+    stadium-storage:
+        bucketName: "spot-image-bucket"
+        folderName: "stadium-images"

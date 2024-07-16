@@ -3,6 +3,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":usecase"))
     implementation(project(":infrastructure:jpa"))
+    implementation(project(":infrastructure:ncp"))
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
