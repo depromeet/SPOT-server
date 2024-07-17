@@ -2,7 +2,6 @@ package org.depromeet.spot.usecase.service.stadium;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
 import org.depromeet.spot.domain.stadium.Stadium;
@@ -41,7 +40,7 @@ public class StadiumReadService implements StadiumReadUsecase {
                                                                     t.getId(),
                                                                     t.getAlias(),
                                                                     t.getLabelRgbCode()))
-                                            .collect(Collectors.toList());
+                                            .toList();
 
                             return new StadiumHomeTeamInfo(
                                     stadium.getId(),
@@ -67,6 +66,7 @@ public class StadiumReadService implements StadiumReadUsecase {
                 .id(stadium.getId())
                 .name(stadium.getName())
                 .homeTeams(homeTeams)
+                .thumbnail(stadium.getMainImage())
                 .seatChartWithLabel(stadium.getLabeledSeatingChartImage())
                 .build();
     }
