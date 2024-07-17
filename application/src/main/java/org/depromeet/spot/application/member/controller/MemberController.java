@@ -1,11 +1,7 @@
 package org.depromeet.spot.application.member.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.application.member.dto.request.RegisterReq;
 import org.depromeet.spot.domain.member.Member;
@@ -19,6 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,13 +42,15 @@ public class MemberController {
         Member memberResult = memberUsecase.create(member);
 
         return jwtTokenUtil.getJWTToken(memberResult);
-        }
+    }
 
     @GetMapping("/{idCode}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Member 로그인 API")
-    public HttpHeaders login(@PathVariable("idCode")
-    @Parameter(name = "idCode", description = "sns idCode", required = true) String idCode) {
+    public HttpHeaders login(
+            @PathVariable("idCode")
+                    @Parameter(name = "idCode", description = "sns idCode", required = true)
+                    String idCode) {
 
         Member member = memberUsecase.login(idCode);
 
@@ -57,11 +61,10 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "닉네임 중복확인 API")
     public Boolean duplicatedNickname(
-        @PathVariable("nickname")
-        @Parameter(name = "nickname", description = "닉네임", required = true)
-        String nickname) {
+            @PathVariable("nickname")
+                    @Parameter(name = "nickname", description = "닉네임", required = true)
+                    String nickname) {
         Boolean result = memberUsecase.duplicatedNickname(nickname);
         return result;
     }
-
 }

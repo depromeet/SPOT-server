@@ -1,17 +1,20 @@
 package org.depromeet.spot.jpa.oauth.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor // 역직렬화를 위한 기본 생성자
@@ -77,44 +80,40 @@ public class KakaoUserInfoEntity extends BaseEntity {
         @JsonIgnoreProperties(ignoreUnknown = true)
         public class Profile {
 
-            //닉네임
+            // 닉네임
             @JsonProperty("nickname")
             public String nickName;
 
-            //프로필 미리보기 이미지 URL
+            // 프로필 미리보기 이미지 URL
             @JsonProperty("thumbnail_image_url")
             public String thumbnailImageUrl;
 
-            //프로필 사진 URL
+            // 프로필 사진 URL
             @JsonProperty("profile_image_url")
             public String profileImageUrl;
-
         }
     }
 
-    public Member toKakaoDomain(Member member){
+    public Member toKakaoDomain(Member member) {
         return Member.builder()
-            .email(kakaoAccount.email)
-            .name(kakaoAccount.name)
-            .nickname(member.getNickname())
-            .phoneNumber(kakaoAccount.phoneNumber)
-            .profileImage(kakaoAccount.profile.profileImageUrl)
-            .snsProvider(SnsProvider.KAKAO)
-            .idToken(getId().toString())
-            .role(MemberRole.ROLE_USER)
-            .teamId(member.getTeamId())
-            .createdAt(toLocalDateTime(connectedAt))
-            .build();
+                .email(kakaoAccount.email)
+                .name(kakaoAccount.name)
+                .nickname(member.getNickname())
+                .phoneNumber(kakaoAccount.phoneNumber)
+                .profileImage(kakaoAccount.profile.profileImageUrl)
+                .snsProvider(SnsProvider.KAKAO)
+                .idToken(getId().toString())
+                .role(MemberRole.ROLE_USER)
+                .teamId(member.getTeamId())
+                .createdAt(toLocalDateTime(connectedAt))
+                .build();
     }
 
-    public Member toLoginDomain(){
-        return Member.builder()
-            .idToken(getId().toString())
-            .build();
+    public Member toLoginDomain() {
+        return Member.builder().idToken(getId().toString()).build();
     }
 
-    public LocalDateTime toLocalDateTime(Date date){
+    public LocalDateTime toLocalDateTime(Date date) {
         return date.toInstant().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
     }
-
 }

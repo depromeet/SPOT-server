@@ -3,14 +3,15 @@ package org.depromeet.spot.jpa.member.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 import org.hibernate.annotations.ColumnDefault;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "members")
@@ -55,32 +56,32 @@ public class MemberEntity extends BaseEntity {
 
     public static MemberEntity from(Member member) {
         return new MemberEntity(
-            member.getEmail(),
-            member.getName(),
-            member.getNickname(),
-            member.getPhoneNumber(),
-            member.getLevel(),
-            member.getProfileImage(),
-            member.getSnsProvider().getValue(),
-            member.getIdToken(),
-            member.getTeamId(),
-            member.getRole().getValue());
+                member.getEmail(),
+                member.getName(),
+                member.getNickname(),
+                member.getPhoneNumber(),
+                member.getLevel(),
+                member.getProfileImage(),
+                member.getSnsProvider().getValue(),
+                member.getIdToken(),
+                member.getTeamId(),
+                member.getRole().getValue());
     }
 
     public Member toDomain() {
         return new Member(
-            this.getId(),
-            email,
-            name,
-            nickname,
-            phoneNumber,
-            level,
-            profileImage,
-            SnsProvider.valueOf(snsProvider),
-            idToken,
-            teamId,
-            MemberRole.valueOf(role),
-            this.getCreatedAt(),
-            this.getDeletedAt());
+                this.getId(),
+                email,
+                name,
+                nickname,
+                phoneNumber,
+                level,
+                profileImage,
+                SnsProvider.valueOf(snsProvider),
+                idToken,
+                teamId,
+                MemberRole.valueOf(role),
+                this.getCreatedAt(),
+                this.getDeletedAt());
     }
 }

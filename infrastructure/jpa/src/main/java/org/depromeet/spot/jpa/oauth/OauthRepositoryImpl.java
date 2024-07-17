@@ -1,7 +1,5 @@
 package org.depromeet.spot.jpa.oauth;
 
-import io.netty.handler.codec.http.HttpHeaderValues;
-import lombok.extern.slf4j.Slf4j;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.jpa.oauth.entity.KakaoTokenEntity;
 import org.depromeet.spot.jpa.oauth.entity.KakaoUserInfoEntity;
@@ -11,6 +9,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import io.netty.handler.codec.http.HttpHeaderValues;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -32,22 +33,33 @@ public class OauthRepositoryImpl implements OauthRepository {
     public String getKakaoAccessToken(String idCode) {
 
         // Webflux의 WebClient
-        KakaoTokenEntity kakaoTokenEntity = WebClient.create(KAUTH_TOKEN_URL_HOST).post()
-            .uri(uriBuilder -> uriBuilder
-                .scheme("https")
-                .path("/oauth/token")
-                .queryParam("grant_type", "authorization_code")
-                .queryParam("client_id", CLIENT_ID)
-                .queryParam("code", idCode)
-                .build(true))
-            .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
-            .retrieve()
-            // TODO : Custom Exception
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Invalid Parameter")))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
-            .bodyToMono(KakaoTokenEntity.class)
-            .block();
-
+        KakaoTokenEntity kakaoTokenEntity =
+                WebClient.create(KAUTH_TOKEN_URL_HOST)
+                        .post()
+                        .uri(
+                                uriBuilder ->
+                                        uriBuilder
+                                                .scheme("https")
+                                                .path("/oauth/token")
+                                                .queryParam("grant_type", "authorization_code")
+                                                .queryParam("client_id", CLIENT_ID)
+                                                .queryParam("code", idCode)
+                                                .build(true))
+                        .header(
+                                HttpHeaders.CONTENT_TYPE,
+                                HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
+                        .retrieve()
+                        // TODO : Custom Exception
+                        .onStatus(
+                                HttpStatusCode::is4xxClientError,
+                                clientResponse ->
+                                        Mono.error(new RuntimeException("Invalid Parameter")))
+                        .onStatus(
+                                HttpStatusCode::is5xxServerError,
+                                clientResponse ->
+                                        Mono.error(new RuntimeException("Internal Server Error")))
+                        .bodyToMono(KakaoTokenEntity.class)
+                        .block();
 
         log.info("Access Token : {}", kakaoTokenEntity.getAccessToken());
         log.info("Refresh Token : {}", kakaoTokenEntity.getRefreshToken());
@@ -72,28 +84,39 @@ public class OauthRepositoryImpl implements OauthRepository {
         return userInfo.toLoginDomain();
     }
 
-    public KakaoUserInfoEntity getUserInfo(String accessToken){
-        KakaoUserInfoEntity userInfo = WebClient.create(KAUTH_USER_URL_HOST)
-            .get()
-            .uri(uriBuilder -> uriBuilder
-                .scheme("https")
-                .path("/v2/user/me")
-                .build(true))
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken) // access token 인가
-            .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
-            .retrieve()
-            // TODO : Custom Exception
-            .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Invalid Parameter")))
-            .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
-            .bodyToMono(KakaoUserInfoEntity.class)
-            .block();
+    public KakaoUserInfoEntity getUserInfo(String accessToken) {
+        KakaoUserInfoEntity userInfo =
+                WebClient.create(KAUTH_USER_URL_HOST)
+                        .get()
+                        .uri(
+                                uriBuilder ->
+                                        uriBuilder.scheme("https").path("/v2/user/me").build(true))
+                        .header(
+                                HttpHeaders.AUTHORIZATION,
+                                "Bearer " + accessToken) // access token 인가
+                        .header(
+                                HttpHeaders.CONTENT_TYPE,
+                                HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
+                        .retrieve()
+                        // TODO : Custom Exception
+                        .onStatus(
+                                HttpStatusCode::is4xxClientError,
+                                clientResponse ->
+                                        Mono.error(new RuntimeException("Invalid Parameter")))
+                        .onStatus(
+                                HttpStatusCode::is5xxServerError,
+                                clientResponse ->
+                                        Mono.error(new RuntimeException("Internal Server Error")))
+                        .bodyToMono(KakaoUserInfoEntity.class)
+                        .block();
 
         log.info("kakao AuthId : {} ", userInfo.getId());
         log.info("nickname : {} ", userInfo.getKakaoAccount().getProfile().getNickName());
-        log.info("ProfileImageUrl : {} ", userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
+        log.info(
+                "ProfileImageUrl : {} ",
+                userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
         log.info("kakao user info : {}", userInfo);
 
         return userInfo;
     }
 }
-

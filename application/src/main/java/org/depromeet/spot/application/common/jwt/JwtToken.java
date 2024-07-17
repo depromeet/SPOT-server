@@ -1,12 +1,14 @@
 package org.depromeet.spot.application.common.jwt;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.Collection;
+import java.util.List;
+
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import java.util.Collection;
-import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
@@ -41,9 +43,7 @@ public class JwtToken implements Authentication {
     }
 
     @Override
-    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-    }
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {}
 
     @Override
     public String getName() {

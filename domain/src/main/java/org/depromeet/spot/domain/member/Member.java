@@ -1,10 +1,12 @@
 package org.depromeet.spot.domain.member;
 
-import lombok.Builder;
-import lombok.Getter;
+import java.time.LocalDateTime;
+
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
-import java.time.LocalDateTime;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
@@ -25,19 +27,19 @@ public class Member {
     private final LocalDateTime deletedAt;
 
     public Member(
-        Long id,
-        String email,
-        String name,
-        String nickname,
-        String phoneNumber,
-        Integer level,
-        String profileImage,
-        SnsProvider snsProvider,
-        String idToken,
-        Long teamId,
-        MemberRole role,
-        LocalDateTime createdAt,
-        LocalDateTime deletedAt) {
+            Long id,
+            String email,
+            String name,
+            String nickname,
+            String phoneNumber,
+            Integer level,
+            String profileImage,
+            SnsProvider snsProvider,
+            String idToken,
+            Long teamId,
+            MemberRole role,
+            LocalDateTime createdAt,
+            LocalDateTime deletedAt) {
         this.id = id;
         this.email = email;
         this.name = name;

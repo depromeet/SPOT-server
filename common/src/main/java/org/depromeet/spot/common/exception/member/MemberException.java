@@ -23,5 +23,4 @@ public abstract class MemberException extends BusinessException {
             super(MemberErrorCode.MEMBER_NICKNAME_CONFLICT);
         }
     }
-
 }

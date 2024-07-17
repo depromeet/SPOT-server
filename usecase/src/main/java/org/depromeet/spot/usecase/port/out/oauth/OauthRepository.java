@@ -9,5 +9,4 @@ public interface OauthRepository {
     Member getRegisterUserInfo(String accesstoken, Member member);
 
     Member getLoginUserInfo(String accesstoken);
-
 }
