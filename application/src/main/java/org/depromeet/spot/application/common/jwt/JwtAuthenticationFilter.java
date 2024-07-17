@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         // Swagger UI에서 사용하는 외부 라ㅇ이브러리 제공 엔드포인트 : "/webjars/**"
                         // Swagger UI에서 사용하는 리소스 제공 엔드포인트 : "/swagger-resources/**"
                         // 로그인, 회원가입은 제외
-                        "/swagger-ui", "/v3/api-docs", "/api/v1/members", "/kakao/");
+                        "/swagger-ui", "/v3/api-docs", "/api/v1/members", "/kakao/", "/api/v1/");
 
         // 현재 URL 이 LIST 안에 포함되있는걸로 시작하는가?
         boolean flag = list.stream().anyMatch(url -> request.getRequestURI().startsWith(url));
