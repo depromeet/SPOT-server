@@ -8,8 +8,6 @@ import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.oauth.OauthRepository;
 import org.springframework.stereotype.Service;
 
-import com.sun.jdi.request.DuplicateRequestException;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,7 +46,8 @@ public class MemberService implements MemberUsecase {
 
     @Override
     public Boolean duplicatedNickname(String nickname) {
-        if (memberRepository.existsByNickname(nickname)) throw new DuplicateRequestException();
+        if (memberRepository.existsByNickname(nickname))
+            throw new MemberNicknameConflictException();
         return Boolean.FALSE;
     }
 }
