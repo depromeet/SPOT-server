@@ -1,5 +1,6 @@
 package org.depromeet.spot.usecase.service.review;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.depromeet.spot.domain.review.KeywordCount;
@@ -27,6 +28,16 @@ public class ReviewReadService implements ReviewReadUsecase {
         Long totalCount = reviewRepository.countByBlockId(stadiumId, blockId, rowId, seatNumber);
         List<KeywordCount> topKeywords =
                 reviewRepository.findTopKeywordsByBlockId(stadiumId, blockId, TOP_KEYWORDS_LIMIT);
+
+        return new ReviewListResult(reviews, topKeywords, totalCount, offset, limit);
+    }
+
+    @Override
+    public ReviewListResult findMyReviews(
+            Long userId, int offset, int limit, Integer year, Integer month) {
+        List<Review> reviews = reviewRepository.findByUserId(userId, offset, limit, year, month);
+        Long totalCount = reviewRepository.countByUserId(userId, year, month);
+        List<KeywordCount> topKeywords = Collections.emptyList(); // 사용자 리뷰에 대한 탑 키워드 모음 필요 없음
 
         return new ReviewListResult(reviews, topKeywords, totalCount, offset, limit);
     }

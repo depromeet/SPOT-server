@@ -115,4 +115,35 @@ class ReviewReadServiceTest {
         assertEquals(10, result.reviews().size());
         assertEquals(20, result.totalCount());
     }
+
+    @Test
+    void findMyReviews는_유저별_리뷰를_정상적으로_반환한다() {
+        // Given
+        Review review1 =
+                Review.builder()
+                        .id(1L)
+                        .userId(1L)
+                        .content("Great game!")
+                        .keywords(Collections.singletonList(createReviewKeyword(1L, 1L, 1L, true)))
+                        .build();
+        Review review2 =
+                Review.builder()
+                        .id(2L)
+                        .userId(1L)
+                        .content("Amazing view!")
+                        .keywords(
+                                Collections.singletonList(
+                                        createReviewKeyword(2L, 2L, 2L, true))) // 다른 keywordId 사용
+                        .build();
+        fakeReviewRepository.save(review1);
+        fakeReviewRepository.save(review2);
+
+        // When
+        ReviewListResult result = reviewReadService.findMyReviews(1L, 0, 10, null, null);
+
+        // Then
+        assertEquals(2, result.reviews().size());
+        assertEquals(2, result.totalCount());
+        assertEquals(0, result.topKeywords().size());
+    }
 }

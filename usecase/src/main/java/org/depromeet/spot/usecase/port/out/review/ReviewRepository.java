@@ -9,7 +9,11 @@ public interface ReviewRepository {
     List<Review> findByBlockId(
             Long stadiumId, Long blockId, Long rowId, Long seatNumber, int offset, int limit);
 
+    List<Review> findByUserId(Long userId, int offset, int limit, Integer year, Integer month);
+
     Long countByBlockId(Long stadiumId, Long blockId, Long rowId, Long seatNumber);
+
+    Long countByUserId(Long userId, Integer year, Integer month);
 
     List<KeywordCount> findTopKeywordsByBlockId(Long stadiumId, Long blockId, int limit);
 }

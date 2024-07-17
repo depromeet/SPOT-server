@@ -28,9 +28,22 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public List<Review> findByUserId(
+            Long userId, int offset, int limit, Integer year, Integer month) {
+        List<ReviewEntity> reviews =
+                reviewCustomRepository.findByUserIdWithFilters(userId, offset, limit, year, month);
+        return reviews.stream().map(this::fetchReviewDetails).collect(Collectors.toList());
+    }
+
+    @Override
     public Long countByBlockId(Long stadiumId, Long blockId, Long rowId, Long seatNumber) {
         return reviewCustomRepository.countByBlockIdWithFilters(
                 stadiumId, blockId, rowId, seatNumber);
+    }
+
+    @Override
+    public Long countByUserId(Long userId, Integer year, Integer month) {
+        return reviewCustomRepository.countByUserIdWithFilters(userId, year, month);
     }
 
     @Override
