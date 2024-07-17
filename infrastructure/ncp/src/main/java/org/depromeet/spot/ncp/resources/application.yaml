@@ -1,0 +1,4 @@
+ncp:
+    object-storage:
+        accessKey: ${NCP_OBJECT_STORAGE_ACCESS_KEY}
+        secretKey: ${NCP_OBJECT_STORAGE_SECRET_KEY}
