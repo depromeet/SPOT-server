@@ -19,4 +19,16 @@ public abstract class SectionException extends BusinessException {
             super(SectionErrorCode.SECTION_NOT_BELONG_TO_STADIUM);
         }
     }
+
+    public static class SectionNameDuplicateException extends SectionException {
+        public SectionNameDuplicateException() {
+            super(SectionErrorCode.DUPLICATE_NAME);
+        }
+    }
+
+    public static class SectionAliasDuplicateException extends SectionException {
+        public SectionAliasDuplicateException() {
+            super(SectionErrorCode.DUPLICATE_ALIAS);
+        }
+    }
 }

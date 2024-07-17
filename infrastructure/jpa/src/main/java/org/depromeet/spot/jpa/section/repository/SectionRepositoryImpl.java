@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class SectionRepositoryImpl implements SectionRepository {
 
     private final SectionJpaRepository sectionJpaRepository;
+    private final SectionJdbcRepository sectionJdbcRepository;
 
     @Override
     public List<Section> findAllByStadium(final Long stadiumId) {
@@ -23,8 +24,13 @@ public class SectionRepositoryImpl implements SectionRepository {
 
     @Override
     public Section save(Section section) {
-        // TODO: test를 위해 추가 -> 구역 생성 티켓 작업할 때 구현 예정
-        return null;
+        SectionEntity entity = sectionJpaRepository.save(SectionEntity.from(section));
+        return entity.toDomain();
+    }
+
+    @Override
+    public void saveAll(List<Section> sections) {
+        sectionJdbcRepository.createSections(sections);
     }
 
     @Override
