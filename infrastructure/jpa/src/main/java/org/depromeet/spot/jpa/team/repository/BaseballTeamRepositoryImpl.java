@@ -1,6 +1,7 @@
 package org.depromeet.spot.jpa.team.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.depromeet.spot.common.exception.team.TeamException.BaseballTeamNotFoundException;
 import org.depromeet.spot.domain.team.BaseballTeam;
@@ -40,5 +41,10 @@ public class BaseballTeamRepositoryImpl implements BaseballTeamRepository {
     @Override
     public boolean existsByNameIn(List<String> names) {
         return baseballTeamJpaRepository.existsByNameIn(names);
+    }
+
+    @Override
+    public boolean existsByIdIn(Set<Long> ids) {
+        return baseballTeamJpaRepository.existsByIdIn(ids);
     }
 }

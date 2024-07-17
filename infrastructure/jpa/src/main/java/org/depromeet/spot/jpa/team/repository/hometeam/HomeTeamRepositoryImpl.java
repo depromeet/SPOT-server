@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
+import org.depromeet.spot.domain.team.StadiumHomeTeam;
 import org.depromeet.spot.jpa.stadium.entity.StadiumEntity;
 import org.depromeet.spot.jpa.team.entity.BaseballTeamEntity;
+import org.depromeet.spot.jpa.team.entity.StadiumHomeTeamEntity;
 import org.depromeet.spot.usecase.port.out.team.HomeTeamRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class HomeTeamRepositoryImpl implements HomeTeamRepository {
 
     private final StadiumHomeTeamCustomRepository stadiumHomeTeamCustomRepository;
+    private final HomeTeamJpaRepository homeTeamJpaRepository;
 
     @Override
     public List<BaseballTeam> findAllHomeTeamByStadium(final Long stadiumId) {
@@ -38,5 +41,12 @@ public class HomeTeamRepositoryImpl implements HomeTeamRepository {
                                         entry.getValue().stream()
                                                 .map(BaseballTeamEntity::toDomain)
                                                 .toList()));
+    }
+
+    @Override
+    public void saveAll(List<StadiumHomeTeam> homeTeams) {
+        List<StadiumHomeTeamEntity> entities =
+                homeTeams.stream().map(StadiumHomeTeamEntity::from).toList();
+        homeTeamJpaRepository.saveAll(entities);
     }
 }

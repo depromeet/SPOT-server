@@ -1,8 +1,8 @@
 package org.depromeet.spot.usecase.port.in.team;
 
-import java.util.List;
+import java.util.Set;
 
 public interface CreateHomeTeamUsecase {
 
-    void createHomeTeam(Long stadiumId, List<Long> teamIds);
+    void createHomeTeams(Long stadiumId, Set<Long> teamIds);
 }

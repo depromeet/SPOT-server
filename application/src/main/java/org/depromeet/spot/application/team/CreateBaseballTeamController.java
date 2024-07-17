@@ -1,6 +1,7 @@
 package org.depromeet.spot.application.team;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -45,7 +46,7 @@ public class CreateBaseballTeamController {
     @Operation(summary = "특정 경기장에 홈 팀을 등록한다.")
     public void createHomeTeam(
             @PathVariable @Positive @NotNull final Long stadiumId,
-            @RequestBody @NotEmpty List<@Positive @NotNull Long> teamIds) {
-        createHomeTeamUsecase.createHomeTeam(stadiumId, teamIds);
+            @RequestBody @NotEmpty Set<@Positive @NotNull Long> teamIds) {
+        createHomeTeamUsecase.createHomeTeams(stadiumId, teamIds);
     }
 }
