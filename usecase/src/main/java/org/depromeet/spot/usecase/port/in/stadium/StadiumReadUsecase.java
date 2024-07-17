@@ -49,5 +49,6 @@ public interface StadiumReadUsecase {
     class StadiumNameInfo {
         private final Long id;
         private final String name;
+        private final boolean isActive;
     }
 }

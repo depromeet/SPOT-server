@@ -55,7 +55,9 @@ public class StadiumReadService implements StadiumReadUsecase {
     @Override
     public List<StadiumNameInfo> findAllNames() {
         List<Stadium> stadiums = stadiumRepository.findAll();
-        return stadiums.stream().map(s -> new StadiumNameInfo(s.getId(), s.getName())).toList();
+        return stadiums.stream()
+                .map(s -> new StadiumNameInfo(s.getId(), s.getName(), s.isActive()))
+                .toList();
     }
 
     @Override
