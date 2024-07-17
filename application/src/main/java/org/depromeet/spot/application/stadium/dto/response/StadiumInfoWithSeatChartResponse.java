@@ -8,7 +8,11 @@ import lombok.Builder;
 
 @Builder
 public record StadiumInfoWithSeatChartResponse(
-        Long id, String name, String seatChartWithLabel, List<HomeTeamInfoResponse> homeTeams) {
+        Long id,
+        String name,
+        String seatChartWithLabel,
+        String thumbnail,
+        List<HomeTeamInfoResponse> homeTeams) {
 
     public static StadiumInfoWithSeatChartResponse from(
             StadiumInfoWithSeatChart stadiumInfoWithSeatChart) {
@@ -21,6 +25,7 @@ public record StadiumInfoWithSeatChartResponse(
                 stadiumInfoWithSeatChart.getId(),
                 stadiumInfoWithSeatChart.getName(),
                 stadiumInfoWithSeatChart.getSeatChartWithLabel(),
+                stadiumInfoWithSeatChart.getThumbnail(),
                 homeTeams);
     }
 }

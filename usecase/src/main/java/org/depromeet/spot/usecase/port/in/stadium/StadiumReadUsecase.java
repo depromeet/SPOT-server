@@ -41,6 +41,7 @@ public interface StadiumReadUsecase {
         private final String name;
         private final List<HomeTeamInfo> homeTeams;
         private final String seatChartWithLabel;
+        private final String thumbnail;
     }
 
     @Getter
