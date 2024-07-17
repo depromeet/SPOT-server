@@ -1,7 +1,6 @@
 package org.depromeet.spot.application.team;
 
 import java.util.List;
-import java.util.Set;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -9,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import org.depromeet.spot.application.team.dto.request.CreateBaseballTeamReq;
+import org.depromeet.spot.application.team.dto.request.CreateHomeTeamReq;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.team.CreateBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.CreateHomeTeamUsecase;
@@ -46,7 +46,7 @@ public class CreateBaseballTeamController {
     @Operation(summary = "특정 경기장에 홈 팀을 등록한다.")
     public void createHomeTeam(
             @PathVariable @Positive @NotNull final Long stadiumId,
-            @RequestBody @NotEmpty Set<@Positive @NotNull Long> teamIds) {
-        createHomeTeamUsecase.createHomeTeams(stadiumId, teamIds);
+            @RequestBody @Valid CreateHomeTeamReq req) {
+        createHomeTeamUsecase.createHomeTeams(stadiumId, req.teamIds());
     }
 }
