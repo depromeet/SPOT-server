@@ -47,10 +47,6 @@ public class ReviewCustomRepository {
 
     public List<ReviewEntity> findByUserIdWithFilters(
             Long userId, int offset, int limit, Integer year, Integer month) {
-        System.out.printf(
-                "userId: %d, offset: %d, limit: %d, year: %d, month: %d\n",
-                userId, offset, limit, year, month);
-
         return queryFactory
                 .selectFrom(reviewEntity)
                 .where(
