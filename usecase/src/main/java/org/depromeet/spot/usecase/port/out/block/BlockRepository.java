@@ -11,4 +11,10 @@ public interface BlockRepository {
     List<Block> findAllBySection(Long sectionId);
 
     Map<Block, List<BlockRow>> findRowInfosBy(Long sectionId);
+
+    List<BlockRow> findAllByBlock(Long blockId);
+
+    boolean existsById(Long blockId);
+
+    Block findById(Long blockId);
 }

@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import org.depromeet.spot.common.exception.block.BlockException.BlockNotFoundException;
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase;
@@ -57,11 +58,36 @@ public class BlockReadService implements BlockReadUsecase {
         return result;
     }
 
-    public List<RowInfo> getBlockRowInfos(List<BlockRow> seats) {
+    @Override
+    public BlockInfo findBlockInfoBy(final Long blockId) {
+        Block block = findById(blockId);
+        List<BlockRow> infos = blockRepository.findAllByBlock(blockId);
+        List<RowInfo> rowInfos = getBlockRowInfos(infos);
+        return new BlockInfo(blockId, block.getCode(), rowInfos);
+    }
+
+    @Override
+    public Block findById(final Long blockId) {
+        return blockRepository.findById(blockId);
+    }
+
+    @Override
+    public boolean existsById(final Long blockId) {
+        return blockRepository.existsById(blockId);
+    }
+
+    @Override
+    public void checkExistsById(final Long blockId) {
+        if (!existsById(blockId)) {
+            throw new BlockNotFoundException("id : " + blockId);
+        }
+    }
+
+    public List<RowInfo> getBlockRowInfos(List<BlockRow> rows) {
         List<RowInfo> rowInfos = new ArrayList<>();
         int lastSeatNum = BLOCK_SEAT_START_NUM;
 
-        for (BlockRow row : seats) {
+        for (BlockRow row : rows) {
             int minSeatNum = lastSeatNum;
             int maxSeatNum = row.getMaxSeats();
             rowInfos.add(
