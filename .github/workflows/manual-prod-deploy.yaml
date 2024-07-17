@@ -1,0 +1,37 @@
+name: Manual Production Deployment
+
+on:
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: 'Tag to deploy  (v1.0.0)'
+                required: true
+
+jobs:
+    deploy-to-prod:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.inputs.tag }}
+
+            - name: Deploy to Prod NCP Server
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.PROD_NCP_SERVER_HOST }}
+                  username: ${{ secrets.PROD_NCP_SERVER_USERNAME }}
+                  password: ${{ secrets.PROD_NCP_SERVER_PASSWORD }}
+                  port: ${{ secrets.PROD_NCP_SERVER_PORT }}
+                  script: |
+                      docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:${{ github.event.inputs.tag }}
+                      docker stop spot-server-prod || true
+                      docker rm spot-server-prod || true
+                      docker run -d --name spot-server-prod \
+                        -p 8080:8080 \
+                        -e SPRING_DATASOURCE_URL=${{ secrets.PROD_DB_URL }} \
+                        -e SPRING_DATASOURCE_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
+                        -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
+                        -e TZ=Asia/Seoul \
+                        ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:${{ github.event.inputs.tag }}
+                      docker system prune -af
