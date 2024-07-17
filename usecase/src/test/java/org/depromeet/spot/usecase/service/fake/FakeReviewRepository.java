@@ -76,6 +76,27 @@ public class FakeReviewRepository implements ReviewRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Review> findByUserId(
+            Long userId, int offset, int limit, Integer year, Integer month) {
+        return data.stream()
+                .filter(review -> review.getUserId().equals(userId))
+                .filter(review -> year == null || review.getCreatedAt().getYear() == year)
+                .filter(review -> month == null || review.getCreatedAt().getMonthValue() == month)
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long countByUserId(Long userId, Integer year, Integer month) {
+        return data.stream()
+                .filter(review -> review.getUserId().equals(userId))
+                .filter(review -> year == null || review.getCreatedAt().getYear() == year)
+                .filter(review -> month == null || review.getCreatedAt().getMonthValue() == month)
+                .count();
+    }
+
     public void save(Review review) {
         data.add(review);
     }
