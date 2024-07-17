@@ -3,11 +3,9 @@ name: Build And Test
 on:
   push:
     branches:
-      - dev
       - main
   pull_request:
     branches:
-      - dev
       - main
 
 jobs:
@@ -72,7 +70,7 @@ jobs:
 
   deploy:
       needs: build-and-test
-      if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       runs-on: ubuntu-latest
 
       steps:
@@ -114,3 +112,24 @@ jobs:
                       -e TZ=Asia/Seoul \
                       ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                     docker system prune -af
+
+  create-release:
+      runs-on: ubuntu-latest
+      permissions:
+          contents: write
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+
+          - name: Bump version and push tag
+            id: tag_version
+            uses: mathieudutour/github-tag-action@v6.1
+            with:
+                github_token: ${{ secrets.SPOT_GITHUB_TOKEN }}
+
+          - name: Create a GitHub release
+            uses: ncipollo/release-action@v1
+            with:
+                tag: ${{ steps.tag_version.outputs.new_tag }}
+                name: Release ${{ steps.tag_version.outputs.new_tag }}
+                body: ${{ steps.tag_version.outputs.changelog }}
