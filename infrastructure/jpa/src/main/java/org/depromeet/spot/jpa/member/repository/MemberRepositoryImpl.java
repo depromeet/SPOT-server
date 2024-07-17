@@ -1,5 +1,7 @@
 package org.depromeet.spot.jpa.member.repository;
 
+import java.util.Optional;
+
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.jpa.member.entity.MemberEntity;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
@@ -20,8 +22,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Member findByIdToken(String idToken) {
-        return memberJpaRepository.findByIdToken(idToken).toDomain();
+    public Optional<Member> findByIdToken(String idToken) {
+        return memberJpaRepository.findByIdToken(idToken).map(MemberEntity::toDomain);
     }
 
     @Override
