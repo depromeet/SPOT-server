@@ -2,40 +2,45 @@ package org.depromeet.spot.domain.member;
 
 import java.time.LocalDateTime;
 
+import org.depromeet.spot.domain.member.enums.MemberRole;
+import org.depromeet.spot.domain.member.enums.SnsProvider;
+
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Member {
 
-    private final Long userId;
+    private final Long id;
     private final String email;
     private final String name;
     private final String nickname;
     private final String phoneNumber;
     private final Integer level;
     private final String profileImage;
-    private final String snsProvider;
+    private final SnsProvider snsProvider;
     private final String idToken;
-    private final String myTeam;
-    private final Integer role;
+    private final Long teamId;
+    private final MemberRole role;
     private final LocalDateTime createdAt;
     private final LocalDateTime deletedAt;
 
     public Member(
-            Long userId,
+            Long id,
             String email,
             String name,
             String nickname,
             String phoneNumber,
             Integer level,
             String profileImage,
-            String snsProvider,
+            SnsProvider snsProvider,
             String idToken,
-            String myTeam,
-            Integer role,
+            Long teamId,
+            MemberRole role,
             LocalDateTime createdAt,
             LocalDateTime deletedAt) {
-        this.userId = userId;
+        this.id = id;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -44,7 +49,7 @@ public class Member {
         this.profileImage = profileImage;
         this.snsProvider = snsProvider;
         this.idToken = idToken;
-        this.myTeam = myTeam;
+        this.teamId = teamId;
         this.role = role;
         this.createdAt = createdAt;
         this.deletedAt = deletedAt;
