@@ -12,6 +12,10 @@ public abstract class TeamException extends BusinessException {
         public BaseballTeamNotFoundException() {
             super(TeamErrorCode.BASEBALL_TEAM_NOT_FOUND);
         }
+
+        public BaseballTeamNotFoundException(Long id) {
+            super(TeamErrorCode.BASEBALL_TEAM_NOT_FOUND.appended(" : " + id));
+        }
     }
 
     public static class InvalidBaseballTeamNameException extends TeamException {
