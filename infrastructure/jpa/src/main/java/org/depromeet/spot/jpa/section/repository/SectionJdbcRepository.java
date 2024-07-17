@@ -20,7 +20,7 @@ public class SectionJdbcRepository {
     public void createSections(List<Section> sections) {
         jdbcTemplate.batchUpdate(
                 "insert into sections"
-                        + "(section_id, name, alias, red, green, blue) values (?, ?, ?, ?, ?, ?)",
+                        + "(stadium_id, name, alias, red, green, blue) values (?, ?, ?, ?, ?, ?)",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
