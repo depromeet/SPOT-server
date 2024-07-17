@@ -46,7 +46,7 @@ public class StadiumReadController {
     public List<StadiumNameInfoResponse> findAllNames() {
         List<StadiumNameInfo> infos = stadiumReadUsecase.findAllNames();
         return infos.stream()
-                .map(t -> new StadiumNameInfoResponse(t.getId(), t.getName()))
+                .map(t -> new StadiumNameInfoResponse(t.getId(), t.getName(), t.isActive()))
                 .toList();
     }
 
