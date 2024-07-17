@@ -1,6 +1,9 @@
 package org.depromeet.spot.usecase.service.section;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.usecase.port.in.section.CreateSectionUsecase;
@@ -19,8 +22,37 @@ public class CreateSectionService implements CreateSectionUsecase {
 
     @Override
     public void createAll(final Long stadiumId, List<CreateSectionCommand> commands) {
+        validate(commands);
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
+
         List<Section> sections = commands.stream().map(c -> c.toDomain(stadiumId)).toList();
         sectionRepository.saveAll(sections);
+    }
+
+    private void validate(List<CreateSectionCommand> commands) {
+        List<String> names = new ArrayList<>();
+        List<String> aliases = new ArrayList<>();
+        commands.forEach(
+                command -> {
+                    names.add(command.name());
+                    aliases.add(command.alias());
+                });
+
+        checkIsDuplicateName(names);
+        checkIsDuplicateAlias(aliases);
+    }
+
+    public void checkIsDuplicateName(List<String> names) {
+        Set<String> namesSet = new HashSet<>(names);
+        if (namesSet.size() < names.size()) {
+            // TODO: throw duplicateName error
+        }
+    }
+
+    public void checkIsDuplicateAlias(List<String> aliases) {
+        Set<String> aliasSet = new HashSet<>(aliases);
+        if (aliasSet.size() < aliases.size()) {
+            // TODO: throw duplicateAlias error
+        }
     }
 }
