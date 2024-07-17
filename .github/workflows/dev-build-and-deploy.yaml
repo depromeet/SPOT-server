@@ -125,7 +125,7 @@ jobs:
             id: tag_version
             uses: mathieudutour/github-tag-action@v6.1
             with:
-                github_token: ${{ secrets.SPOT_GITHUB_TOKEN }}
+                github_token: ${{ secrets.GITHUB_TOKEN }}
 
           - name: Create a GitHub release
             uses: ncipollo/release-action@v1
