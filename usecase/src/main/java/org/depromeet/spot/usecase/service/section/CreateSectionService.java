@@ -37,7 +37,10 @@ public class CreateSectionService implements CreateSectionUsecase {
         commands.forEach(
                 command -> {
                     names.add(command.name());
-                    aliases.add(command.alias());
+                    // alias는 nullable하기 때문에 체크 필요 -> name은 request에서 NN validation 완료
+                    if (command.alias() != null) {
+                        aliases.add(command.alias());
+                    }
                 });
 
         checkIsDuplicateName(names);
