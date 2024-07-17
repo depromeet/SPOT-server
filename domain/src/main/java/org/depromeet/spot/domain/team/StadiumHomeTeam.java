@@ -1,9 +1,11 @@
 package org.depromeet.spot.domain.team;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class StadiumHomeTeam {
 
