@@ -2,6 +2,8 @@ package org.depromeet.spot.usecase.port.in.block;
 
 import java.util.List;
 
+import org.depromeet.spot.domain.block.Block;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +13,14 @@ public interface BlockReadUsecase {
     List<BlockCodeInfo> findCodeInfosByStadium(Long stadiumId, Long sectionId);
 
     List<BlockInfo> findAllBlockInfoBy(final Long stadiumId, final Long sectionId);
+
+    BlockInfo findBlockInfoBy(final Long blockId);
+
+    Block findById(Long blockId);
+
+    boolean existsById(Long blockId);
+
+    void checkExistsById(Long blockId);
 
     @Getter
     @AllArgsConstructor

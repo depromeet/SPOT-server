@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.block.BlockException.BlockNotFoundException;
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.jpa.block.entity.BlockEntity;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class BlockRepositoryImpl implements BlockRepository {
 
     private final BlockJpaRepository blockJpaRepository;
+    private final BlockRowJpaRepository blockRowJpaRepository;
     private final BlockCustomRepository blockCustomRepository;
 
     @Override
@@ -38,5 +40,24 @@ public class BlockRepositoryImpl implements BlockRepository {
                                         entry.getValue().stream()
                                                 .map(BlockRowEntity::toDomain)
                                                 .toList()));
+    }
+
+    @Override
+    public List<BlockRow> findAllByBlock(final Long blockId) {
+        List<BlockRowEntity> entities =
+                blockRowJpaRepository.findAllByBlockIdOrderByNumberAsc(blockId);
+        return entities.stream().map(BlockRowEntity::toDomain).toList();
+    }
+
+    @Override
+    public boolean existsById(final Long blockId) {
+        return blockJpaRepository.existsById(blockId);
+    }
+
+    @Override
+    public Block findById(final Long blockId) {
+        BlockEntity entity =
+                blockJpaRepository.findById(blockId).orElseThrow(BlockNotFoundException::new);
+        return entity.toDomain();
     }
 }
