@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.depromeet.spot.common.exception.section.SectionException.SectionAliasDuplicateException;
+import org.depromeet.spot.common.exception.section.SectionException.SectionNameDuplicateException;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.usecase.port.in.section.CreateSectionUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
@@ -45,14 +47,14 @@ public class CreateSectionService implements CreateSectionUsecase {
     public void checkIsDuplicateName(List<String> names) {
         Set<String> namesSet = new HashSet<>(names);
         if (namesSet.size() < names.size()) {
-            // TODO: throw duplicateName error
+            throw new SectionNameDuplicateException();
         }
     }
 
     public void checkIsDuplicateAlias(List<String> aliases) {
         Set<String> aliasSet = new HashSet<>(aliases);
         if (aliasSet.size() < aliases.size()) {
-            // TODO: throw duplicateAlias error
+            throw new SectionAliasDuplicateException();
         }
     }
 }
