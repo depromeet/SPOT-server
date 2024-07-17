@@ -33,11 +33,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         List<String> list =
                 List.of(
+                        // swagger-ui와 v3/api-docs는 스웨거를 제외하기 위해 등록.
+                        // 혹시나 스웨거 자원 사용 에러 발생 시 아래 두 가지 추가 필요함.
+                        // Swagger UI에서 사용하는 외부 라ㅇ이브러리 제공 엔드포인트 : "/webjars/**"
+                        // Swagger UI에서 사용하는 리소스 제공 엔드포인트 : "/swagger-resources/**"
                         // 로그인, 회원가입은 제외
-                        "/api/v1/members", "/kakao/");
-        boolean flag = list.stream().anyMatch(url -> request.getRequestURI().startsWith(url));
-        log.info("flag : {}", flag);
+                        "/swagger-ui", "/v3/api-docs", "/api/v1/members", "/kakao/");
+
         // 현재 URL 이 LIST 안에 포함되있는걸로 시작하는가?
+        boolean flag = list.stream().anyMatch(url -> request.getRequestURI().startsWith(url));
+
         if (flag) {
             filterChain.doFilter(request, response);
             return;
