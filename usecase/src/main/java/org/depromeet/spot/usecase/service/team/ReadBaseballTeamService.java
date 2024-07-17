@@ -30,9 +30,11 @@ public class ReadBaseballTeamService implements ReadBaseballTeamUsecase {
     }
 
     @Override
-    public void checkExistsBy(Set<Long> teamIds) {
-        if (!baseballTeamRepository.existsByIdIn(teamIds)) {
-            throw new BaseballTeamNotFoundException();
+    public void areAllTeamIdsExist(Set<Long> teamIds) {
+        for (Long teamId : teamIds) {
+            if (!baseballTeamRepository.existsById(teamId)) {
+                throw new BaseballTeamNotFoundException(teamId);
+            }
         }
     }
 }

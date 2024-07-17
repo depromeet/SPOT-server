@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.depromeet.spot.common.exception.team.TeamException.BaseballTeamNotFoundException;
@@ -61,7 +60,7 @@ public class FakeBaseballTeamRepository implements BaseballTeamRepository {
     }
 
     @Override
-    public boolean existsByIdIn(Set<Long> ids) {
-        return data.stream().map(BaseballTeam::getId).anyMatch(ids::contains);
+    public boolean existsById(Long id) {
+        return data.stream().anyMatch(team -> team.getId().equals(id));
     }
 }

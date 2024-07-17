@@ -11,5 +11,5 @@ public interface ReadBaseballTeamUsecase {
 
     List<BaseballTeam> findAll();
 
-    void checkExistsBy(Set<Long> teamIds);
+    void areAllTeamIdsExist(Set<Long> teamIds);
 }

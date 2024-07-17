@@ -24,7 +24,7 @@ public class CreateHomeTeamService implements CreateHomeTeamUsecase {
     @Override
     public void createHomeTeams(final Long stadiumId, Set<Long> teamIds) {
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
-        readBaseballTeamUsecase.checkExistsBy(teamIds);
+        readBaseballTeamUsecase.areAllTeamIdsExist(teamIds);
         List<StadiumHomeTeam> homeTeams = new ArrayList<>();
         teamIds.forEach(
                 teamId ->
