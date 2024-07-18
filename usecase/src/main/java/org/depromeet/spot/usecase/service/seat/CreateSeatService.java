@@ -56,6 +56,7 @@ public class CreateSeatService implements CreateSeatUsecase {
                                 .row(row)
                                 .seatNumber(blockSeatNum)
                                 .build());
+                blockSeatNum++;
             } while (blockSeatNum <= row.getMaxSeats());
         }
         return seats;
