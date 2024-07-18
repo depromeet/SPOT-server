@@ -1,8 +1,8 @@
 spring:
     datasource:
-        url: jdbc:mysql://mysql:3306/spot
+        url: jdbc:mysql://localhost:3306/spot
         username: test1234
-        password: test1234
+        password: DPM15thspot!
         driver-class-name: com.mysql.cj.jdbc.Driver
 
     jpa:
@@ -33,8 +33,3 @@ decorator:
             enable-logging: true
 
 # 필요한 경우 추가 설정
-
-oauth:
-    clientId: ${CLIENT_ID}
-    kauthTokenUrlHost: ${KAUTH_TOKEN_URL_HOST}
-    kauthUserUrlHost: ${KAUTH_USER_URL_HOST}

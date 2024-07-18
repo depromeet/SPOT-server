@@ -19,14 +19,14 @@ import reactor.core.publisher.Mono;
 public class OauthRepositoryImpl implements OauthRepository {
 
     // kakao에서 발급 받은 clientID
-    @Value("${CLIENT_ID}")
+    @Value("${oauth.clientId}")
     private String CLIENT_ID;
 
-    @Value("${KAUTH_TOKEN_URL_HOST}")
+    @Value("${oauth.kauthTokenUrlHost}")
     private String KAUTH_TOKEN_URL_HOST;
 
     // 엑세스 토큰으로 카카오에서 유저 정보 받아오기
-    @Value("${KAUTH_USER_URL_HOST}")
+    @Value("${oauth.kauthUserUrlHost}")
     private String KAUTH_USER_URL_HOST;
 
     @Override
