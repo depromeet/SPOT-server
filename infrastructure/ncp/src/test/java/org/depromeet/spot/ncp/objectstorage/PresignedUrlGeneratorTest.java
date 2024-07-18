@@ -3,8 +3,6 @@ package org.depromeet.spot.ncp.objectstorage;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
-import org.depromeet.spot.common.exception.media.MediaException.InvalidReviewMediaException;
-import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.ncp.mock.FakeAmazonS3Config;
 import org.depromeet.spot.ncp.mock.FakeTimeUsecase;
 import org.depromeet.spot.ncp.property.ObjectStorageProperties;
@@ -34,22 +32,10 @@ class PresignedUrlGeneratorTest {
     }
 
     @Test
-    void 리뷰_속성이_아니라면_리뷰_미디어를_생성할_수_없다() {
+    void 이미지_확장자가_아니라면_리뷰_미디어를_생성할_수_없다() {
         // given
         Long userId = 1L;
-        PresignedUrlRequest request = new PresignedUrlRequest("jpg", MediaProperty.STADIUM);
-
-        // when
-        // then
-        assertThatThrownBy(() -> presignedUrlGenerator.forReview(userId, request))
-                .isInstanceOf(InvalidReviewMediaException.class);
-    }
-
-    @Test
-    void 리뷰_미디어_확장자가_아니라면_리뷰_미디어를_생성할_수_없다() {
-        // given
-        Long userId = 1L;
-        PresignedUrlRequest request = new PresignedUrlRequest("mp4", MediaProperty.REVIEW);
+        PresignedUrlRequest request = new PresignedUrlRequest("mp4");
 
         // when
         // then

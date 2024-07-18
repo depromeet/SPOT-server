@@ -4,8 +4,6 @@ import java.net.URL;
 import java.util.Date;
 
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
-import org.depromeet.spot.common.exception.media.MediaException.InvalidReviewMediaException;
-import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
 import org.depromeet.spot.ncp.config.ObjectStorageConfig;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
@@ -33,24 +31,19 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     private static final long EXPIRE_MS = 1000 * 60 * 5L;
 
     @Override
-    public String forReview(final Long userId, PresignedUrlRequest request) {
-        isValidReviewMedia(request.getProperty(), request.getFileExtension());
+    public String forImage(final Long memberId, PresignedUrlRequest request) {
+        isValidImageExtension(request.getFileExtension());
 
         final ImageExtension fileExtension = ImageExtension.from(request.getFileExtension());
         final String folderName = request.getProperty().getFolderName();
         final String fileName =
-                fileNameGenerator.createReviewFileName(userId, fileExtension, folderName);
+                fileNameGenerator.createFileName(memberId, fileExtension, folderName);
         final URL url = createPresignedUrl(fileName);
 
         return url.toString();
     }
 
-    // 1차 MVP에서 사진만 허용
-    private void isValidReviewMedia(final MediaProperty property, final String fileExtension) {
-        if (property != MediaProperty.REVIEW) {
-            throw new InvalidReviewMediaException();
-        }
-
+    private void isValidImageExtension(final String fileExtension) {
         if (!ImageExtension.isValid(fileExtension)) {
             throw new InvalidExtensionException(fileExtension);
         }
