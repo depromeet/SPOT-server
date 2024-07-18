@@ -385,3 +385,4 @@ gradle-app.setting
 .env
 
 *.application-jwt.yml
+application-jwt.yml
