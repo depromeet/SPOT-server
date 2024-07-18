@@ -10,10 +10,12 @@ import org.depromeet.spot.usecase.port.in.team.CreateHomeTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.out.team.HomeTeamRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CreateHomeTeamService implements CreateHomeTeamUsecase {
 

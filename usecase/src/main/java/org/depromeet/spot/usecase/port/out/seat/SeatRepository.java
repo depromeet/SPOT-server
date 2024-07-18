@@ -7,4 +7,6 @@ import org.depromeet.spot.domain.seat.Seat;
 public interface SeatRepository {
 
     void saveAll(List<Seat> seats);
+
+    Seat findById(Long seatId);
 }
