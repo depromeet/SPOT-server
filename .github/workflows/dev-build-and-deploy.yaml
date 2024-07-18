@@ -111,6 +111,7 @@ jobs:
                       -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
                       -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
                       -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
+                      -e SPRING_JWT_SECRET=${{ secrets.JWT_SECRET }} \
                       -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
                       -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
                       -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
