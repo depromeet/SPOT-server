@@ -40,6 +40,11 @@ public class FakeSectionRepository implements SectionRepository {
     }
 
     @Override
+    public void saveAll(List<Section> sections) {
+        sections.forEach(this::save);
+    }
+
+    @Override
     public boolean existsInStadium(Long stadiumId, Long sectionId) {
         return data.stream()
                 .filter(section -> section.getStadiumId().equals(sectionId))

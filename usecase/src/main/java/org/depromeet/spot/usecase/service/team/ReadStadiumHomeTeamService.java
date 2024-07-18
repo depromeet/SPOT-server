@@ -6,7 +6,7 @@ import java.util.Map;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
-import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
+import org.depromeet.spot.usecase.port.out.team.HomeTeamRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReadStadiumHomeTeamService implements ReadStadiumHomeTeamUsecase {
 
-    private final BaseballTeamRepository baseballTeamRepository;
+    private final HomeTeamRepository homeTeamRepository;
 
     @Override
     public List<HomeTeamInfo> findByStadium(final Long stadiumId) {
-        List<BaseballTeam> teams = baseballTeamRepository.findAllHomeTeamByStadium(stadiumId);
+        List<BaseballTeam> teams = homeTeamRepository.findAllHomeTeamByStadium(stadiumId);
         return teams.stream()
                 .map(t -> new HomeTeamInfo(t.getId(), t.getAlias(), t.getLabelRgbCode()))
                 .toList();
@@ -27,6 +27,6 @@ public class ReadStadiumHomeTeamService implements ReadStadiumHomeTeamUsecase {
 
     @Override
     public Map<Stadium, List<BaseballTeam>> findAllStadiumHomeTeam() {
-        return baseballTeamRepository.findAllStadiumHomeTeam();
+        return homeTeamRepository.findAllStadiumHomeTeam();
     }
 }
