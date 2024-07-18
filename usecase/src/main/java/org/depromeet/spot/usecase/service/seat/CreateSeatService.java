@@ -11,6 +11,7 @@ import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase;
 import org.depromeet.spot.usecase.port.in.block.ReadBlockRowUsecase;
 import org.depromeet.spot.usecase.port.in.seat.CreateSeatUsecase;
+import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class CreateSeatService implements CreateSeatUsecase {
 
     private final ReadBlockRowUsecase readBlockRowUsecase;
     private final BlockReadUsecase blockReadUsecase;
+    private final SeatRepository seatRepository;
 
     private static final int BLOCK_SEAT_START_NUM = 1;
 
@@ -37,6 +39,7 @@ public class CreateSeatService implements CreateSeatUsecase {
         Stadium stadium = Stadium.builder().id(block.getStadiumId()).build();
         Section section = Section.builder().id(block.getSectionId()).build();
         List<Seat> seats = createAutoIncrementSeats(block, stadium, section, rows);
+        seatRepository.saveAll(seats);
     }
 
     public List<Seat> createAutoIncrementSeats(
