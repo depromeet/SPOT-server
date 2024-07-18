@@ -9,6 +9,7 @@ import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.jpa.block.entity.BlockEntity;
 import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
+import org.depromeet.spot.jpa.block.repository.row.BlockRowJpaRepository;
 import org.depromeet.spot.usecase.port.out.block.BlockRepository;
 import org.springframework.stereotype.Repository;
 
@@ -62,6 +63,11 @@ public class BlockRepositoryImpl implements BlockRepository {
     }
 
     @Override
+    public boolean existsByStadiumAndCode(Long stadiumId, String code) {
+        return blockJpaRepository.existsByStadiumIdAndCode(stadiumId, code);
+    }
+
+    @Override
     public Block findById(final Long blockId) {
         BlockEntity entity =
                 blockJpaRepository.findById(blockId).orElseThrow(BlockNotFoundException::new);
@@ -74,6 +80,12 @@ public class BlockRepositoryImpl implements BlockRepository {
                 blockJpaRepository
                         .findByStadiumIdAndCode(stadiumId, code)
                         .orElseThrow(BlockNotFoundException::new);
+        return entity.toDomain();
+    }
+
+    @Override
+    public Block save(Block block) {
+        BlockEntity entity = blockJpaRepository.save(BlockEntity.from(block));
         return entity.toDomain();
     }
 }
