@@ -7,7 +7,7 @@ import org.depromeet.spot.jpa.block.entity.BlockEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BlockJpaRepository extends JpaRepository<BlockEntity, Long> {
-    Optional<BlockEntity> findByCode(String code);
+    Optional<BlockEntity> findByStadiumIdAndCode(Long stadiumId, String code);
 
     List<BlockEntity> findAllBySectionId(Long sectionId);
 }

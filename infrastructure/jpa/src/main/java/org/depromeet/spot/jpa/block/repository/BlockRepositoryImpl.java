@@ -69,9 +69,11 @@ public class BlockRepositoryImpl implements BlockRepository {
     }
 
     @Override
-    public Block findByCode(String code) {
+    public Block findByStadiumAndCode(final Long stadiumId, final String code) {
         BlockEntity entity =
-                blockJpaRepository.findByCode(code).orElseThrow(BlockNotFoundException::new);
+                blockJpaRepository
+                        .findByStadiumIdAndCode(stadiumId, code)
+                        .orElseThrow(BlockNotFoundException::new);
         return entity.toDomain();
     }
 }

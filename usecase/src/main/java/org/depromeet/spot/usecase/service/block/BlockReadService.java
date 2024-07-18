@@ -60,7 +60,8 @@ public class BlockReadService implements BlockReadUsecase {
 
     @Override
     public BlockInfo findBlockInfoBy(final Long stadiumId, final String blockCode) {
-        Block block = findByCode(blockCode);
+        stadiumReadUsecase.checkIsExistsBy(stadiumId);
+        Block block = findByStadiumAndCode(stadiumId, blockCode);
         List<BlockRow> infos = blockRepository.findAllByBlock(blockCode);
         List<RowInfo> rowInfos = getBlockRowInfos(infos);
         return new BlockInfo(block.getId(), block.getCode(), rowInfos);
@@ -72,8 +73,8 @@ public class BlockReadService implements BlockReadUsecase {
     }
 
     @Override
-    public Block findByCode(final String code) {
-        return blockRepository.findByCode(code);
+    public Block findByStadiumAndCode(final Long stadiumId, final String code) {
+        return blockRepository.findByStadiumAndCode(code);
     }
 
     @Override

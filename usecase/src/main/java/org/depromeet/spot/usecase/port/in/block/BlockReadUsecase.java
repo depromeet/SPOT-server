@@ -18,7 +18,7 @@ public interface BlockReadUsecase {
 
     Block findById(Long blockId);
 
-    Block findByCode(String code);
+    Block findByStadiumAndCode(Long stadiumId, String code);
 
     boolean existsById(Long blockId);
 
