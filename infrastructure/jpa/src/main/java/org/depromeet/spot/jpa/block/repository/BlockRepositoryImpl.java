@@ -81,4 +81,10 @@ public class BlockRepositoryImpl implements BlockRepository {
                         .orElseThrow(BlockNotFoundException::new);
         return entity.toDomain();
     }
+
+    @Override
+    public Block save(Block block) {
+        BlockEntity entity = blockJpaRepository.save(BlockEntity.from(block));
+        return entity.toDomain();
+    }
 }

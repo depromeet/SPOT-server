@@ -23,4 +23,6 @@ public interface BlockRepository {
     Block findById(Long blockId);
 
     Block findByStadiumAndCode(Long stadiumId, String code);
+
+    Block save(Block block);
 }

@@ -33,14 +33,20 @@ public class CreateBlockService implements CreateBlockUsecase {
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
         sectionReadUsecase.checkIsExistsInStadium(stadiumId, sectionId);
         blockReadUsecase.checkIsDuplicateCode(stadiumId, command.code());
+        Block block = create(stadiumId, sectionId, command.code(), command.maxRows());
+        createRowUsecase.createAll(block, command.rowInfos());
+    }
+
+    public Block create(
+            final Long stadiumId, final Long sectionId, final String code, final int maxRows) {
         Block block =
                 Block.builder()
                         .sectionId(sectionId)
                         .stadiumId(stadiumId)
-                        .code(command.code())
-                        .maxRows(command.maxRows())
+                        .code(code)
+                        .maxRows(maxRows)
                         .build();
-        createRowUsecase.createAll(block, command.rowInfos());
+        return blockRepository.save(block);
     }
 
     public void checkRowSize(int blockMaxRow, List<CreateRowCommand> rowCommands) {
