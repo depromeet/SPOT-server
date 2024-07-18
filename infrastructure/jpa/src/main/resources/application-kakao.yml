@@ -1,4 +1,0 @@
-oauth:
-    clientId: 1f043adfbb8f5438907686f472d3b164
-    kauthTokenUrlHost: https://kauth.kakao.com
-    kauthUserUrlHost: https://kapi.kakao.com
