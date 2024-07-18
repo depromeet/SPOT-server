@@ -2,6 +2,7 @@ package org.depromeet.spot.usecase.service.seat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -40,10 +41,11 @@ class CreateSeatServiceTest {
         Stadium stadium = Stadium.builder().id(1L).build();
         Section section = Section.builder().id(1L).build();
         List<BlockRow> rows =
-                List.of(
-                        BlockRow.builder().number(1).maxSeats(10).build(),
-                        BlockRow.builder().number(2).maxSeats(14).build(),
-                        BlockRow.builder().number(3).maxSeats(18).build());
+                new ArrayList<>(
+                        List.of(
+                                BlockRow.builder().number(1).maxSeats(10).build(),
+                                BlockRow.builder().number(2).maxSeats(14).build(),
+                                BlockRow.builder().number(3).maxSeats(18).build()));
 
         // when
         List<Seat> seats =
