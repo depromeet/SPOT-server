@@ -383,3 +383,6 @@ gradle-app.setting
 /db/
 
 .env
+
+*.application-jwt.yml
+application-jwt.yml
