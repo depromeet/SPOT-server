@@ -3,11 +3,13 @@ package org.depromeet.spot.domain.review;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
+@AllArgsConstructor
 public class Review {
 
     private final Long id;
@@ -18,11 +20,30 @@ public class Review {
     private final Long rowId;
     private final Long seatNumber;
 
-    private final LocalDateTime dateTime; // 시간은 미표기
+    private final LocalDateTime dateTime;
     private final String content;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final LocalDateTime deletedAt;
     private final List<ReviewImage> images;
     private final List<ReviewKeyword> keywords;
+
+    public Review addImagesAndKeywords(
+            List<ReviewImage> newImages, List<ReviewKeyword> newKeywords) {
+        return new Review(
+                id,
+                userId,
+                stadiumId,
+                blockId,
+                seatId,
+                rowId,
+                seatNumber,
+                dateTime,
+                content,
+                createdAt,
+                updatedAt,
+                deletedAt,
+                newImages,
+                newKeywords);
+    }
 }

@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
 public class ReviewImage {
 
     private final Long id;
@@ -14,4 +14,8 @@ public class ReviewImage {
     private final String url;
     private final LocalDateTime createdAt;
     private final LocalDateTime deletedAt;
+
+    public static ReviewImage of(Long reviewId, String url) {
+        return ReviewImage.builder().reviewId(reviewId).url(url).build();
+    }
 }

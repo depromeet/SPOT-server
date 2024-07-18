@@ -8,6 +8,8 @@ public interface UpdateMemberUsecase {
 
     Member updateProfile(Long memberId, UpdateProfileCommand command);
 
+    void updateLevel(Long memberId, long reviewCnt);
+
     @Builder
     record UpdateProfileCommand(String profileImage, String nickname, Long teamId) {}
 }
