@@ -1,6 +1,7 @@
 package org.depromeet.spot.domain.review;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,6 @@ public class Review {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final LocalDateTime deletedAt;
+    private final List<ReviewImage> images;
+    private final List<ReviewKeyword> keywords;
 }

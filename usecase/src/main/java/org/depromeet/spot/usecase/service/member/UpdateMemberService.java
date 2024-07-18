@@ -29,4 +29,9 @@ public class UpdateMemberService implements UpdateMemberUsecase {
                 member.updateProfile(command.profileImage(), command.nickname(), command.teamId());
         return memberRepository.update(updateMember);
     }
+
+    @Override
+    public void updateLevel(Long memberId, long reviewCnt) {
+        // TODO
+    }
 }
