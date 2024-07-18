@@ -9,6 +9,7 @@ import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.jpa.block.entity.BlockEntity;
 import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
+import org.depromeet.spot.jpa.block.repository.row.BlockRowJpaRepository;
 import org.depromeet.spot.usecase.port.out.block.BlockRepository;
 import org.springframework.stereotype.Repository;
 
