@@ -1,9 +1,12 @@
 package org.depromeet.spot.application.media;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import org.depromeet.spot.application.media.dto.request.CreatePresignedUrlRequest;
 import org.depromeet.spot.application.media.dto.response.MediaUrlResponse;
+import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort.PresignedUrlRequest;
 import org.springframework.http.HttpStatus;
@@ -32,8 +35,20 @@ public class MediaController {
     public MediaUrlResponse createReviewImageUploadUrl(
             @PathVariable Long memberId, @RequestBody @Valid CreatePresignedUrlRequest request) {
         PresignedUrlRequest command =
-                new PresignedUrlRequest(request.fileExtension(), request.property());
-        String presignedUrl = createPresignedUrlPort.forReview(memberId, command);
+                new PresignedUrlRequest(request.fileExtension(), MediaProperty.REVIEW);
+        String presignedUrl = createPresignedUrlPort.forImage(memberId, command);
+        return new MediaUrlResponse(presignedUrl);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/members/{memberId}/profile/images")
+    @Operation(summary = "유저의 프로필 이미지 업로드 url을 생성합니다.")
+    public MediaUrlResponse createProfileImageUploadUrl(
+            @PathVariable @Positive @NotNull Long memberId,
+            @RequestBody @Valid CreatePresignedUrlRequest request) {
+        PresignedUrlRequest command =
+                new PresignedUrlRequest(request.fileExtension(), MediaProperty.PROFILE_IMAGE);
+        String presignedUrl = createPresignedUrlPort.forImage(memberId, command);
         return new MediaUrlResponse(presignedUrl);
     }
 }

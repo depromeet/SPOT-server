@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class Member {
 
     private final Long id;
@@ -26,32 +28,21 @@ public class Member {
     private final LocalDateTime createdAt;
     private final LocalDateTime deletedAt;
 
-    public Member(
-            Long id,
-            String email,
-            String name,
-            String nickname,
-            String phoneNumber,
-            Integer level,
-            String profileImage,
-            SnsProvider snsProvider,
-            String idToken,
-            Long teamId,
-            MemberRole role,
-            LocalDateTime createdAt,
-            LocalDateTime deletedAt) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
-        this.level = level;
-        this.profileImage = profileImage;
-        this.snsProvider = snsProvider;
-        this.idToken = idToken;
-        this.teamId = teamId;
-        this.role = role;
-        this.createdAt = createdAt;
-        this.deletedAt = deletedAt;
+    public Member updateProfile(String newProfileImage, String newNickname, Long newTeamId) {
+        return Member.builder()
+                .id(id)
+                .email(email)
+                .name(name)
+                .nickname(newNickname)
+                .phoneNumber(phoneNumber)
+                .level(level)
+                .profileImage(newProfileImage)
+                .snsProvider(snsProvider)
+                .idToken(idToken)
+                .teamId(newTeamId)
+                .role(role)
+                .createdAt(createdAt)
+                .deletedAt(deletedAt)
+                .build();
     }
 }

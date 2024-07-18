@@ -9,6 +9,7 @@ public enum MediaProperty {
     STADIUM_SEAT("stadium-seat-charts"),
     STADIUM_SEAT_LABEL("stadium-seat-label-charts"),
     TEAM_LOGO("team-logos"),
+    PROFILE_IMAGE("profile-images"),
     ;
 
     private final String folderName;
