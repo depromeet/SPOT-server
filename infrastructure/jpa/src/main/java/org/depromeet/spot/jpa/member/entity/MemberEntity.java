@@ -20,18 +20,18 @@ import lombok.NoArgsConstructor;
 public class MemberEntity extends BaseEntity {
 
     // TODO : email 받아온 후 nullable = false로 바꿔야함.
-    @Column(name = "email", nullable = true, unique = true, length = 50)
+    @Column(name = "email", unique = true, length = 50)
     private String email;
 
     // TODO : 이름 받아온 후 nullable = false로 바꿔야함.
-    @Column(name = "name", nullable = true, length = 20)
+    @Column(name = "name", length = 20)
     private String name;
 
     @Column(name = "nickname", nullable = false, unique = true, length = 10)
     private String nickname;
 
     // TODO : phone_number 받아온 후 nullable = false로 바꿔야함.
-    @Column(name = "phone_number", nullable = true, unique = true, length = 13)
+    @Column(name = "phone_number", unique = true, length = 13)
     private String phoneNumber;
 
     // TODO : ERD nullable로 변경
