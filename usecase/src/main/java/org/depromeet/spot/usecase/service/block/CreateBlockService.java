@@ -17,9 +17,11 @@ import org.depromeet.spot.usecase.port.out.block.BlockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @Transactional
 @RequiredArgsConstructor
 public class CreateBlockService implements CreateBlockUsecase {
@@ -33,7 +35,9 @@ public class CreateBlockService implements CreateBlockUsecase {
 
     @Override
     public void create(final Long stadiumId, final Long sectionId, CreateBlockCommand command) {
-        checkValidRow(command.maxRows(), command.rowInfos());
+        List<Integer> rowNumbers =
+                command.rowInfos().stream().map(CreateRowCommand::number).toList();
+        checkValidRow(command.maxRows(), rowNumbers);
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
         sectionReadUsecase.checkIsExistsInStadium(stadiumId, sectionId);
         blockReadUsecase.checkIsDuplicateCode(stadiumId, command.code());
@@ -54,14 +58,14 @@ public class CreateBlockService implements CreateBlockUsecase {
         return blockRepository.save(block);
     }
 
-    public void checkValidRow(int blockMaxRow, List<CreateRowCommand> rowCommands) {
-        List<Integer> rowNumbers = rowCommands.stream().map(CreateRowCommand::number).toList();
-        checkRowSize(blockMaxRow, rowCommands.size());
+    public void checkValidRow(int blockMaxRow, List<Integer> rowNumbers) {
+        checkRowSize(blockMaxRow, rowNumbers);
         checkValidRowNumber(blockMaxRow, rowNumbers);
         checkDuplicateRowNumber(rowNumbers);
     }
 
-    public void checkRowSize(int blockMaxRow, int rowSize) {
+    public void checkRowSize(int blockMaxRow, List<Integer> rowNumbers) {
+        int rowSize = rowNumbers.size();
         if (blockMaxRow != rowSize) {
             throw new InvalidBlockRowException();
         }
