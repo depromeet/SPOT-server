@@ -48,6 +48,15 @@ public class FakeBlockRepository implements BlockRepository {
     }
 
     @Override
+    public boolean existsByStadiumAndCode(Long stadiumId, String code) {
+        return blockData.stream()
+                .anyMatch(
+                        block ->
+                                block.getCode().equals(code)
+                                        && block.getStadiumId().equals(stadiumId));
+    }
+
+    @Override
     public Block findById(Long blockId) {
         return getById(blockId).orElseThrow(BlockNotFoundException::new);
     }
