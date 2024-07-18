@@ -27,4 +27,23 @@ public class Review {
     private final LocalDateTime deletedAt;
     private final List<ReviewImage> images;
     private final List<ReviewKeyword> keywords;
+
+    public Review addImagesAndKeywords(
+            List<ReviewImage> newImages, List<ReviewKeyword> newKeywords) {
+        return new Review(
+                id,
+                userId,
+                stadiumId,
+                blockId,
+                seatId,
+                rowId,
+                seatNumber,
+                dateTime,
+                content,
+                createdAt,
+                updatedAt,
+                deletedAt,
+                newImages,
+                newKeywords);
+    }
 }
