@@ -23,6 +23,13 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
+    public Member update(Member member) {
+        memberJpaRepository.updateProfile(
+                member.getId(), member.getProfileImage(), member.getTeamId(), member.getNickname());
+        return member;
+    }
+
+    @Override
     public Optional<Member> findByIdToken(String idToken) {
         return memberJpaRepository.findByIdToken(idToken).map(MemberEntity::toDomain);
     }

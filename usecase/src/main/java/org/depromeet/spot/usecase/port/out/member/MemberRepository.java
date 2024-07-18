@@ -8,6 +8,8 @@ public interface MemberRepository {
 
     Member save(Member member);
 
+    Member update(Member member);
+
     Optional<Member> findByIdToken(String idToken);
 
     Boolean existsByNickname(String nickname);
