@@ -31,7 +31,6 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     @Override
     public String getKakaoAccessToken(String idCode) {
-
         // Webflux의 WebClient
         KakaoTokenEntity kakaoTokenEntity =
                 WebClient.create(KAUTH_TOKEN_URL_HOST)
@@ -61,9 +60,9 @@ public class OauthRepositoryImpl implements OauthRepository {
                         .bodyToMono(KakaoTokenEntity.class)
                         .block();
 
-        log.info("Access Token : {}", kakaoTokenEntity.getAccessToken());
-        log.info("Refresh Token : {}", kakaoTokenEntity.getRefreshToken());
-
+        if (kakaoTokenEntity == null) {
+            // TODO
+        }
         return kakaoTokenEntity.getAccessToken();
     }
 
@@ -109,13 +108,6 @@ public class OauthRepositoryImpl implements OauthRepository {
                                         Mono.error(new RuntimeException("Internal Server Error")))
                         .bodyToMono(KakaoUserInfoEntity.class)
                         .block();
-
-        log.info("kakao AuthId : {} ", userInfo.getId());
-        log.info("nickname : {} ", userInfo.getKakaoAccount().getProfile().getNickName());
-        log.info(
-                "ProfileImageUrl : {} ",
-                userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
-        log.info("kakao user info : {}", userInfo);
 
         return userInfo;
     }
