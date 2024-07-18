@@ -21,4 +21,11 @@ public class BlockRowRepositoryImpl implements BlockRowRepository {
                 blockRowJpaRepository.saveAll(rows.stream().map(BlockRowEntity::from).toList());
         return entities.stream().map(BlockRowEntity::toDomain).toList();
     }
+
+    @Override
+    public List<BlockRow> findAllByBlock(Long blockId) {
+        List<BlockRowEntity> entities =
+                blockRowJpaRepository.findAllByBlockIdOrderByNumberAsc(blockId);
+        return entities.stream().map(BlockRowEntity::toDomain).toList();
+    }
 }
