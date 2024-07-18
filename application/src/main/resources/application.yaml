@@ -8,6 +8,8 @@ spring:
     include:
         - jpa
         - ncp
+        - jwt
+        - kakao
   # swagger를 이용해 API 명세서 생성
   doc:
     swagger-ui:
