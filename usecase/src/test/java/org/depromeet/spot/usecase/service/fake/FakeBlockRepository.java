@@ -35,6 +35,11 @@ public class FakeBlockRepository implements BlockRepository {
     }
 
     @Override
+    public List<BlockRow> findAllByBlock(String blockCode) {
+        return rowData.stream().filter(row -> row.getBlock().getCode().equals(blockCode)).toList();
+    }
+
+    @Override
     public boolean existsById(Long blockId) {
         return blockData.stream().anyMatch(block -> block.getId().equals(blockId));
     }
@@ -44,7 +49,19 @@ public class FakeBlockRepository implements BlockRepository {
         return getById(blockId).orElseThrow(BlockNotFoundException::new);
     }
 
+    @Override
+    public Block findByStadiumAndCode(Long stadiumId, String code) {
+        return getByStadiumAndCode(stadiumId, code).orElseThrow(BlockNotFoundException::new);
+    }
+
     private Optional<Block> getById(Long id) {
         return blockData.stream().filter(block -> block.getId().equals(id)).findAny();
+    }
+
+    private Optional<Block> getByStadiumAndCode(Long stadiumId, String code) {
+        return blockData.stream()
+                .filter(block -> block.getCode().equals(code))
+                .filter(block -> block.getStadiumId().equals(stadiumId))
+                .findAny();
     }
 }

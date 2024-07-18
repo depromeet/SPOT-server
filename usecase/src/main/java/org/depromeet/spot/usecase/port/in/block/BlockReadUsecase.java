@@ -14,9 +14,11 @@ public interface BlockReadUsecase {
 
     List<BlockInfo> findAllBlockInfoBy(final Long stadiumId, final Long sectionId);
 
-    BlockInfo findBlockInfoBy(final Long blockId);
+    BlockInfo findBlockInfoBy(final Long stadiumId, final String blockCode);
 
     Block findById(Long blockId);
+
+    Block findByStadiumAndCode(Long stadiumId, String code);
 
     boolean existsById(Long blockId);
 
