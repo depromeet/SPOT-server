@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import org.depromeet.spot.application.review.dto.request.CreateReviewRequest;
+import org.depromeet.spot.application.review.dto.response.ReviewResponse;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
 import org.springframework.http.HttpStatus;
@@ -30,10 +31,11 @@ public class CreateReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "특정 좌석에 신규 리뷰를 추가한다.")
     @PostMapping("/seats/{seatId}/members/{memberId}/reviews")
-    public void create(
+    public ReviewResponse create(
             @PathVariable @Positive @NotNull final Long seatId,
             @PathVariable @Positive @NotNull final Long memberId,
             @RequestBody @Valid @NotNull CreateReviewRequest request) {
         Review review = createReviewUsecase.create(seatId, memberId, request.toCommand());
+        return ReviewResponse.from(review);
     }
 }
