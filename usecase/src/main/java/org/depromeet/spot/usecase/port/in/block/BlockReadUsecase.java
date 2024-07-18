@@ -20,6 +20,8 @@ public interface BlockReadUsecase {
 
     Block findByStadiumAndCode(Long stadiumId, String code);
 
+    void checkIsDuplicateCode(Long stadiumId, String code);
+
     boolean existsById(Long blockId);
 
     void checkExistsById(Long blockId);

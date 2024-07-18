@@ -18,7 +18,11 @@ public interface BlockRepository {
 
     boolean existsById(Long blockId);
 
+    boolean existsByStadiumAndCode(Long stadiumId, String code);
+
     Block findById(Long blockId);
 
     Block findByStadiumAndCode(Long stadiumId, String code);
+
+    Block save(Block block);
 }
