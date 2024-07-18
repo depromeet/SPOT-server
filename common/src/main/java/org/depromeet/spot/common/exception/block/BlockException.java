@@ -17,4 +17,20 @@ public abstract class BlockException extends BusinessException {
             super(BlockErrorCode.BLOCK_NOT_FOUND.appended(obj));
         }
     }
+
+    public static class BlockCodeDuplicateException extends BlockException {
+        public BlockCodeDuplicateException() {
+            super(BlockErrorCode.BLOCK_CODE_DUPLICATE);
+        }
+
+        public BlockCodeDuplicateException(String str) {
+            super(BlockErrorCode.BLOCK_CODE_DUPLICATE.appended(str));
+        }
+    }
+
+    public static class InvalidBlockRowException extends BlockException {
+        public InvalidBlockRowException() {
+            super(BlockErrorCode.INVALID_BLOCK_ROW);
+        }
+    }
 }

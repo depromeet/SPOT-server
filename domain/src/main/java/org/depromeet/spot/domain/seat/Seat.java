@@ -6,9 +6,11 @@ import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class Seat {
 

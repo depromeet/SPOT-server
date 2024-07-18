@@ -1,4 +1,4 @@
-package org.depromeet.spot.jpa.block.repository;
+package org.depromeet.spot.jpa.block.repository.row;
 
 import java.util.List;
 
