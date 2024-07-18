@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewRepositoryImpl implements ReviewRepository {
     private final ReviewCustomRepository reviewCustomRepository;
+    private final ReviewJpaRepository reviewJpaRepository;
 
     @Override
     public List<Review> findByBlockId(
@@ -49,6 +50,12 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public List<KeywordCount> findTopKeywordsByBlockId(Long stadiumId, Long blockId, int limit) {
         return reviewCustomRepository.findTopKeywordsByBlockId(stadiumId, blockId, limit);
+    }
+
+    @Override
+    public Review save(Review review) {
+        ReviewEntity entity = reviewJpaRepository.save(ReviewEntity.from(review));
+        return entity.toDomain();
     }
 
     private Review fetchReviewDetails(ReviewEntity reviewEntity) {

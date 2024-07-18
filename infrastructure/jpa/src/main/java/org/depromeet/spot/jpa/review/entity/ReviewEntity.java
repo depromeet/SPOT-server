@@ -1,8 +1,6 @@
 package org.depromeet.spot.jpa.review.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,10 +44,7 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    public static Review createReviewWithDetails(
-            ReviewEntity entity,
-            List<ReviewImageEntity> images,
-            List<ReviewKeywordEntity> keywords) {
+    public static Review createReviewWithDetails(ReviewEntity entity) {
         return Review.builder()
                 .id(entity.getId())
                 .userId(entity.getUserId())
@@ -62,14 +57,6 @@ public class ReviewEntity extends BaseEntity {
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .deletedAt(entity.getDeletedAt())
-                .images(
-                        images.stream()
-                                .map(ReviewImageEntity::toDomain)
-                                .collect(Collectors.toList()))
-                .keywords(
-                        keywords.stream()
-                                .map(ReviewKeywordEntity::toDomain)
-                                .collect(Collectors.toList()))
                 .build();
     }
 
