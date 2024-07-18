@@ -3,7 +3,6 @@ package org.depromeet.spot.ncp.objectstorage;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.depromeet.spot.domain.media.extension.ImageExtension;
-import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
 import org.depromeet.spot.ncp.mock.FakeTimeUsecase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,30 +18,16 @@ class FileNameGeneratorTest {
     }
 
     @Test
-    void 리뷰_첨부파일_이름을_생성할_수_있다() {
+    void 첨부_파일_이름을_생성할_수_있다() {
         // given
         Long userId = 1L;
         ImageExtension extension = ImageExtension.JPG;
 
         // when
-        final String folderName = "review-images";
-        final String fileName =
-                fileNameGenerator.createReviewFileName(userId, extension, folderName);
+        final String folderName = "folder-names";
+        final String fileName = fileNameGenerator.createFileName(userId, extension, folderName);
 
         // then
-        assertThat(fileName).isEqualTo("review-images/REVIEW_user_1_2024-07-09T21:00.jpg");
-    }
-
-    @Test
-    void 경기장_첨부파일_이름을_생성할_수_있다() {
-        // given
-        StadiumSeatMediaExtension extension = StadiumSeatMediaExtension.SVG;
-
-        // when
-        final String folderName = "stadium-images";
-        final String fileName = fileNameGenerator.createStadiumFileName(extension, folderName);
-
-        // then
-        assertThat(fileName).isEqualTo("stadium-images/STADIUM_2024-07-09T21:00.svg");
+        assertThat(fileName).isEqualTo("folder-names/user_1_2024-07-09T21:00.jpg");
     }
 }
