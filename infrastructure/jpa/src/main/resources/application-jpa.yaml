@@ -9,7 +9,7 @@ spring:
         database: mysql
         database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
-            ddl-auto: update  # 주의: 프로덕션 환경에서는 'validate' 사용 권장
+            ddl-auto: none  # 주의: 프로덕션 환경에서는 'validate' 사용 권장
         properties:
             hibernate:
                 use_sql_comments: true
