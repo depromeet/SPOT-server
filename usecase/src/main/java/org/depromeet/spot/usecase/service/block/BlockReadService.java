@@ -74,7 +74,7 @@ public class BlockReadService implements BlockReadUsecase {
 
     @Override
     public Block findByStadiumAndCode(final Long stadiumId, final String code) {
-        return blockRepository.findByStadiumAndCode(code);
+        return blockRepository.findByStadiumAndCode(stadiumId, code);
     }
 
     @Override
