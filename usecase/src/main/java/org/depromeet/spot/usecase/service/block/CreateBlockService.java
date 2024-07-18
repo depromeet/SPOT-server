@@ -1,6 +1,8 @@
 package org.depromeet.spot.usecase.service.block;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.depromeet.spot.common.exception.block.BlockException.InvalidBlockRowException;
 import org.depromeet.spot.domain.block.Block;
@@ -31,7 +33,7 @@ public class CreateBlockService implements CreateBlockUsecase {
 
     @Override
     public void create(final Long stadiumId, final Long sectionId, CreateBlockCommand command) {
-        checkRowSize(command.maxRows(), command.rowInfos());
+        checkValidRow(command.maxRows(), command.rowInfos());
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
         sectionReadUsecase.checkIsExistsInStadium(stadiumId, sectionId);
         blockReadUsecase.checkIsDuplicateCode(stadiumId, command.code());
@@ -52,8 +54,30 @@ public class CreateBlockService implements CreateBlockUsecase {
         return blockRepository.save(block);
     }
 
-    public void checkRowSize(int blockMaxRow, List<CreateRowCommand> rowCommands) {
-        if (blockMaxRow != rowCommands.size()) {
+    public void checkValidRow(int blockMaxRow, List<CreateRowCommand> rowCommands) {
+        List<Integer> rowNumbers = rowCommands.stream().map(CreateRowCommand::number).toList();
+        checkRowSize(blockMaxRow, rowCommands.size());
+        checkValidRowNumber(blockMaxRow, rowNumbers);
+        checkDuplicateRowNumber(rowNumbers);
+    }
+
+    public void checkRowSize(int blockMaxRow, int rowSize) {
+        if (blockMaxRow != rowSize) {
+            throw new InvalidBlockRowException();
+        }
+    }
+
+    public void checkValidRowNumber(int blockMaxRow, List<Integer> rowNumberList) {
+        for (Integer rowNumber : rowNumberList) {
+            if (rowNumber > blockMaxRow) {
+                throw new InvalidBlockRowException();
+            }
+        }
+    }
+
+    public void checkDuplicateRowNumber(List<Integer> rowNumberList) {
+        Set<Integer> rowNumberSet = new HashSet<>(rowNumberList);
+        if (rowNumberSet.size() < rowNumberList.size()) {
             throw new InvalidBlockRowException();
         }
     }
