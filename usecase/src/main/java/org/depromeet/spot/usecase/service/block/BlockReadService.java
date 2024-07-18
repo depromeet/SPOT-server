@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import org.depromeet.spot.common.exception.block.BlockException.BlockCodeDuplicateException;
 import org.depromeet.spot.common.exception.block.BlockException.BlockNotFoundException;
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
@@ -75,6 +76,13 @@ public class BlockReadService implements BlockReadUsecase {
     @Override
     public Block findByStadiumAndCode(final Long stadiumId, final String code) {
         return blockRepository.findByStadiumAndCode(stadiumId, code);
+    }
+
+    @Override
+    public void checkIsDuplicateCode(Long stadiumId, String code) {
+        if (blockRepository.existsByStadiumAndCode(stadiumId, code)) {
+            throw new BlockCodeDuplicateException("code : " + code);
+        }
     }
 
     @Override
