@@ -34,6 +34,9 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "row_id", nullable = false)
     private Long rowId;
 
+    @Column(name = "seat_id", nullable = false)
+    private Long seatId;
+
     @Column(name = "seat_number", nullable = false)
     private Long seatNumber;
 
@@ -56,6 +59,7 @@ public class ReviewEntity extends BaseEntity {
                 .stadiumId(entity.getStadiumId())
                 .blockId(entity.getBlockId())
                 .rowId(entity.getRowId())
+                .seatId(entity.getSeatId())
                 .seatNumber(entity.getSeatNumber())
                 .dateTime(entity.getDateTime())
                 .content(entity.getContent())
@@ -79,6 +83,7 @@ public class ReviewEntity extends BaseEntity {
                 review.getStadiumId(),
                 review.getBlockId(),
                 review.getRowId(),
+                review.getSeatId(),
                 review.getSeatNumber(),
                 review.getDateTime(),
                 review.getContent(),
@@ -92,6 +97,7 @@ public class ReviewEntity extends BaseEntity {
                 .stadiumId(stadiumId)
                 .blockId(blockId)
                 .rowId(rowId)
+                .seatId(seatId)
                 .seatNumber(seatNumber)
                 .dateTime(dateTime)
                 .content(content)
