@@ -1,12 +1,12 @@
 package org.depromeet.spot.usecase.port.in.member;
 
-import java.util.List;
-
 import org.depromeet.spot.domain.member.Member;
 
 public interface MemberUsecase {
 
-    Member create(String name);
+    Member create(Member member);
 
-    List<Member> findByName(String name);
+    Member login(String idCode);
+
+    Boolean duplicatedNickname(String nickname);
 }
