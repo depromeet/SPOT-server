@@ -114,6 +114,8 @@ jobs:
                     docker system prune -af
 
   create-release:
+      needs: [ build-and-test, deploy ]  # deploy job이 성공적으로 완료된 후에만 실행
+      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
       runs-on: ubuntu-latest
       permissions:
           contents: write
