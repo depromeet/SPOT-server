@@ -10,4 +10,6 @@ public interface BlockJpaRepository extends JpaRepository<BlockEntity, Long> {
     Optional<BlockEntity> findByStadiumIdAndCode(Long stadiumId, String code);
 
     List<BlockEntity> findAllBySectionId(Long sectionId);
+
+    boolean existsByStadiumIdAndCode(Long stadiumId, String code);
 }
