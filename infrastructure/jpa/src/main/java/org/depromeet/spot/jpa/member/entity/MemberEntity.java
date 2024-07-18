@@ -51,6 +51,10 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "team_id", nullable = false, length = 10)
     private Long teamId;
 
+    // TODO : 얘는 테이블 차이로 인한 임시 필드이므로 추후 수정해서 삭제해야함.
+    @Column(name = "my_team", nullable = false, length = 10)
+    private Long myTeam;
+
     @Column(name = "role", nullable = false)
     private String role;
 
@@ -60,10 +64,13 @@ public class MemberEntity extends BaseEntity {
                 member.getName(),
                 member.getNickname(),
                 member.getPhoneNumber(),
-                member.getLevel(),
+                // TODO : 레벨 - 추 후 PrePersist, DynamicInsert 등을 통해 기본값 넣기.
+                1,
                 member.getProfileImage(),
                 member.getSnsProvider().getValue(),
                 member.getIdToken(),
+                member.getTeamId(),
+                // TODO : 얘는 테이블 차이로 인한 임시 필드이므로 추후 수정해서 삭제해야함.
                 member.getTeamId(),
                 member.getRole().getValue());
     }
