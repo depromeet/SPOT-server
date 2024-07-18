@@ -14,7 +14,7 @@ public interface BlockRepository {
 
     List<BlockRow> findAllByBlock(Long blockId);
 
-    List<BlockRow> findAllByBlock(String blockCode);
+    List<BlockRow> findAllByStadiumAndBlock(Long stadiumId, String blockCode);
 
     boolean existsById(Long blockId);
 

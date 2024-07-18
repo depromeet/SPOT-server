@@ -62,7 +62,7 @@ public class BlockReadService implements BlockReadUsecase {
     public BlockInfo findBlockInfoBy(final Long stadiumId, final String blockCode) {
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
         Block block = findByStadiumAndCode(stadiumId, blockCode);
-        List<BlockRow> infos = blockRepository.findAllByBlock(blockCode);
+        List<BlockRow> infos = blockRepository.findAllByStadiumAndBlock(stadiumId, blockCode);
         List<RowInfo> rowInfos = getBlockRowInfos(infos);
         return new BlockInfo(block.getId(), block.getCode(), rowInfos);
     }

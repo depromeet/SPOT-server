@@ -35,8 +35,11 @@ public class FakeBlockRepository implements BlockRepository {
     }
 
     @Override
-    public List<BlockRow> findAllByBlock(String blockCode) {
-        return rowData.stream().filter(row -> row.getBlock().getCode().equals(blockCode)).toList();
+    public List<BlockRow> findAllByStadiumAndBlock(Long stadiumId, String blockCode) {
+        return rowData.stream()
+                .filter(row -> row.getBlock().getStadiumId().equals(stadiumId))
+                .filter(row -> row.getBlock().getCode().equals(blockCode))
+                .toList();
     }
 
     @Override

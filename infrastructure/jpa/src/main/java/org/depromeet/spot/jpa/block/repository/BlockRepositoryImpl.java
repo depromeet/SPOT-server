@@ -50,9 +50,9 @@ public class BlockRepositoryImpl implements BlockRepository {
     }
 
     @Override
-    public List<BlockRow> findAllByBlock(String blockCode) {
+    public List<BlockRow> findAllByStadiumAndBlock(Long stadiumId, String blockCode) {
         List<BlockRowEntity> entities =
-                blockRowJpaRepository.findAllByBlockCodeOrderByNumberAsc(blockCode);
+                blockRowJpaRepository.findAllByStadiumAndBlock(stadiumId, blockCode);
         return entities.stream().map(BlockRowEntity::toDomain).toList();
     }
 
