@@ -67,15 +67,20 @@ public class BlockReadController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("blocks/{blockId}/rows")
+    @GetMapping("/stadiums/{stadiumId}/blocks/{blockCode}/rows")
     @Operation(summary = "특정 블록 내에 있는 열별 좌석 범위 정보를 조회한다.")
     public BlockInfoResponse findBlockInfoBy(
-            @PathVariable("blockId")
+            @PathVariable("stadiumId")
                     @NotNull
                     @Positive
-                    @Parameter(name = "blockId", description = "블록 PK", required = true)
-                    final Long blockId) {
-        BlockInfo infos = blockReadUsecase.findBlockInfoBy(blockId);
+                    @Parameter(name = "stadiumId", description = "경기장 PK", required = true)
+                    final Long stadiumId,
+            @PathVariable("blockCode")
+                    @NotNull
+                    @Positive
+                    @Parameter(name = "blockCode", description = "블록 Code", required = true)
+                    final String blockCode) {
+        BlockInfo infos = blockReadUsecase.findBlockInfoBy(stadiumId, blockCode);
         return BlockInfoResponse.from(infos);
     }
 }

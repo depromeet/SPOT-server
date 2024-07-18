@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BlockRowJpaRepository extends JpaRepository<BlockRowEntity, Long> {
 
     List<BlockRowEntity> findAllByBlockIdOrderByNumberAsc(Long blockId);
+
+    List<BlockRowEntity> findAllByBlockCodeOrderByNumberAsc(String code);
 }

@@ -59,16 +59,21 @@ public class BlockReadService implements BlockReadUsecase {
     }
 
     @Override
-    public BlockInfo findBlockInfoBy(final Long blockId) {
-        Block block = findById(blockId);
-        List<BlockRow> infos = blockRepository.findAllByBlock(blockId);
+    public BlockInfo findBlockInfoBy(final Long stadiumId, final String blockCode) {
+        Block block = findByCode(blockCode);
+        List<BlockRow> infos = blockRepository.findAllByBlock(blockCode);
         List<RowInfo> rowInfos = getBlockRowInfos(infos);
-        return new BlockInfo(blockId, block.getCode(), rowInfos);
+        return new BlockInfo(block.getId(), block.getCode(), rowInfos);
     }
 
     @Override
     public Block findById(final Long blockId) {
         return blockRepository.findById(blockId);
+    }
+
+    @Override
+    public Block findByCode(final String code) {
+        return blockRepository.findByCode(code);
     }
 
     @Override

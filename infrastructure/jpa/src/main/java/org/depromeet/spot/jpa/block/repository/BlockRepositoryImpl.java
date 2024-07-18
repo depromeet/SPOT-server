@@ -50,6 +50,13 @@ public class BlockRepositoryImpl implements BlockRepository {
     }
 
     @Override
+    public List<BlockRow> findAllByBlock(String blockCode) {
+        List<BlockRowEntity> entities =
+                blockRowJpaRepository.findAllByBlockCodeOrderByNumberAsc(blockCode);
+        return entities.stream().map(BlockRowEntity::toDomain).toList();
+    }
+
+    @Override
     public boolean existsById(final Long blockId) {
         return blockJpaRepository.existsById(blockId);
     }
@@ -58,6 +65,13 @@ public class BlockRepositoryImpl implements BlockRepository {
     public Block findById(final Long blockId) {
         BlockEntity entity =
                 blockJpaRepository.findById(blockId).orElseThrow(BlockNotFoundException::new);
+        return entity.toDomain();
+    }
+
+    @Override
+    public Block findByCode(String code) {
+        BlockEntity entity =
+                blockJpaRepository.findByCode(code).orElseThrow(BlockNotFoundException::new);
         return entity.toDomain();
     }
 }
