@@ -48,6 +48,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public long countByUserId(Long userId) {
+        return reviewJpaRepository.countByUserId(userId);
+    }
+
+    @Override
     public List<KeywordCount> findTopKeywordsByBlockId(Long stadiumId, Long blockId, int limit) {
         return reviewCustomRepository.findTopKeywordsByBlockId(stadiumId, blockId, limit);
     }

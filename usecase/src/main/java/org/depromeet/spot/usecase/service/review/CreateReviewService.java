@@ -36,20 +36,22 @@ public class CreateReviewService implements CreateReviewUsecase {
         Member member = readMemberUsecase.findById(memberId);
 
         Review review = reviewRepository.save(convertToDomain(seat, member, command));
-
-        List<String> imageUrls = command.images();
         List<ReviewImage> images =
                 reviewImageRepository.saveAll(
-                        imageUrls.stream()
+                        command.images().stream()
                                 .map(url -> ReviewImage.of(review.getId(), url))
                                 .toList());
 
         // TODO: 리뷰 키워드 저장
         List<ReviewKeyword> keywords = new ArrayList<>();
 
-        // TODO: 리뷰 수를 이용해 레벨 조정
-
+        calculateMemberLevel(member);
         return review.addImagesAndKeywords(images, keywords);
+    }
+
+    public void calculateMemberLevel(final Member member) {
+        final long memberReviewCnt = reviewRepository.countByUserId(member.getId());
+        updateMemberUsecase.updateLevel(member, memberReviewCnt);
     }
 
     private Review convertToDomain(Seat seat, Member member, CreateReviewCommand command) {

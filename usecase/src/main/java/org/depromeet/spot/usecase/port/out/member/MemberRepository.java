@@ -8,7 +8,9 @@ public interface MemberRepository {
 
     Member save(Member member);
 
-    Member update(Member member);
+    Member updateProfile(Member member);
+
+    Member updateLevel(Member member);
 
     Optional<Member> findByIdToken(String idToken);
 

@@ -101,6 +101,11 @@ public class FakeReviewRepository implements ReviewRepository {
     }
 
     @Override
+    public long countByUserId(Long userId) {
+        return data.stream().filter(review -> review.getUserId().equals(userId)).count();
+    }
+
+    @Override
     public Review save(Review review) {
         if (review.getId() == null || review.getId() == 0) {
             Review newReview =
