@@ -9,6 +9,8 @@ import lombok.Getter;
 public enum SectionErrorCode implements ErrorCode {
     SECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "SE001", "요청 구역이 존재하지 않습니다."),
     SECTION_NOT_BELONG_TO_STADIUM(HttpStatus.BAD_REQUEST, "SE002", "요청 경기장의 구역이 아닙니다."),
+    DUPLICATE_NAME(HttpStatus.BAD_REQUEST, "SE003", "요청 경기장에 이미 해당 이름의 구역이 존재합니다."),
+    DUPLICATE_ALIAS(HttpStatus.BAD_REQUEST, "SE004", "요청 경기장에 이미 해당 별칭의 구역이 존재합니다."),
     ;
 
     private final HttpStatus status;

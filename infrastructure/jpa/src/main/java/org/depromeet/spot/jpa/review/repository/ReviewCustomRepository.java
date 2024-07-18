@@ -45,6 +45,26 @@ public class ReviewCustomRepository {
                 .fetch();
     }
 
+    public List<ReviewEntity> findByUserIdWithFilters(
+            Long userId, int offset, int limit, Integer year, Integer month) {
+        return queryFactory
+                .selectFrom(reviewEntity)
+                .where(
+                        reviewEntity
+                                .userId
+                                .eq(userId)
+                                .and(year != null ? reviewEntity.createdAt.year().eq(year) : null)
+                                .and(
+                                        month != null
+                                                ? reviewEntity.createdAt.month().eq(month)
+                                                : null)
+                                .and(reviewEntity.deletedAt.isNull()))
+                .orderBy(reviewEntity.createdAt.desc())
+                .offset(offset)
+                .limit(limit)
+                .fetch();
+    }
+
     public long countByBlockIdWithFilters(
             Long stadiumId, Long blockId, Long rowId, Long seatNumber) {
         return queryFactory
@@ -60,7 +80,25 @@ public class ReviewCustomRepository {
                                                 ? reviewEntity.seatNumber.eq(seatNumber)
                                                 : null)
                                 .and(reviewEntity.deletedAt.isNull()))
-                .fetchCount();
+                .stream()
+                .count();
+    }
+
+    public long countByUserIdWithFilters(Long userId, Integer year, Integer month) {
+        return queryFactory
+                .selectFrom(reviewEntity)
+                .where(
+                        reviewEntity
+                                .userId
+                                .eq(userId)
+                                .and(year != null ? reviewEntity.createdAt.year().eq(year) : null)
+                                .and(
+                                        month != null
+                                                ? reviewEntity.createdAt.month().eq(month)
+                                                : null)
+                                .and(reviewEntity.deletedAt.isNull()))
+                .stream()
+                .count();
     }
 
     public List<KeywordCount> findTopKeywordsByBlockId(Long stadiumId, Long blockId, int limit) {

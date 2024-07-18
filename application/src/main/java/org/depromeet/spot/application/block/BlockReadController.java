@@ -50,7 +50,7 @@ public class BlockReadController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("stadiums/{stadiumId}/sections/{sectionId}/blocks/rows")
-    @Operation(summary = "특정 야구장 섹션 내에 있는 모든 블록 열/번 정보를 조회한다.")
+    @Operation(summary = "특정 야구장 구역 내에 있는 모든 블록 열/번 정보를 조회한다.")
     public List<BlockInfoResponse> findAllBlockInfoBy(
             @PathVariable("stadiumId")
                     @NotNull
@@ -64,5 +64,18 @@ public class BlockReadController {
                     final Long sectionId) {
         List<BlockInfo> infos = blockReadUsecase.findAllBlockInfoBy(stadiumId, sectionId);
         return infos.stream().map(BlockInfoResponse::from).toList();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("blocks/{blockId}/rows")
+    @Operation(summary = "특정 블록 내에 있는 열별 좌석 범위 정보를 조회한다.")
+    public BlockInfoResponse findBlockInfoBy(
+            @PathVariable("blockId")
+                    @NotNull
+                    @Positive
+                    @Parameter(name = "blockId", description = "블록 PK", required = true)
+                    final Long blockId) {
+        BlockInfo infos = blockReadUsecase.findBlockInfoBy(blockId);
+        return BlockInfoResponse.from(infos);
     }
 }

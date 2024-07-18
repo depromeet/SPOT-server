@@ -10,5 +10,7 @@ public interface SectionRepository {
 
     Section save(Section section);
 
+    void saveAll(List<Section> sections);
+
     boolean existsInStadium(Long stadiumId, Long sectionId);
 }
