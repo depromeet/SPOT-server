@@ -17,4 +17,10 @@ public abstract class MemberException extends BusinessException {
             super(MemberErrorCode.MEMBER_NOT_FOUND.appended(o));
         }
     }
+
+    public static class MemberNicknameConflictException extends MemberException {
+        public MemberNicknameConflictException() {
+            super(MemberErrorCode.MEMBER_NICKNAME_CONFLICT);
+        }
+    }
 }
