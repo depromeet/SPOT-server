@@ -27,6 +27,13 @@ public class UpdateMemberService implements UpdateMemberUsecase {
         readBaseballTeamUsecase.areAllTeamIdsExist(Set.of(command.teamId()));
         Member updateMember =
                 member.updateProfile(command.profileImage(), command.nickname(), command.teamId());
-        return memberRepository.update(updateMember);
+        return memberRepository.updateProfile(updateMember);
+    }
+
+    @Override
+    public void updateLevel(Member member, long reviewCnt) {
+        final int newLevel = member.calculateLevel(reviewCnt);
+        Member updateMember = member.updateLevel(newLevel);
+        memberRepository.updateLevel(updateMember);
     }
 }

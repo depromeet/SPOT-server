@@ -11,6 +11,7 @@ import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
 import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Builder
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StadiumReadService implements StadiumReadUsecase {
 
     private final ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
