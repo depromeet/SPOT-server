@@ -11,5 +11,5 @@ public interface CreateRowUsecase {
     void createAll(Block block, List<CreateRowCommand> commands);
 
     @Builder
-    record CreateRowCommand(int number, int minSeatNum, int maxSeatNum) {}
+    record CreateRowCommand(int number, int maxSeatNum) {}
 }

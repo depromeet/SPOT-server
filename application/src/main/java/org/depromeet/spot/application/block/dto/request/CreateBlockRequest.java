@@ -7,13 +7,9 @@ import org.depromeet.spot.usecase.port.in.block.CreateRowUsecase.CreateRowComman
 
 public record CreateBlockRequest(String code, int maxRows, List<CreateRowRequest> rowInfos) {
 
-    public record CreateRowRequest(int number, int minSeatNum, int maxSeatNum) {
+    public record CreateRowRequest(int number, int maxSeatNum) {
         public CreateRowCommand toCommand() {
-            return CreateRowCommand.builder()
-                    .number(number)
-                    .maxSeatNum(maxSeatNum)
-                    .minSeatNum(minSeatNum)
-                    .build();
+            return CreateRowCommand.builder().number(number).maxSeatNum(maxSeatNum).build();
         }
     }
 
