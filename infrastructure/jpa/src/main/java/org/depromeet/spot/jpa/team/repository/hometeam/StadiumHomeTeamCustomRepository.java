@@ -1,4 +1,4 @@
-package org.depromeet.spot.jpa.team.repository;
+package org.depromeet.spot.jpa.team.repository.hometeam;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
