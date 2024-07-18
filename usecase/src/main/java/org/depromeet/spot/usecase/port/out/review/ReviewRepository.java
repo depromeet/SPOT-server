@@ -15,5 +15,9 @@ public interface ReviewRepository {
 
     Long countByUserId(Long userId, Integer year, Integer month);
 
+    long countByUserId(Long userId);
+
     List<KeywordCount> findTopKeywordsByBlockId(Long stadiumId, Long blockId, int limit);
+
+    Review save(Review review);
 }

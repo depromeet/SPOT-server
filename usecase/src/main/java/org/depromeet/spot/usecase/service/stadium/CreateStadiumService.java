@@ -6,10 +6,12 @@ import org.depromeet.spot.usecase.port.in.stadium.CreateStadiumUsecase;
 import org.depromeet.spot.usecase.port.out.media.ImageUploadPort;
 import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CreateStadiumService implements CreateStadiumUsecase {
 

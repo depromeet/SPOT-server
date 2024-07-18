@@ -28,6 +28,43 @@ public class Member {
     private final LocalDateTime createdAt;
     private final LocalDateTime deletedAt;
 
+    public int calculateLevel(long reviewCnt) {
+        if (reviewCnt <= 2) {
+            return 1;
+        }
+        if (2 < reviewCnt && reviewCnt <= 6) {
+            return 2;
+        }
+        if (6 < reviewCnt && reviewCnt <= 11) {
+            return 3;
+        }
+        if (11 < reviewCnt && reviewCnt <= 20) {
+            return 4;
+        }
+        if (20 < reviewCnt && reviewCnt <= 35) {
+            return 5;
+        }
+        return 6;
+    }
+
+    public Member updateLevel(int newLevel) {
+        return Member.builder()
+                .id(id)
+                .email(email)
+                .name(name)
+                .nickname(nickname)
+                .phoneNumber(phoneNumber)
+                .level(newLevel)
+                .profileImage(profileImage)
+                .snsProvider(snsProvider)
+                .idToken(idToken)
+                .teamId(teamId)
+                .role(role)
+                .createdAt(createdAt)
+                .deletedAt(deletedAt)
+                .build();
+    }
+
     public Member updateProfile(String newProfileImage, String newNickname, Long newTeamId) {
         return Member.builder()
                 .id(id)

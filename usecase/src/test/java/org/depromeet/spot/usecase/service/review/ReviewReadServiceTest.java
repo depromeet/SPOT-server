@@ -97,7 +97,7 @@ class ReviewReadServiceTest {
         for (int i = 0; i < 20; i++) {
             Review review =
                     Review.builder()
-                            .id((long) i)
+                            .id((long) i + 1)
                             .stadiumId(1L)
                             .blockId(1L)
                             .rowId(1L)

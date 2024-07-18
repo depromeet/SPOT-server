@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.depromeet.spot.common.exception.seat.SeatException.SeatNotFoundException;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
 
@@ -17,6 +19,15 @@ public class FakeSeatRepository implements SeatRepository {
     @Override
     public void saveAll(List<Seat> seats) {
         seats.forEach(this::save);
+    }
+
+    @Override
+    public Seat findById(Long seatId) {
+        return getById(seatId).orElseThrow(SeatNotFoundException::new);
+    }
+
+    private Optional<Seat> getById(Long id) {
+        return data.stream().filter(seat -> seat.getId().equals(id)).findAny();
     }
 
     private Seat save(Seat seat) {

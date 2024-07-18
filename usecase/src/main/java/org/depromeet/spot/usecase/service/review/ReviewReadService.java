@@ -9,11 +9,13 @@ import org.depromeet.spot.domain.review.ReviewListResult;
 import org.depromeet.spot.usecase.port.in.review.ReviewReadUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReviewReadService implements ReviewReadUsecase {
     private final ReviewRepository reviewRepository;
 
