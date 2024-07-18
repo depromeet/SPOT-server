@@ -1,0 +1,3 @@
+spring:
+    jwt:
+        secret: c3BvdC1qd3QtdG9rZW4tc3BvdC1qd3QtdG9rZW4tc3BvdC1qd3QtdG9rZW4tc3BvdC1qd3QtdG9rZW4tc3BvdC1qd3QtdG9rZW4t
