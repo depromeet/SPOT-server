@@ -6,7 +6,7 @@ import org.depromeet.spot.domain.block.BlockRow;
 
 public interface BlockRowRepository {
 
-    List<BlockRow> createAll(List<BlockRow> rows);
+    void createAll(List<BlockRow> rows);
 
     List<BlockRow> findAllByBlock(Long blockId);
 }

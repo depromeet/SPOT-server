@@ -25,18 +25,16 @@ public class CreateRowService implements CreateRowUsecase {
     public void createAll(Block block, List<CreateRowCommand> commands) {
         blockReadUsecase.checkExistsById(block.getId());
         List<BlockRow> rows =
-                blockRowRepository.createAll(
-                        commands.stream()
-                                .map(
-                                        command ->
-                                                BlockRow.builder()
-                                                        .block(block)
-                                                        .number(command.number())
-                                                        .maxSeats(command.maxSeatNum())
-                                                        .build())
-                                .sorted(Comparator.comparingInt(BlockRow::getNumber))
-                                .toList());
-        // TODO: Seat로 넘겨서 좌석 생성
-
+                commands.stream()
+                        .map(
+                                command ->
+                                        BlockRow.builder()
+                                                .block(block)
+                                                .number(command.number())
+                                                .maxSeats(command.maxSeatNum())
+                                                .build())
+                        .sorted(Comparator.comparingInt(BlockRow::getNumber))
+                        .toList();
+        blockRowRepository.createAll(rows);
     }
 }

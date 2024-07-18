@@ -14,12 +14,11 @@ import lombok.RequiredArgsConstructor;
 public class BlockRowRepositoryImpl implements BlockRowRepository {
 
     private final BlockRowJpaRepository blockRowJpaRepository;
+    private final BlockRowJdbcRepository blockRowJdbcRepository;
 
     @Override
-    public List<BlockRow> createAll(List<BlockRow> rows) {
-        List<BlockRowEntity> entities =
-                blockRowJpaRepository.saveAll(rows.stream().map(BlockRowEntity::from).toList());
-        return entities.stream().map(BlockRowEntity::toDomain).toList();
+    public void createAll(List<BlockRow> rows) {
+        blockRowJdbcRepository.createRows(rows);
     }
 
     @Override

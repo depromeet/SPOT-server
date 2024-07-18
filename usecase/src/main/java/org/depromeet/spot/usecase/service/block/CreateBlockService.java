@@ -8,6 +8,7 @@ import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase;
 import org.depromeet.spot.usecase.port.in.block.CreateBlockUsecase;
 import org.depromeet.spot.usecase.port.in.block.CreateRowUsecase;
 import org.depromeet.spot.usecase.port.in.block.CreateRowUsecase.CreateRowCommand;
+import org.depromeet.spot.usecase.port.in.seat.CreateSeatUsecase;
 import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.out.block.BlockRepository;
@@ -26,6 +27,7 @@ public class CreateBlockService implements CreateBlockUsecase {
     private final CreateRowUsecase createRowUsecase;
     private final StadiumReadUsecase stadiumReadUsecase;
     private final SectionReadUsecase sectionReadUsecase;
+    private final CreateSeatUsecase createSeatUsecase;
 
     @Override
     public void create(final Long stadiumId, final Long sectionId, CreateBlockCommand command) {
@@ -35,6 +37,7 @@ public class CreateBlockService implements CreateBlockUsecase {
         blockReadUsecase.checkIsDuplicateCode(stadiumId, command.code());
         Block block = create(stadiumId, sectionId, command.code(), command.maxRows());
         createRowUsecase.createAll(block, command.rowInfos());
+        createSeatUsecase.createAllInBlock(block.getId());
     }
 
     public Block create(
