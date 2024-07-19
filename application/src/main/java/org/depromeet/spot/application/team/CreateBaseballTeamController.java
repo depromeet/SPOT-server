@@ -1,24 +1,23 @@
 package org.depromeet.spot.application.team;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import org.depromeet.spot.application.team.dto.request.CreateBaseballTeamReq;
 import org.depromeet.spot.application.team.dto.request.CreateHomeTeamReq;
-import org.depromeet.spot.domain.team.BaseballTeam;
+import org.depromeet.spot.domain.common.RgbCode;
 import org.depromeet.spot.usecase.port.in.team.CreateBaseballTeamUsecase;
+import org.depromeet.spot.usecase.port.in.team.CreateBaseballTeamUsecase.CreateBaseballTeamCommand;
 import org.depromeet.spot.usecase.port.in.team.CreateHomeTeamUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,10 +34,23 @@ public class CreateBaseballTeamController {
 
     @PostMapping("/baseball-teams")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "신규 야구 팀(구단) 정보를 생성한다.")
-    public void create(@RequestBody @Valid @NotEmpty List<CreateBaseballTeamReq> requests) {
-        List<BaseballTeam> teams = requests.stream().map(CreateBaseballTeamReq::toDomain).toList();
-        createBaseballTeamUsecase.saveAll(teams);
+    @Operation(summary = "신규 야구 팀(구단) 정보를 단일 생성한다.")
+    public void create(
+            @RequestParam("logo") MultipartFile logo,
+            @RequestParam("name") String name,
+            @RequestParam("alias") String alias,
+            @RequestParam("rgbRed") int rgbRed,
+            @RequestParam("rgbBlue") int rgbBlue,
+            @RequestParam("rgbGreen") int rgbGreen) {
+        RgbCode rgbCode = RgbCode.builder().blue(rgbBlue).red(rgbRed).green(rgbGreen).build();
+        CreateBaseballTeamCommand command =
+                CreateBaseballTeamCommand.builder()
+                        .logo(logo)
+                        .name(name)
+                        .alias(alias)
+                        .rgbCode(rgbCode)
+                        .build();
+        createBaseballTeamUsecase.save(command);
     }
 
     @PostMapping("/stadiums/{stadiumId}/baseball-teams")
