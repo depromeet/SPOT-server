@@ -3,11 +3,10 @@ package org.depromeet.spot.domain.review;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
 public class ReviewKeyword {
-
     private final Long id;
-    private final Long reviewId;
-    private final Long keywordId;
+    private final Review review;
+    private final Keyword keyword;
 }

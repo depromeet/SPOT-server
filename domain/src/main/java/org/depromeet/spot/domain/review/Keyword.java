@@ -3,11 +3,10 @@ package org.depromeet.spot.domain.review;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
 public class Keyword {
-
     private final Long id;
     private final String content;
-    private final boolean isPositive;
+    private final Boolean isPositive;
 }
