@@ -40,6 +40,7 @@ public class StadiumHomeTeamCustomRepository {
                 .on(stadiumHomeTeamEntity.stadiumId.eq(stadiumEntity.id))
                 .join(baseballTeamEntity)
                 .on(stadiumHomeTeamEntity.teamId.eq(baseballTeamEntity.id))
+                .orderBy(stadiumEntity.name.asc())
                 .transform(groupBy(stadiumEntity).as(list(baseballTeamEntity)));
     }
 }
