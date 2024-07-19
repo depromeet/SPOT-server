@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.application.review.dto.request.BlockReviewRequest;
 import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
@@ -15,6 +16,9 @@ import org.depromeet.spot.domain.review.BlockReviewListResult;
 import org.depromeet.spot.domain.review.MyReviewListResult;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReviewReadUsecase;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class ReviewReadController {
 
     private final ReviewReadUsecase reviewReadUsecase;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/stadiums/{stadiumId}/blocks/{blockCode}/reviews")
@@ -42,23 +47,40 @@ public class ReviewReadController {
                     Long stadiumId,
             @PathVariable("blockCode") @NotNull @Parameter(description = "블록 코드", required = true)
                     String blockCode,
-            @ModelAttribute @Valid BlockReviewRequest request) {
+            @ModelAttribute @Valid BlockReviewRequest request,
+            @ParameterObject @PageableDefault(size = 20, page = 0) Pageable pageable) {
         BlockReviewListResult result =
-                reviewReadUsecase.findReviewsByBlockId(
+                reviewReadUsecase.findReviewsByStadiumIdAndBlockCode(
                         stadiumId,
                         blockCode,
                         request.rowNumber(),
                         request.seatNumber(),
-                        request.offset(),
-                        request.limit());
+                        request.year(),
+                        request.month(),
+                        pageable);
         return BlockReviewListResponse.from(result, request.rowNumber(), request.seatNumber());
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/reviews/months")
     @Operation(summary = "리뷰가 작성된 년도와 월 정보를 조회한다.")
-    public ReviewMonthsResponse findReviewMonths(@RequestParam @NotNull Long memberId) {
-        List<ReviewYearMonth> yearMonths = reviewReadUsecase.findReviewMonths(memberId);
+    public ReviewMonthsResponse findReviewMonths(@RequestHeader("Authorization") String token) {
+
+        // "Bearer " 접두사 제거
+        String jwt = token.replace("Bearer ", "");
+
+        // ToDo: JWT 유효성 검사
+        //        if (!jwtTokenUtil.isValidateToken(jwt)) {
+        //            throw new UnauthorizedException("Invalid token");
+        //        }
+
+        // JWT에서 id 추출
+        String memberId = jwtTokenUtil.getIdFromJWT(jwt);
+
+        // memberId를 Long으로 변환
+        Long memberIdLong = Long.parseLong(memberId);
+
+        List<ReviewYearMonth> yearMonths = reviewReadUsecase.findReviewMonths(memberIdLong);
         return ReviewMonthsResponse.from(yearMonths);
     }
 
@@ -67,14 +89,12 @@ public class ReviewReadController {
     @Operation(
             summary = "자신이 작성한 리뷰 목록을 조회한다.",
             description = "연도와 월로 필터링할 수 있다. 필터링 없이 전체를 조회하려면 year와 month를 null로 입력한다.")
-    public MyReviewListResponse findMyReviews(@ModelAttribute @Valid MyReviewRequest request) {
+    public MyReviewListResponse findMyReviews(
+            @ModelAttribute @Valid MyReviewRequest request,
+            @ParameterObject @PageableDefault(size = 20, page = 0) Pageable pageable) {
         MyReviewListResult result =
-                reviewReadUsecase.findMyReviews(
-                        request.userId(),
-                        request.offset(),
-                        request.limit(),
-                        request.year(),
-                        request.month());
+                reviewReadUsecase.findMyReviewsByUserId(
+                        request.userId(), request.year(), request.month(), pageable);
         return MyReviewListResponse.from(result);
     }
 }
