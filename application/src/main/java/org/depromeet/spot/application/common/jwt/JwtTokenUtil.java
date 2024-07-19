@@ -1,6 +1,9 @@
 package org.depromeet.spot.application.common.jwt;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,15 +44,20 @@ public class JwtTokenUtil {
     }
 
     public String generateToken(Long memberId, MemberRole memberRole) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime expiredAtDateTime = currentDateTime.plusYears(1);
+
+        ZonedDateTime zonedCurrent = expiredAtDateTime.atZone(ZoneId.systemDefault());
+        ZonedDateTime zonedExpire = expiredAtDateTime.atZone(ZoneId.systemDefault());
+        Date current = Date.from(zonedCurrent.toInstant());
+        Date expiredAt = Date.from(zonedExpire.toInstant());
+
         return Jwts.builder()
                 .setHeader(createHeader())
                 .setClaims(createClaims(memberRole))
                 .setSubject(memberId.toString())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(
-                        new Date(
-                                System.currentTimeMillis()
-                                        + 1000 * 60 * 60 * 24 * 30 * 12L)) // 토큰 만료 시간
+                .setIssuedAt(current)
+                .setExpiration(expiredAt)
                 .signWith(SignatureAlgorithm.HS256, SECRETKEY.getBytes())
                 .compact();
     }
