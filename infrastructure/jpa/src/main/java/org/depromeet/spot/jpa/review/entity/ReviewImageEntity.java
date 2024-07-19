@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.review.ReviewImage;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -30,16 +31,12 @@ public class ReviewImageEntity extends BaseEntity {
     @Column(name = "url", nullable = false, length = 255)
     private String url;
 
-    //    public static ReviewImageEntity from(ReviewImage reviewImage) {
-    //        return new ReviewImageEntity(reviewImage.getReviewId(), reviewImage.getUrl());
-    //    }
-    //
-    //    public ReviewImage toDomain() {
-    //        return ReviewImage.builder()
-    //                .id(this.getId())
-    //                .reviewId(reviewId)
-    //                .url(url)
-    //                .createdAt(this.getCreatedAt())
-    //                .build();
-    //    }
+    public static ReviewImageEntity from(ReviewImage reviewImage) {
+        return new ReviewImageEntity(
+                ReviewEntity.from(reviewImage.getReview()), reviewImage.getUrl());
+    }
+
+    public ReviewImage toDomain() {
+        return ReviewImage.builder().id(this.getId()).review(review.toDomain()).url(url).build();
+    }
 }

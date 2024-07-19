@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.review.ReviewKeyword;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -33,16 +34,17 @@ public class ReviewKeywordEntity extends BaseEntity {
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private KeywordEntity keyword;
 
-    //    public static ReviewKeywordEntity from(ReviewKeyword reviewKeyword) {
-    //        return new ReviewKeywordEntity(reviewKeyword.getReviewId(),
-    // reviewKeyword.getKeywordId());
-    //    }
-    //
-    //    public ReviewKeyword toDomain() {
-    //        return ReviewKeyword.builder()
-    //                .id(this.getId())
-    //                .reviewId(reviewId)
-    //                .keywordId(keywordId)
-    //                .build();
-    //    }
+    public static ReviewKeywordEntity from(ReviewKeyword reviewKeyword) {
+        return new ReviewKeywordEntity(
+                ReviewEntity.from(reviewKeyword.getReview()),
+                KeywordEntity.from(reviewKeyword.getKeyword()));
+    }
+
+    public ReviewKeyword toDomain() {
+        return ReviewKeyword.builder()
+                .id(this.getId())
+                .review(review.toDomain())
+                .keyword(keyword.toDomain())
+                .build();
+    }
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.block.BlockTopKeyword;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 import org.depromeet.spot.jpa.review.entity.KeywordEntity;
 
@@ -38,19 +39,19 @@ public class BlockTopKeywordEntity extends BaseEntity {
     @Column(name = "count", nullable = false)
     private Long count;
 
-    //    public static BlockTopKeywordEntity from(BlockTopKeyword blockTopKeyword) {
-    //        return new BlockTopKeywordEntity(
-    //                blockTopKeyword.getBlockId(),
-    //                blockTopKeyword.getKeywordId(),
-    //                blockTopKeyword.getCount());
-    //    }
-    //
-    //    public BlockTopKeyword toDomain() {
-    //        return BlockTopKeyword.builder()
-    //                .id(this.getId())
-    //                .blockId(blockId)
-    //                .keywordId(keywordId)
-    //                .count(count)
-    //                .build();
-    //    }
+    public static BlockTopKeywordEntity from(BlockTopKeyword blockTopKeyword) {
+        return new BlockTopKeywordEntity(
+                BlockEntity.from(blockTopKeyword.getBlock()),
+                KeywordEntity.from(blockTopKeyword.getKeyword()),
+                blockTopKeyword.getCount());
+    }
+
+    public BlockTopKeyword toDomain() {
+        return BlockTopKeyword.builder()
+                .id(this.getId())
+                .block(block.toDomain())
+                .keyword(keyword.toDomain())
+                .count(count)
+                .build();
+    }
 }

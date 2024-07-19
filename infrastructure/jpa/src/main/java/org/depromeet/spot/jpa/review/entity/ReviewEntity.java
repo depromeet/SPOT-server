@@ -2,6 +2,7 @@ package org.depromeet.spot.jpa.review.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.jpa.block.entity.BlockEntity;
 import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
@@ -106,32 +108,43 @@ public class ReviewEntity extends BaseEntity {
     // keywords.stream().map(KeywordEntity::toDomain).collect(Collectors.toList()))
     //                .build();
     //    }
+    public static ReviewEntity from(Review review) {
+        return new ReviewEntity(
+                MemberEntity.from(review.getMember()),
+                StadiumEntity.from(review.getStadium()),
+                BlockEntity.from(review.getBlock()),
+                BlockRowEntity.from(review.getRow()),
+                SeatEntity.from(review.getSeat()),
+                review.getDateTime(),
+                review.getContent(),
+                review.getDeletedAt(),
+                review.getImages().stream()
+                        .map(ReviewImageEntity::from)
+                        .collect(Collectors.toList()),
+                review.getKeywords().stream()
+                        .map(ReviewKeywordEntity::from)
+                        .collect(Collectors.toList()));
+    }
 
-    //    public static ReviewEntity from(Review review) {
-    //        return new ReviewEntity(
-    //                review.getUserId(),
-    //                review.getStadiumId(),
-    //                review.getBlockId(),
-    //                review.getRowId(),
-    //                review.getSeatId(),
-    //                review.getDateTime(),
-    //                review.getContent(),
-    //                review.getDeletedAt());
-    //    }
-    //
-    //    public Review toDomain() {
-    //        return Review.builder()
-    //                .id(this.getId())
-    //                .userId(userId)
-    //                .stadiumId(stadiumId)
-    //                .blockId(blockId)
-    //                .rowId(rowId)
-    //                .seatId(seatId)
-    //                .dateTime(dateTime)
-    //                .content(content)
-    //                .createdAt(this.getCreatedAt())
-    //                .updatedAt(this.getUpdatedAt())
-    //                .deletedAt(deletedAt)
-    //                .build();
-    //    }
+    public Review toDomain() {
+        return Review.builder()
+                .id(this.getId())
+                .member(member.toDomain())
+                .stadium(stadium.toDomain())
+                .block(block.toDomain())
+                .row(row.toDomain())
+                .seat(seat.toDomain())
+                .dateTime(dateTime)
+                .content(content)
+                .deletedAt(deletedAt)
+                .images(
+                        images.stream()
+                                .map(ReviewImageEntity::toDomain)
+                                .collect(Collectors.toList()))
+                .keywords(
+                        keywords.stream()
+                                .map(ReviewKeywordEntity::toDomain)
+                                .collect(Collectors.toList()))
+                .build();
+    }
 }

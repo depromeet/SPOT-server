@@ -23,7 +23,7 @@ public class KeywordEntity extends BaseEntity {
     private boolean isPositive;
 
     public static KeywordEntity from(Keyword keyword) {
-        return new KeywordEntity(keyword.getContent(), keyword.isPositive());
+        return new KeywordEntity(keyword.getContent(), keyword.getIsPositive());
     }
 
     public Keyword toDomain() {
