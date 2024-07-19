@@ -116,13 +116,15 @@ jobs:
                       -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
                       -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
                       -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
+                      -e NCP_OBJECT_STORAGE_ACCESS_KEY=${{ secrets.NCP_OBJECT_STORAGE_ACCESS_KEY }} \
+                      -e NCP_OBJECT_STORAGE_SECRET_KEY=${{ secrets.NCP_OBJECT_STORAGE_SECRET_KEY }} \
                       -e TZ=Asia/Seoul \
                       ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                     docker system prune -af
 
   create-release:
       needs: [ build-and-test, deploy ]  # deploy job이 성공적으로 완료된 후에만 실행
-      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
+#      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
       runs-on: ubuntu-latest
       permissions:
           contents: write
