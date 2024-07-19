@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.block.BlockTopKeyword;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
-import org.depromeet.spot.jpa.review.entity.KeywordEntity;
+import org.depromeet.spot.jpa.review.entity.ReviewKeywordEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -34,7 +34,7 @@ public class BlockTopKeywordEntity extends BaseEntity {
             name = "keyword_id",
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private KeywordEntity keyword;
+    private ReviewKeywordEntity keyword;
 
     @Column(name = "count", nullable = false)
     private Long count;
@@ -42,7 +42,7 @@ public class BlockTopKeywordEntity extends BaseEntity {
     public static BlockTopKeywordEntity from(BlockTopKeyword blockTopKeyword) {
         return new BlockTopKeywordEntity(
                 BlockEntity.from(blockTopKeyword.getBlock()),
-                KeywordEntity.from(blockTopKeyword.getKeyword()),
+                ReviewKeywordEntity.from(blockTopKeyword.getKeyword()),
                 blockTopKeyword.getCount());
     }
 
