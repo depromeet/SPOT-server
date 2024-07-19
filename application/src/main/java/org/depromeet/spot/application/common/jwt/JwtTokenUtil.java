@@ -10,7 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -34,15 +33,11 @@ public class JwtTokenUtil {
     @Value("${spring.jwt.secret}")
     private String SECRETKEY;
 
-    public HttpHeaders getJWTToken(Member member) {
+    public String getJWTToken(Member member) {
         // TODO 토큰 구현하기.
 
         // jwt 토큰 생성
-        String token = generateToken(member.getId(), member.getRole());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-        return headers;
+        return generateToken(member.getId(), member.getRole());
     }
 
     public String generateToken(Long memberId, MemberRole memberRole) {
@@ -53,7 +48,8 @@ public class JwtTokenUtil {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(
                         new Date(
-                                System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30L)) // 토큰 만료 시간
+                                System.currentTimeMillis()
+                                        + 1000 * 60 * 60 * 24 * 30 * 12L)) // 토큰 만료 시간
                 .signWith(SignatureAlgorithm.HS256, SECRETKEY.getBytes())
                 .compact();
     }
