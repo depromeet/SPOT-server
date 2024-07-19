@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
 
 import org.depromeet.spot.common.exception.review.ReviewException;
+import org.depromeet.spot.domain.review.BlockReviewListResult;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewKeyword;
-import org.depromeet.spot.domain.review.ReviewListResult;
 import org.depromeet.spot.usecase.service.fake.FakeReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,8 @@ class ReviewReadServiceTest {
         fakeReviewRepository.save(review2);
 
         // When
-        ReviewListResult result = reviewReadService.findReviewsByBlockId(1L, 1L, null, null, 0, 10);
+        BlockReviewListResult result =
+                reviewReadService.findReviewsByBlockId(1L, 1L, null, null, 0, 10);
 
         // Then
         assertEquals(2, result.reviews().size());
@@ -109,7 +110,8 @@ class ReviewReadServiceTest {
         }
 
         // When
-        ReviewListResult result = reviewReadService.findReviewsByBlockId(1L, 1L, null, null, 5, 10);
+        BlockReviewListResult result =
+                reviewReadService.findReviewsByBlockId(1L, 1L, null, null, 5, 10);
 
         // Then
         assertEquals(10, result.reviews().size());
@@ -124,14 +126,15 @@ class ReviewReadServiceTest {
                         .id(1L)
                         .userId(1L)
                         .content("Great game!")
-                        .keywords(Collections.singletonList(createReviewKeyword(1L, 1L, 1L, true)))
+                        .reviewKeywords(
+                                Collections.singletonList(createReviewKeyword(1L, 1L, 1L, true)))
                         .build();
         Review review2 =
                 Review.builder()
                         .id(2L)
                         .userId(1L)
                         .content("Amazing view!")
-                        .keywords(
+                        .reviewKeywords(
                                 Collections.singletonList(
                                         createReviewKeyword(2L, 2L, 2L, true))) // 다른 keywordId 사용
                         .build();
@@ -139,7 +142,7 @@ class ReviewReadServiceTest {
         fakeReviewRepository.save(review2);
 
         // When
-        ReviewListResult result = reviewReadService.findMyReviews(1L, 0, 10, null, null);
+        BlockReviewListResult result = reviewReadService.findMyReviews(1L, 0, 10, null, null);
 
         // Then
         assertEquals(2, result.reviews().size());
