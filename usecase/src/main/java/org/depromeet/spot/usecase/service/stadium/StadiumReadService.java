@@ -1,5 +1,7 @@
 package org.depromeet.spot.usecase.service.stadium;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,29 +29,39 @@ public class StadiumReadService implements StadiumReadUsecase {
     public List<StadiumHomeTeamInfo> findAllStadiums() {
         Map<Stadium, List<BaseballTeam>> stadiumHomeTeams =
                 readStadiumHomeTeamUsecase.findAllStadiumHomeTeam();
-        return stadiumHomeTeams.entrySet().stream()
-                .map(
-                        entry -> {
-                            Stadium stadium = entry.getKey();
-                            List<BaseballTeam> teams = entry.getValue();
-                            List<HomeTeamInfo> homeTeamInfos =
-                                    teams.stream()
-                                            .map(
-                                                    t ->
-                                                            new HomeTeamInfo(
-                                                                    t.getId(),
-                                                                    t.getAlias(),
-                                                                    t.getLabelRgbCode()))
-                                            .toList();
+        List<StadiumHomeTeamInfo> immutableList =
+                stadiumHomeTeams.entrySet().stream()
+                        .map(
+                                entry -> {
+                                    Stadium stadium = entry.getKey();
+                                    List<BaseballTeam> teams = entry.getValue();
+                                    List<HomeTeamInfo> homeTeamInfos =
+                                            teams.stream()
+                                                    .map(
+                                                            t ->
+                                                                    new HomeTeamInfo(
+                                                                            t.getId(),
+                                                                            t.getAlias(),
+                                                                            t.getLabelRgbCode()))
+                                                    .toList();
 
-                            return new StadiumHomeTeamInfo(
-                                    stadium.getId(),
-                                    stadium.getName(),
-                                    homeTeamInfos,
-                                    stadium.getMainImage(),
-                                    stadium.isActive());
-                        })
-                .toList();
+                                    return new StadiumHomeTeamInfo(
+                                            stadium.getId(),
+                                            stadium.getName(),
+                                            homeTeamInfos,
+                                            stadium.getMainImage(),
+                                            stadium.isActive());
+                                })
+                        .toList();
+        List<StadiumHomeTeamInfo> result = new ArrayList<>(immutableList);
+        result.sort(
+                new Comparator<>() {
+                    @Override
+                    public int compare(StadiumHomeTeamInfo o1, StadiumHomeTeamInfo o2) {
+                        return Boolean.compare(o2.isActive(), o1.isActive());
+                    }
+                });
+        return result;
     }
 
     @Override
