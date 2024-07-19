@@ -3,20 +3,28 @@ package org.depromeet.spot.application.review.dto.response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.domain.review.ReviewListResult;
+import org.depromeet.spot.domain.review.BlockReviewListResult;
 
-public record ReviewListResponse(
+public record BlockReviewListResponse(
         List<KeywordCountResponse> keywords,
-        List<ReviewResponse> reviews,
+        List<BaseReviewResponse> reviews,
         Long totalCount,
         int filteredCount,
         int offset,
         int limit,
         boolean hasMore,
         FilterInfo filter) {
-    public static ReviewListResponse from(ReviewListResult result) {
-        List<ReviewResponse> reviewResponses =
-                result.reviews().stream().map(ReviewResponse::from).collect(Collectors.toList());
+    public static BlockReviewListResponse from(
+            BlockReviewListResult result, Long rowNumber, Long seatNumber) {
+        List<BaseReviewResponse> reviewResponses =
+                result.reviews().stream()
+                        .map(
+                                review ->
+                                        BaseReviewResponse.from(
+                                                review,
+                                                result.getMemberByReviewId(review.getId()),
+                                                result.getSeatByReviewId(review.getId())))
+                        .collect(Collectors.toList());
 
         List<KeywordCountResponse> keywordResponses =
                 result.topKeywords().stream()
@@ -24,9 +32,9 @@ public record ReviewListResponse(
                         .collect(Collectors.toList());
 
         boolean hasMore = (result.offset() + result.reviews().size()) < result.totalCount();
-        FilterInfo filter = new FilterInfo(null, null); // Assuming no filter info for now
+        FilterInfo filter = new FilterInfo(rowNumber, seatNumber);
 
-        return new ReviewListResponse(
+        return new BlockReviewListResponse(
                 keywordResponses,
                 reviewResponses,
                 result.totalCount(),
@@ -39,5 +47,5 @@ public record ReviewListResponse(
 
     record KeywordCountResponse(String content, Long count) {}
 
-    record FilterInfo(Long rowId, Integer seatNumber) {}
+    record FilterInfo(Long rowNumber, Long seatNumber) {}
 }
