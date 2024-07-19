@@ -18,7 +18,6 @@ public class Review {
     private final Long blockId;
     private final Long seatId;
     private final Long rowId;
-    private final Long seatNumber;
 
     private final LocalDateTime dateTime;
     private final String content;
@@ -37,7 +36,6 @@ public class Review {
                 blockId,
                 seatId,
                 rowId,
-                seatNumber,
                 dateTime,
                 content,
                 createdAt,

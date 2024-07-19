@@ -37,9 +37,6 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "seat_id", nullable = false)
     private Long seatId;
 
-    @Column(name = "seat_number", nullable = false)
-    private Long seatNumber;
-
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 

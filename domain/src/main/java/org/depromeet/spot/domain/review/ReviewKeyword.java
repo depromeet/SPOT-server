@@ -10,5 +10,4 @@ public class ReviewKeyword {
     private final Long id;
     private final Long reviewId;
     private final Long keywordId;
-    private final Boolean isPositive;
 }

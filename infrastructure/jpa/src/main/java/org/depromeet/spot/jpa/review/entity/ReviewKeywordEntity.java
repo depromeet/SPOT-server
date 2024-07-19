@@ -22,14 +22,8 @@ public class ReviewKeywordEntity extends BaseEntity {
     @Column(name = "keyword_id", nullable = false)
     private Long keywordId;
 
-    @Column(name = "is_positive", nullable = false)
-    private Boolean isPositive;
-
     public static ReviewKeywordEntity from(ReviewKeyword reviewKeyword) {
-        return new ReviewKeywordEntity(
-                reviewKeyword.getReviewId(),
-                reviewKeyword.getKeywordId(),
-                reviewKeyword.getIsPositive());
+        return new ReviewKeywordEntity(reviewKeyword.getReviewId(), reviewKeyword.getKeywordId());
     }
 
     public ReviewKeyword toDomain() {
@@ -37,7 +31,6 @@ public class ReviewKeywordEntity extends BaseEntity {
                 .id(this.getId())
                 .reviewId(reviewId)
                 .keywordId(keywordId)
-                .isPositive(isPositive)
                 .build();
     }
 }
