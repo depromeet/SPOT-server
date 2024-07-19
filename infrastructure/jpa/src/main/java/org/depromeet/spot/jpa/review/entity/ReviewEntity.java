@@ -2,14 +2,24 @@ package org.depromeet.spot.jpa.review.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.jpa.block.entity.BlockEntity;
+import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
+import org.depromeet.spot.jpa.member.entity.MemberEntity;
+import org.depromeet.spot.jpa.seat.entity.SeatEntity;
+import org.depromeet.spot.jpa.stadium.entity.StadiumEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,20 +32,40 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ReviewEntity extends BaseEntity {
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private MemberEntity member;
 
-    @Column(name = "stadium_id", nullable = false)
-    private Long stadiumId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "stadium_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private StadiumEntity stadium;
 
-    @Column(name = "block_id", nullable = false)
-    private Long blockId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "block_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private BlockEntity block;
 
-    @Column(name = "row_id", nullable = false)
-    private Long rowId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "row_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private BlockRowEntity row;
 
-    @Column(name = "seat_id", nullable = false)
-    private Long seatId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "seat_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private SeatEntity seat;
 
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
@@ -46,54 +76,62 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    public static Review createReviewWithDetails(
-            ReviewEntity entity, List<ReviewImageEntity> images, List<KeywordEntity> keywords) {
-        return Review.builder()
-                .id(entity.getId())
-                .userId(entity.getUserId())
-                .stadiumId(entity.getStadiumId())
-                .blockId(entity.getBlockId())
-                .rowId(entity.getRowId())
-                .seatId(entity.getSeatId())
-                .dateTime(entity.getDateTime())
-                .content(entity.getContent())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .deletedAt(entity.getDeletedAt())
-                .images(
-                        images.stream()
-                                .map(ReviewImageEntity::toDomain)
-                                .collect(Collectors.toList()))
-                .keywords(
-                        keywords.stream().map(KeywordEntity::toDomain).collect(Collectors.toList()))
-                .build();
-    }
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewImageEntity> images;
 
-    public static ReviewEntity from(Review review) {
-        return new ReviewEntity(
-                review.getUserId(),
-                review.getStadiumId(),
-                review.getBlockId(),
-                review.getRowId(),
-                review.getSeatId(),
-                review.getDateTime(),
-                review.getContent(),
-                review.getDeletedAt());
-    }
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewKeywordEntity> keywords;
 
-    public Review toDomain() {
-        return Review.builder()
-                .id(this.getId())
-                .userId(userId)
-                .stadiumId(stadiumId)
-                .blockId(blockId)
-                .rowId(rowId)
-                .seatId(seatId)
-                .dateTime(dateTime)
-                .content(content)
-                .createdAt(this.getCreatedAt())
-                .updatedAt(this.getUpdatedAt())
-                .deletedAt(deletedAt)
-                .build();
-    }
+    //    public static Review createReviewWith(
+    //            ReviewEntity entity, List<ReviewImageEntity> images, List<KeywordEntity> keywords)
+    // {
+    //        return Review.builder()
+    //                .id(entity.getId())
+    //                .userId(entity.member.getId())
+    //                .stadiumId(entity.stadium.getId())
+    //                .blockId(entity.block.getId())
+    //                .rowId(entity.block.getId())
+    //                .seatId(entity.seat.getId())
+    //                .dateTime(entity.getDateTime())
+    //                .content(entity.getContent())
+    //                .createdAt(entity.getCreatedAt())
+    //                .updatedAt(entity.getUpdatedAt())
+    //                .deletedAt(entity.getDeletedAt())
+    //                .images(
+    //                        images.stream()
+    //                                .map(ReviewImageEntity::toDomain)
+    //                                .collect(Collectors.toList()))
+    //                .keywords(
+    //
+    // keywords.stream().map(KeywordEntity::toDomain).collect(Collectors.toList()))
+    //                .build();
+    //    }
+
+    //    public static ReviewEntity from(Review review) {
+    //        return new ReviewEntity(
+    //                review.getUserId(),
+    //                review.getStadiumId(),
+    //                review.getBlockId(),
+    //                review.getRowId(),
+    //                review.getSeatId(),
+    //                review.getDateTime(),
+    //                review.getContent(),
+    //                review.getDeletedAt());
+    //    }
+    //
+    //    public Review toDomain() {
+    //        return Review.builder()
+    //                .id(this.getId())
+    //                .userId(userId)
+    //                .stadiumId(stadiumId)
+    //                .blockId(blockId)
+    //                .rowId(rowId)
+    //                .seatId(seatId)
+    //                .dateTime(dateTime)
+    //                .content(content)
+    //                .createdAt(this.getCreatedAt())
+    //                .updatedAt(this.getUpdatedAt())
+    //                .deletedAt(deletedAt)
+    //                .build();
+    //    }
 }

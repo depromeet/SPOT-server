@@ -27,6 +27,6 @@ public class KeywordEntity extends BaseEntity {
     }
 
     public Keyword toDomain() {
-        return Keyword.builder().id(this.getId()).content(content).build();
+        return Keyword.builder().id(this.getId()).content(content).isPositive(isPositive).build();
     }
 }
