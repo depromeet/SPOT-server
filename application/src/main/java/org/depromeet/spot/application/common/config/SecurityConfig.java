@@ -19,6 +19,18 @@ public class SecurityConfig {
 
     private final JwtTokenUtil jwtTokenUtil;
 
+    private static final String[] AUTH_WHITELIST = {
+        "/api/**",
+        "/swagger-ui/**",
+        "/api-docs",
+        "swagger-ui-custom.html",
+        "/v3/api-docs/**",
+        "/api-docs/**",
+        "/swagger-ui.html",
+        "/favicon.ico/**",
+        "/api/v1/members/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,9 +43,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize ->
                                 authorize
-                                        // 테스트, 개발 중엔 모든 경로 오픈.
-                                        .requestMatchers("/**")
-                                        .permitAll())
+                                        .requestMatchers(AUTH_WHITELIST)
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated())
                 // UsernamePasswordAuthenticationFilter 필터 전에 jwt 필터가 먼저 동작하도록함.
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenUtil),
