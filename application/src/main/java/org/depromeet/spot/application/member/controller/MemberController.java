@@ -4,9 +4,9 @@ import jakarta.validation.Valid;
 
 import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.application.member.dto.request.RegisterReq;
+import org.depromeet.spot.application.member.dto.response.JwtTokenResponse;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,25 +36,25 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Member 회원가입 API")
-    public HttpHeaders create(@RequestBody @Valid RegisterReq request) {
+    public JwtTokenResponse create(@RequestBody @Valid RegisterReq request) {
 
         Member member = request.toDomain();
         Member memberResult = memberUsecase.create(member);
 
-        return jwtTokenUtil.getJWTToken(memberResult);
+        return new JwtTokenResponse(jwtTokenUtil.getJWTToken(memberResult));
     }
 
     @GetMapping("/{idCode}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Member 로그인 API")
-    public HttpHeaders login(
+    public JwtTokenResponse login(
             @PathVariable("idCode")
                     @Parameter(name = "idCode", description = "sns idCode", required = true)
                     String idCode) {
 
         Member member = memberUsecase.login(idCode);
 
-        return jwtTokenUtil.getJWTToken(member);
+        return new JwtTokenResponse(jwtTokenUtil.getJWTToken(member));
     }
 
     @GetMapping("/duplicatedNickname/{nickname}")
