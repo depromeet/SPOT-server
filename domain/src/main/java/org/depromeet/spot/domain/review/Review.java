@@ -25,10 +25,9 @@ public class Review {
     private final LocalDateTime updatedAt;
     private final LocalDateTime deletedAt;
     private final List<ReviewImage> images;
-    private final List<ReviewKeyword> keywords;
+    private final List<Keyword> keywords;
 
-    public Review addImagesAndKeywords(
-            List<ReviewImage> newImages, List<ReviewKeyword> newKeywords) {
+    public Review addImagesAndKeywords(List<ReviewImage> newImages, List<Keyword> newKeywords) {
         return new Review(
                 id,
                 userId,
