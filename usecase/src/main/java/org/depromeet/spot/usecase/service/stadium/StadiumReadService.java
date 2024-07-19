@@ -55,12 +55,8 @@ public class StadiumReadService implements StadiumReadUsecase {
                         .toList();
         List<StadiumHomeTeamInfo> result = new ArrayList<>(immutableList);
         result.sort(
-                new Comparator<>() {
-                    @Override
-                    public int compare(StadiumHomeTeamInfo o1, StadiumHomeTeamInfo o2) {
-                        return Boolean.compare(o2.isActive(), o1.isActive());
-                    }
-                });
+                Comparator.comparing((StadiumHomeTeamInfo info) -> !info.isActive())
+                        .thenComparing(StadiumHomeTeamInfo::getName));
         return result;
     }
 
