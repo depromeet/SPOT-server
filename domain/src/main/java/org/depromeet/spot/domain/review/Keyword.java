@@ -9,4 +9,5 @@ public class Keyword {
 
     private final Long id;
     private final String content;
+    private final boolean isPositive;
 }
