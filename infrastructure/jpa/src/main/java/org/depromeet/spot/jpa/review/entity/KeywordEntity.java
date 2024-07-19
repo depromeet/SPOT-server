@@ -19,8 +19,11 @@ public class KeywordEntity extends BaseEntity {
     @Column(name = "content", nullable = false, length = 50)
     private String content;
 
+    @Column(name = "isPositive", nullable = false)
+    private boolean isPositive;
+
     public static KeywordEntity from(Keyword keyword) {
-        return new KeywordEntity(keyword.getContent());
+        return new KeywordEntity(keyword.getContent(), keyword.isPositive());
     }
 
     public Keyword toDomain() {

@@ -47,9 +47,7 @@ public class ReviewEntity extends BaseEntity {
     private LocalDateTime deletedAt;
 
     public static Review createReviewWithDetails(
-            ReviewEntity entity,
-            List<ReviewImageEntity> images,
-            List<ReviewKeywordEntity> keywords) {
+            ReviewEntity entity, List<ReviewImageEntity> images, List<KeywordEntity> keywords) {
         return Review.builder()
                 .id(entity.getId())
                 .userId(entity.getUserId())
@@ -57,7 +55,6 @@ public class ReviewEntity extends BaseEntity {
                 .blockId(entity.getBlockId())
                 .rowId(entity.getRowId())
                 .seatId(entity.getSeatId())
-                .seatNumber(entity.getSeatNumber())
                 .dateTime(entity.getDateTime())
                 .content(entity.getContent())
                 .createdAt(entity.getCreatedAt())
@@ -68,9 +65,7 @@ public class ReviewEntity extends BaseEntity {
                                 .map(ReviewImageEntity::toDomain)
                                 .collect(Collectors.toList()))
                 .keywords(
-                        keywords.stream()
-                                .map(ReviewKeywordEntity::toDomain)
-                                .collect(Collectors.toList()))
+                        keywords.stream().map(KeywordEntity::toDomain).collect(Collectors.toList()))
                 .build();
     }
 
@@ -81,7 +76,6 @@ public class ReviewEntity extends BaseEntity {
                 review.getBlockId(),
                 review.getRowId(),
                 review.getSeatId(),
-                review.getSeatNumber(),
                 review.getDateTime(),
                 review.getContent(),
                 review.getDeletedAt());
@@ -95,7 +89,6 @@ public class ReviewEntity extends BaseEntity {
                 .blockId(blockId)
                 .rowId(rowId)
                 .seatId(seatId)
-                .seatNumber(seatNumber)
                 .dateTime(dateTime)
                 .content(content)
                 .createdAt(this.getCreatedAt())
