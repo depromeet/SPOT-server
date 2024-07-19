@@ -1,10 +1,22 @@
 package org.depromeet.spot.usecase.port.in.review;
 
-import org.depromeet.spot.domain.review.ReviewListResult;
+import java.util.List;
+
+import org.depromeet.spot.domain.review.BlockReviewListResult;
+import org.depromeet.spot.domain.review.MyReviewListResult;
+import org.depromeet.spot.domain.review.ReviewYearMonth;
 
 public interface ReviewReadUsecase {
-    ReviewListResult findReviewsByBlockId(
-            Long stadiumId, Long blockId, Long rowId, Long seatNumber, int offset, int limit);
+    BlockReviewListResult findReviewsByBlockId(
+            Long stadiumId,
+            String blockCode,
+            Long rowNumber,
+            Long seatNumber,
+            int offset,
+            int limit);
 
-    ReviewListResult findMyReviews(Long userId, int offset, int limit, Integer year, Integer month);
+    MyReviewListResult findMyReviews(
+            Long userId, int offset, int limit, Integer year, Integer month);
+
+    List<ReviewYearMonth> findReviewMonths(Long memberId);
 }
