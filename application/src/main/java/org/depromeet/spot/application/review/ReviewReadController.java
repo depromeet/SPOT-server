@@ -12,9 +12,9 @@ import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.ReviewMonthsResponse;
-import org.depromeet.spot.domain.review.BlockReviewListResult;
 import org.depromeet.spot.domain.review.MyReviewListResult;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
+import org.depromeet.spot.domain.review.result.BlockReviewListResult;
 import org.depromeet.spot.usecase.port.in.review.ReviewReadUsecase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +57,8 @@ public class ReviewReadController {
                         request.seatNumber(),
                         request.year(),
                         request.month(),
-                        pageable);
+                        pageable.getPageNumber(),
+                        pageable.getPageSize());
         return BlockReviewListResponse.from(result, request.rowNumber(), request.seatNumber());
     }
 
@@ -94,7 +95,11 @@ public class ReviewReadController {
             @ParameterObject @PageableDefault(size = 20, page = 0) Pageable pageable) {
         MyReviewListResult result =
                 reviewReadUsecase.findMyReviewsByUserId(
-                        request.userId(), request.year(), request.month(), pageable);
+                        request.userId(),
+                        request.year(),
+                        request.month(),
+                        pageable.getPageNumber(),
+                        pageable.getPageSize());
         return MyReviewListResponse.from(result);
     }
 }
