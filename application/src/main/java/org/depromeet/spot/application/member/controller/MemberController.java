@@ -56,7 +56,9 @@ public class MemberController {
                     String accessToken) {
 
         Member member = memberUsecase.login(accessToken);
-
+        if (member == null) {
+            return new JwtTokenResponse("");
+        }
         return new JwtTokenResponse(jwtTokenUtil.getJWTToken(member));
     }
 
