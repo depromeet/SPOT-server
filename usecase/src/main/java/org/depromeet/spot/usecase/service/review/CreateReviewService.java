@@ -13,6 +13,7 @@ import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.seat.ReadSeatUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
+import org.depromeet.spot.usecase.port.out.review.ReviewKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,27 +27,64 @@ public class CreateReviewService implements CreateReviewUsecase {
 
     private final ReviewRepository reviewRepository;
     private final ReviewImageRepository reviewImageRepository;
+    private final ReviewKeywordRepository reviewKeywordRepository;
     private final ReadSeatUsecase readSeatUsecase;
     private final ReadMemberUsecase readMemberUsecase;
     private final UpdateMemberUsecase updateMemberUsecase;
 
     @Override
-    public Review create(final Long seatId, final Long memberId, CreateReviewCommand command) {
+    public CreateReviewResult create(
+            final Long seatId, final Long memberId, CreateReviewCommand command) {
         Seat seat = readSeatUsecase.findById(seatId);
         Member member = readMemberUsecase.findById(memberId);
 
         Review review = reviewRepository.save(convertToDomain(seat, member, command));
-        List<ReviewImage> images =
-                reviewImageRepository.saveAll(
-                        command.images().stream()
-                                .map(url -> ReviewImage.of(review.getId(), url))
-                                .toList());
 
-        // TODO: 리뷰 키워드 저장
-        List<ReviewKeyword> keywords = new ArrayList<>();
+        List<ReviewImage> images = saveReviewImages(review, command.images());
+        List<ReviewKeyword> keywords = saveReviewKeywords(review, command.good(), command.bad());
+
+        review = review.addImagesAndKeywords(images, keywords);
 
         calculateMemberLevel(member);
-        return review.addImagesAndKeywords(images, keywords);
+
+        return new CreateReviewResult(review, member, seat);
+    }
+
+    private List<ReviewImage> saveReviewImages(Review review, List<String> imageUrls) {
+        List<ReviewImage> images =
+                imageUrls.stream()
+                        .map(url -> ReviewImage.builder().review(review).url(url).build())
+                        .toList();
+        return reviewImageRepository.saveAll(images);
+    }
+
+    private List<ReviewKeyword> saveReviewKeywords(
+            Review review, List<String> goodKeywords, List<String> badKeywords) {
+        List<ReviewKeyword> keywords = new ArrayList<>();
+
+        keywords.addAll(
+                goodKeywords.stream()
+                        .map(
+                                keyword ->
+                                        ReviewKeyword.builder()
+                                                .review(review)
+                                                .content(keyword)
+                                                .isPositive(true)
+                                                .build())
+                        .toList());
+
+        keywords.addAll(
+                badKeywords.stream()
+                        .map(
+                                keyword ->
+                                        ReviewKeyword.builder()
+                                                .review(review)
+                                                .content(keyword)
+                                                .isPositive(false)
+                                                .build())
+                        .toList());
+
+        return reviewKeywordRepository.saveAll(keywords);
     }
 
     public void calculateMemberLevel(final Member member) {
@@ -56,12 +94,12 @@ public class CreateReviewService implements CreateReviewUsecase {
 
     private Review convertToDomain(Seat seat, Member member, CreateReviewCommand command) {
         return Review.builder()
-                .userId(member.getId())
-                .stadiumId(seat.getStadium().getId())
-                .blockId(seat.getBlock().getId())
-                .seatId(seat.getId())
-                .rowId(seat.getRow().getId())
-                .seatNumber(Long.valueOf(seat.getSeatNumber()))
+                .member(member)
+                .stadium(seat.getStadium())
+                .section(seat.getSection())
+                .block(seat.getBlock())
+                .row(seat.getRow())
+                .seat(seat)
                 .dateTime(command.dateTime())
                 .content(command.content())
                 .build();
