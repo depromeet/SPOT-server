@@ -3,7 +3,6 @@ package org.depromeet.spot.usecase.service.member;
 import java.util.Optional;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
-import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
@@ -39,7 +38,9 @@ public class MemberService implements MemberUsecase {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
         Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
         if (existedMember.isEmpty()) {
-            throw new MemberNotFoundException();
+            // TODO : 404 말고 사용되지 않는 Exception 코드가 필요함.
+            //            throw new MemberNotFoundException();
+            return null;
         }
         return existedMember.get();
     }
