@@ -10,8 +10,8 @@ import org.hibernate.validator.constraints.Range;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record RegisterReq(
-        @NotNull(message = "인가 id code는 필수 값입니다.") @Schema(description = "인가 id code")
-                String idCode,
+        @NotNull(message = "인가 accessToken는 필수 값입니다.") @Schema(description = "카카오 인증 accessToken")
+                String accessToken,
         @NotNull(message = "닉네임 값은 필수입니다.")
                 @Schema(description = "설정하려는 닉네임")
                 @Length(min = 2, max = 10, message = "닉네임은 2글자에서 10글자 사이여야합니다.")
@@ -25,6 +25,6 @@ public record RegisterReq(
                 Long teamId) {
 
     public Member toDomain() {
-        return Member.builder().idToken(idCode).nickname(nickname).teamId(teamId).build();
+        return Member.builder().nickname(nickname).teamId(teamId).build();
     }
 }

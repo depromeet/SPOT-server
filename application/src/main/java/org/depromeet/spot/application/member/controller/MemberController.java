@@ -39,20 +39,23 @@ public class MemberController {
     public JwtTokenResponse create(@RequestBody @Valid RegisterReq request) {
 
         Member member = request.toDomain();
-        Member memberResult = memberUsecase.create(member);
+        Member memberResult = memberUsecase.create(request.accessToken(), member);
 
         return new JwtTokenResponse(jwtTokenUtil.getJWTToken(memberResult));
     }
 
-    @GetMapping("/{idCode}")
+    @GetMapping("/{accessToken}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Member 로그인 API")
     public JwtTokenResponse login(
-            @PathVariable("idCode")
-                    @Parameter(name = "idCode", description = "sns idCode", required = true)
-                    String idCode) {
+            @PathVariable("accessToken")
+                    @Parameter(
+                            name = "accessToken",
+                            description = "sns accessToken",
+                            required = true)
+                    String accessToken) {
 
-        Member member = memberUsecase.login(idCode);
+        Member member = memberUsecase.login(accessToken);
 
         return new JwtTokenResponse(jwtTokenUtil.getJWTToken(member));
     }
@@ -66,5 +69,15 @@ public class MemberController {
                     String nickname) {
         Boolean result = memberUsecase.duplicatedNickname(nickname);
         return result;
+    }
+
+    @GetMapping("/accessToken/{idCode}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "(백엔드용)accessToken을 받아오기 위한 API")
+    public String getAccessToken(
+            @PathVariable("idCode")
+                    @Parameter(name = "idCode", description = "카카오에서 발급 받은 idCode", required = true)
+                    String idCode) {
+        return memberUsecase.getAccessToken(idCode);
     }
 }
