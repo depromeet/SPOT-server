@@ -21,11 +21,10 @@ public class MemberService implements MemberUsecase {
     private final MemberRepository memberRepository;
 
     @Override
-    public Member create(Member member) {
+    public Member create(String accessToken, Member member) {
         if (memberRepository.existsByNickname(member.getNickname())) {
             throw new MemberNicknameConflictException();
         }
-        String accessToken = oauthRepository.getKakaoAccessToken(member.getIdToken());
         Member memberResult = oauthRepository.getRegisterUserInfo(accessToken, member);
         Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
         if (existedMember.isPresent()) {
@@ -36,8 +35,7 @@ public class MemberService implements MemberUsecase {
     }
 
     @Override
-    public Member login(String idCode) {
-        String accessToken = oauthRepository.getKakaoAccessToken(idCode);
+    public Member login(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
         Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
         if (existedMember.isEmpty()) {
@@ -51,5 +49,10 @@ public class MemberService implements MemberUsecase {
         if (memberRepository.existsByNickname(nickname))
             throw new MemberNicknameConflictException();
         return Boolean.FALSE;
+    }
+
+    @Override
+    public String getAccessToken(String idCode) {
+        return oauthRepository.getKakaoAccessToken(idCode);
     }
 }

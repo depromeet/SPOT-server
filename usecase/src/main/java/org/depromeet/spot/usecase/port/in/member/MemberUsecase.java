@@ -4,9 +4,11 @@ import org.depromeet.spot.domain.member.Member;
 
 public interface MemberUsecase {
 
-    Member create(Member member);
+    Member create(String accessToken, Member member);
 
     Member login(String idCode);
 
     Boolean duplicatedNickname(String nickname);
+
+    String getAccessToken(String idCode);
 }
