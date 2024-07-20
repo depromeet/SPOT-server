@@ -12,9 +12,9 @@ import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.ReviewMonthsResponse;
-import org.depromeet.spot.domain.review.MyReviewListResult;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.result.BlockReviewListResult;
+import org.depromeet.spot.domain.review.result.MyReviewListResult;
 import org.depromeet.spot.usecase.port.in.review.ReviewReadUsecase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -65,23 +65,25 @@ public class ReviewReadController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/reviews/months")
     @Operation(summary = "리뷰가 작성된 년도와 월 정보를 조회한다.")
-    public ReviewMonthsResponse findReviewMonths(@RequestHeader("Authorization") String token) {
+    public ReviewMonthsResponse findReviewMonths(
+            //        @RequestHeader("Authorization") String token
+            @RequestParam @Parameter(description = "유저 ID") Long userId) {
 
-        // "Bearer " 접두사 제거
-        String jwt = token.replace("Bearer ", "");
+        //        // "Bearer " 접두사 제거
+        //        String jwt = token.replace("Bearer ", "");
+        //
+        //        // ToDo: JWT 유효성 검사
+        //        //        if (!jwtTokenUtil.isValidateToken(jwt)) {
+        //        //            throw new UnauthorizedException("Invalid token");
+        //        //        }
+        //
+        //        // JWT에서 id 추출
+        //        String memberId = jwtTokenUtil.getIdFromJWT(jwt);
+        //
+        //        // memberId를 Long으로 변환
+        //        Long memberIdLong = Long.parseLong(memberId);
 
-        // ToDo: JWT 유효성 검사
-        //        if (!jwtTokenUtil.isValidateToken(jwt)) {
-        //            throw new UnauthorizedException("Invalid token");
-        //        }
-
-        // JWT에서 id 추출
-        String memberId = jwtTokenUtil.getIdFromJWT(jwt);
-
-        // memberId를 Long으로 변환
-        Long memberIdLong = Long.parseLong(memberId);
-
-        List<ReviewYearMonth> yearMonths = reviewReadUsecase.findReviewMonths(memberIdLong);
+        List<ReviewYearMonth> yearMonths = reviewReadUsecase.findReviewMonths(userId);
         return ReviewMonthsResponse.from(yearMonths);
     }
 
@@ -91,11 +93,12 @@ public class ReviewReadController {
             summary = "자신이 작성한 리뷰 목록을 조회한다.",
             description = "연도와 월로 필터링할 수 있다. 필터링 없이 전체를 조회하려면 year와 month를 null로 입력한다.")
     public MyReviewListResponse findMyReviews(
+            @RequestParam @Parameter(description = "유저 ID") Long userId,
             @ModelAttribute @Valid MyReviewRequest request,
             @ParameterObject @PageableDefault(size = 20, page = 0) Pageable pageable) {
         MyReviewListResult result =
                 reviewReadUsecase.findMyReviewsByUserId(
-                        request.userId(),
+                        userId,
                         request.year(),
                         request.month(),
                         pageable.getPageNumber(),

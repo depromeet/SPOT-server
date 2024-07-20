@@ -2,9 +2,9 @@ package org.depromeet.spot.usecase.port.in.review;
 
 import java.util.List;
 
-import org.depromeet.spot.domain.review.MyReviewListResult;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.result.BlockReviewListResult;
+import org.depromeet.spot.domain.review.result.MyReviewListResult;
 
 public interface ReviewReadUsecase {
     BlockReviewListResult findReviewsByStadiumIdAndBlockCode(
