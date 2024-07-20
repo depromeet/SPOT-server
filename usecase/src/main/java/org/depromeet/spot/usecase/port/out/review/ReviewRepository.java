@@ -20,4 +20,8 @@ public interface ReviewRepository {
     Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable);
 
     List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
+
+    Review save(Review review);
+
+    long countByUserId(Long memberId);
 }

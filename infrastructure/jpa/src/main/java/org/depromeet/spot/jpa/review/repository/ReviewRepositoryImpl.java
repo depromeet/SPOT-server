@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
+import org.depromeet.spot.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +39,16 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId) {
         return reviewCustomRepository.findReviewMonthsByMemberId(memberId);
+    }
+
+    @Override
+    public Review save(Review review) {
+        ReviewEntity savedEntity = reviewJpaRepository.save(ReviewEntity.from(review));
+        return savedEntity.toDomain();
+    }
+
+    @Override
+    public long countByUserId(Long memberId) {
+        return reviewJpaRepository.countByMemberId(memberId);
     }
 }
