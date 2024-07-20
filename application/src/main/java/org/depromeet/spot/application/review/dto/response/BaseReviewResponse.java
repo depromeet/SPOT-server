@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.block.Block;
+import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.seat.Seat;
@@ -17,6 +18,7 @@ public record BaseReviewResponse(
         StadiumResponse stadium,
         SectionResponse section,
         BlockResponse block,
+        RowResponse row,
         SeatResponse seat,
         LocalDateTime dateTime,
         String content,
@@ -30,6 +32,7 @@ public record BaseReviewResponse(
                 StadiumResponse.from(review.getStadium()),
                 SectionResponse.from(review.getSection()),
                 BlockResponse.from(review.getBlock()),
+                RowResponse.from(review.getRow()),
                 SeatResponse.from(review.getSeat()),
                 review.getDateTime(),
                 review.getContent(),
@@ -56,6 +59,12 @@ public record BaseReviewResponse(
     public record BlockResponse(Long id, String code) {
         public static BlockResponse from(Block block) {
             return new BlockResponse(block.getId(), block.getCode());
+        }
+    }
+
+    public record RowResponse(Long id, Integer number) {
+        public static RowResponse from(BlockRow row) {
+            return new RowResponse(row.getId(), row.getNumber());
         }
     }
 

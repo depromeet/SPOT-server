@@ -33,11 +33,32 @@ public class ReviewCustomRepository {
             Integer month,
             Pageable pageable) {
         QReviewEntity review = QReviewEntity.reviewEntity;
+        QMemberEntity member = QMemberEntity.memberEntity;
+        QStadiumEntity stadium = QStadiumEntity.stadiumEntity;
+        QSectionEntity section = QSectionEntity.sectionEntity;
+        QBlockEntity block = QBlockEntity.blockEntity;
+        QBlockRowEntity blockRow = QBlockRowEntity.blockRowEntity;
+        QSeatEntity seat = QSeatEntity.seatEntity;
 
         List<Review> reviews =
                 queryFactory
-                        .select(review)
-                        .from(review)
+                        .selectFrom(review)
+                        .join(review.member, member)
+                        .fetchJoin()
+                        .join(review.stadium, stadium)
+                        .fetchJoin()
+                        .join(review.section, section)
+                        .fetchJoin()
+                        .join(review.block, block)
+                        .fetchJoin()
+                        .join(review.row, blockRow)
+                        .fetchJoin()
+                        .join(review.seat, seat)
+                        .fetchJoin()
+                        .leftJoin(review.images)
+                        .fetchJoin()
+                        .leftJoin(review.keywords)
+                        .fetchJoin()
                         .where(
                                 review.stadium
                                         .id
@@ -45,17 +66,18 @@ public class ReviewCustomRepository {
                                         .and(review.block.code.eq(blockCode))
                                         .and(
                                                 rowNumber != null
-                                                        ? review.row.number.eq(rowNumber)
+                                                        ? blockRow.number.eq(rowNumber)
                                                         : null)
                                         .and(
                                                 seatNumber != null
-                                                        ? review.seat.seatNumber.eq(seatNumber)
+                                                        ? seat.seatNumber.eq(seatNumber)
                                                         : null)
                                         .and(year != null ? review.dateTime.year().eq(year) : null)
                                         .and(
                                                 month != null
                                                         ? review.dateTime.month().eq(month)
                                                         : null))
+                        .distinct()
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
                         .fetch()
@@ -65,7 +87,7 @@ public class ReviewCustomRepository {
 
         Long total =
                 queryFactory
-                        .select(review.count())
+                        .select(review.countDistinct())
                         .from(review)
                         .where(
                                 review.stadium
@@ -92,11 +114,32 @@ public class ReviewCustomRepository {
 
     public Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable) {
         QReviewEntity review = QReviewEntity.reviewEntity;
+        QMemberEntity member = QMemberEntity.memberEntity;
+        QStadiumEntity stadium = QStadiumEntity.stadiumEntity;
+        QSectionEntity section = QSectionEntity.sectionEntity;
+        QBlockEntity block = QBlockEntity.blockEntity;
+        QBlockRowEntity blockRow = QBlockRowEntity.blockRowEntity;
+        QSeatEntity seat = QSeatEntity.seatEntity;
 
         List<Review> reviews =
                 queryFactory
-                        .select(review)
-                        .from(review)
+                        .selectFrom(review)
+                        .join(review.member, member)
+                        .fetchJoin()
+                        .join(review.stadium, stadium)
+                        .fetchJoin()
+                        .join(review.section, section)
+                        .fetchJoin()
+                        .join(review.block, block)
+                        .fetchJoin()
+                        .join(review.row, blockRow)
+                        .fetchJoin()
+                        .join(review.seat, seat)
+                        .fetchJoin()
+                        .leftJoin(review.images)
+                        .fetchJoin()
+                        .leftJoin(review.keywords)
+                        .fetchJoin()
                         .where(
                                 review.member
                                         .id
@@ -106,6 +149,7 @@ public class ReviewCustomRepository {
                                                 month != null
                                                         ? review.dateTime.month().eq(month)
                                                         : null))
+                        .distinct()
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
                         .orderBy(review.dateTime.desc())
@@ -116,7 +160,7 @@ public class ReviewCustomRepository {
 
         Long total =
                 queryFactory
-                        .select(review.count())
+                        .select(review.countDistinct())
                         .from(review)
                         .where(
                                 review.member
