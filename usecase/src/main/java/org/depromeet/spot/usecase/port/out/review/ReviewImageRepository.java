@@ -7,4 +7,6 @@ import org.depromeet.spot.domain.review.ReviewImage;
 public interface ReviewImageRepository {
     List<ReviewImage> findTopReviewImagesByStadiumIdAndBlockCode(
             Long stadiumId, String blockCode, int limit);
+
+    List<ReviewImage> saveAll(List<ReviewImage> reviewImages);
 }

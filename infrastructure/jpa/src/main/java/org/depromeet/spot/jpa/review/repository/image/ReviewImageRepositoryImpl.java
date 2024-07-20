@@ -1,8 +1,10 @@
 package org.depromeet.spot.jpa.review.repository.image;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.review.ReviewImage;
+import org.depromeet.spot.jpa.review.entity.ReviewImageEntity;
 import org.depromeet.spot.jpa.review.repository.ReviewImageCustomRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
 import org.springframework.stereotype.Repository;
@@ -20,5 +22,13 @@ public class ReviewImageRepositoryImpl implements ReviewImageRepository {
             Long stadiumId, String blockCode, int limit) {
         return reviewImageCustomRepository.findTopReviewImagesByStadiumIdAndBlockCode(
                 stadiumId, blockCode, limit);
+    }
+
+    @Override
+    public List<ReviewImage> saveAll(List<ReviewImage> reviewImages) {
+        List<ReviewImageEntity> entities =
+                reviewImages.stream().map(ReviewImageEntity::from).collect(Collectors.toList());
+        List<ReviewImageEntity> savedEntities = reviewImageJpaRepository.saveAll(entities);
+        return savedEntities.stream().map(ReviewImageEntity::toDomain).collect(Collectors.toList());
     }
 }
