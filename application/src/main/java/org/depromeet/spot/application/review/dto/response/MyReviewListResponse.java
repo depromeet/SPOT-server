@@ -3,24 +3,36 @@ package org.depromeet.spot.application.review.dto.response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.domain.review.MyReviewListResult;
+import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.result.MyReviewListResult;
 
 public record MyReviewListResponse(
-        List<BaseReviewResponse> reviews, long totalCount, int offset, int limit, boolean hasMore) {
+        List<MyReviewResponse> reviews, long totalElements, int totalPages, int number, int size) {
     public static MyReviewListResponse from(MyReviewListResult result) {
-        List<BaseReviewResponse> reviewResponses =
-                result.reviews().stream()
-                        .map(
-                                review ->
-                                        BaseReviewResponse.from(
-                                                review,
-                                                result.getMemberByReviewId(review.getId()),
-                                                result.getSeatByReviewId(review.getId())))
+        List<MyReviewResponse> reviews =
+                result.getReviews().stream()
+                        .map(MyReviewResponse::from)
                         .collect(Collectors.toList());
 
-        boolean hasMore = (result.offset() + result.reviews().size()) < result.totalCount();
-
         return new MyReviewListResponse(
-                reviewResponses, result.totalCount(), result.offset(), result.limit(), hasMore);
+                reviews,
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.getNumber(),
+                result.getSize());
+    }
+
+    public record MyReviewResponse(
+            BaseReviewResponse baseReview,
+            String stadiumName,
+            String sectionName,
+            String blockCode) {
+        public static MyReviewResponse from(Review review) {
+            return new MyReviewResponse(
+                    BaseReviewResponse.from(review),
+                    review.getStadium().getName(),
+                    review.getSection().getName(),
+                    review.getBlock().getCode());
+        }
     }
 }
