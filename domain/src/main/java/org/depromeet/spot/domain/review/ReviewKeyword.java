@@ -8,5 +8,6 @@ import lombok.Getter;
 public class ReviewKeyword {
     private final Long id;
     private final Review review;
-    private final Keyword keyword;
+    private final String content;
+    private final Boolean isPositive;
 }

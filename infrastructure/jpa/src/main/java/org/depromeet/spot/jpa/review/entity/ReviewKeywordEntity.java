@@ -1,5 +1,6 @@
 package org.depromeet.spot.jpa.review.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,24 +28,25 @@ public class ReviewKeywordEntity extends BaseEntity {
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ReviewEntity review;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "keyword_id",
-            nullable = false,
-            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private KeywordEntity keyword;
+    @Column(name = "content", nullable = false, length = 50)
+    private String content;
+
+    @Column(name = "isPositive", nullable = false)
+    private boolean isPositive;
 
     public static ReviewKeywordEntity from(ReviewKeyword reviewKeyword) {
         return new ReviewKeywordEntity(
                 ReviewEntity.from(reviewKeyword.getReview()),
-                KeywordEntity.from(reviewKeyword.getKeyword()));
+                reviewKeyword.getContent(),
+                reviewKeyword.getIsPositive());
     }
 
     public ReviewKeyword toDomain() {
         return ReviewKeyword.builder()
                 .id(this.getId())
                 .review(review.toDomain())
-                .keyword(keyword.toDomain())
+                .content(content)
+                .isPositive(isPositive)
                 .build();
     }
 }
