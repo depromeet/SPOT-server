@@ -21,6 +21,7 @@ import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 import org.depromeet.spot.jpa.member.entity.MemberEntity;
 import org.depromeet.spot.jpa.seat.entity.SeatEntity;
+import org.depromeet.spot.jpa.section.entity.SectionEntity;
 import org.depromeet.spot.jpa.stadium.entity.StadiumEntity;
 
 import lombok.AllArgsConstructor;
@@ -47,6 +48,13 @@ public class ReviewEntity extends BaseEntity {
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private StadiumEntity stadium;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "section_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private SectionEntity section;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -112,6 +120,7 @@ public class ReviewEntity extends BaseEntity {
         return new ReviewEntity(
                 MemberEntity.from(review.getMember()),
                 StadiumEntity.from(review.getStadium()),
+                SectionEntity.from(review.getSection()),
                 BlockEntity.from(review.getBlock()),
                 BlockRowEntity.from(review.getRow()),
                 SeatEntity.from(review.getSeat()),
@@ -131,6 +140,7 @@ public class ReviewEntity extends BaseEntity {
                 .id(this.getId())
                 .member(member.toDomain())
                 .stadium(stadium.toDomain())
+                .section(section.toDomain())
                 .block(block.toDomain())
                 .row(row.toDomain())
                 .seat(seat.toDomain())
