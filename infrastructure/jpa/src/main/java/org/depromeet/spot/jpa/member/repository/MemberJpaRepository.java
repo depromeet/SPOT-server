@@ -25,4 +25,6 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
             @Param("profileImage") String profileImage,
             @Param("teamId") Long teamId,
             @Param("nickname") String nickname);
+
+    void deleteByIdToken(String idToken);
 }

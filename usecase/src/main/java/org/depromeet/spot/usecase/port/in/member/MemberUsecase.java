@@ -11,4 +11,6 @@ public interface MemberUsecase {
     Boolean duplicatedNickname(String nickname);
 
     String getAccessToken(String idCode);
+
+    Boolean deleteMember(String accessToken);
 }
