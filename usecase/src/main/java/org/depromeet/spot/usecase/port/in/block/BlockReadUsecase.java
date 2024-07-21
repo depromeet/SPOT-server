@@ -46,7 +46,6 @@ public interface BlockReadUsecase {
     class RowInfo {
         private Long id;
         private int number;
-        private int minSeatNum;
-        private int maxSeatNum;
+        private List<Integer> seatNumList;
     }
 }
