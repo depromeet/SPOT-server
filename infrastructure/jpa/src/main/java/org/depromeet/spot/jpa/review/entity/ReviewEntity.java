@@ -1,6 +1,7 @@
 package org.depromeet.spot.jpa.review.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,19 +21,24 @@ import org.depromeet.spot.jpa.block.entity.BlockEntity;
 import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 import org.depromeet.spot.jpa.member.entity.MemberEntity;
+import org.depromeet.spot.jpa.review.entity.image.ReviewImageEntity;
+import org.depromeet.spot.jpa.review.entity.keyword.ReviewKeywordEntity;
 import org.depromeet.spot.jpa.seat.entity.SeatEntity;
 import org.depromeet.spot.jpa.section.entity.SectionEntity;
 import org.depromeet.spot.jpa.stadium.entity.StadiumEntity;
+import org.hibernate.annotations.BatchSize;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "reviews")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class ReviewEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -87,9 +93,11 @@ public class ReviewEntity extends BaseEntity {
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 30)
     private List<ReviewImageEntity> images;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 30)
     private List<ReviewKeywordEntity> keywords;
 
     public static ReviewEntity from(Review review) {
@@ -103,12 +111,8 @@ public class ReviewEntity extends BaseEntity {
                 review.getDateTime(),
                 review.getContent(),
                 review.getDeletedAt(),
-                review.getImages().stream()
-                        .map(ReviewImageEntity::from)
-                        .collect(Collectors.toList()),
-                review.getKeywords().stream()
-                        .map(ReviewKeywordEntity::from)
-                        .collect(Collectors.toList()));
+                new ArrayList<>(),
+                new ArrayList<>());
     }
 
     public Review toDomain() {

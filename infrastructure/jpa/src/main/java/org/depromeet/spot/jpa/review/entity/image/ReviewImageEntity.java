@@ -1,4 +1,4 @@
-package org.depromeet.spot.jpa.review.entity;
+package org.depromeet.spot.jpa.review.entity.image;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -9,8 +9,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import org.depromeet.spot.domain.review.ReviewImage;
+import org.depromeet.spot.domain.review.image.ReviewImage;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
+import org.depromeet.spot.jpa.review.entity.ReviewEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -32,11 +33,14 @@ public class ReviewImageEntity extends BaseEntity {
     private String url;
 
     public static ReviewImageEntity from(ReviewImage reviewImage) {
-        return new ReviewImageEntity(
-                ReviewEntity.from(reviewImage.getReview()), reviewImage.getUrl());
+        return new ReviewImageEntity(null, reviewImage.getUrl());
     }
 
     public ReviewImage toDomain() {
-        return ReviewImage.builder().id(this.getId()).review(review.toDomain()).url(url).build();
+        return ReviewImage.builder()
+                .id(this.getId())
+                .reviewId(review != null ? review.getId() : null)
+                .url(url)
+                .build();
     }
 }

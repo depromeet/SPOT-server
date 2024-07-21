@@ -1,4 +1,4 @@
-package org.depromeet.spot.jpa.block.entity;
+package org.depromeet.spot.jpa.review.entity.keyword;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -10,8 +10,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.block.BlockTopKeyword;
+import org.depromeet.spot.jpa.block.entity.BlockEntity;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
-import org.depromeet.spot.jpa.review.entity.ReviewKeywordEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

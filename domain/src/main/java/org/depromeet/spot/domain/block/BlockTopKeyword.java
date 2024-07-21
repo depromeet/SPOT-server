@@ -1,6 +1,6 @@
 package org.depromeet.spot.domain.block;
 
-import org.depromeet.spot.domain.review.ReviewKeyword;
+import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 
 import lombok.Builder;
 import lombok.Getter;
