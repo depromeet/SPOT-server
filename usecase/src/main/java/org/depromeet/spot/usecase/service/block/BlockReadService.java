@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.depromeet.spot.common.exception.block.BlockException.BlockCodeDuplicateException;
 import org.depromeet.spot.common.exception.block.BlockException.BlockNotFoundException;
@@ -111,17 +112,27 @@ public class BlockReadService implements BlockReadUsecase {
         return rowInfos;
     }
 
-    public List<BlockInfo> getBlockInfos(Map<BlockRow, List<Seat>> seatsGroup) {
+    public List<BlockInfo> getBlockInfos(Map<BlockRow, List<Seat>> rowSeatGroup) {
         List<BlockInfo> blockInfos = new ArrayList<>();
 
-        for (Entry<BlockRow, List<Seat>> entry : seatsGroup.entrySet()) {
-            BlockRow row = entry.getKey();
-            Block block = row.getBlock();
-            List<RowInfo> rowInfo = getBlockRowInfos(Map.of(row, entry.getValue()));
+        Map<Block, Map<BlockRow, List<Seat>>> blockRowGroup = groupByBlock(rowSeatGroup);
 
-            blockInfos.add(new BlockInfo(block.getId(), block.getCode(), rowInfo));
+        for (Entry<Block, Map<BlockRow, List<Seat>>> entry : blockRowGroup.entrySet()) {
+            Block block = entry.getKey();
+            Map<BlockRow, List<Seat>> blockRowSeatsGroup = entry.getValue();
+            List<RowInfo> blockRowInfos = getBlockRowInfos(blockRowSeatsGroup);
+            blockInfos.add(new BlockInfo(block.getId(), block.getCode(), blockRowInfos));
         }
 
         return blockInfos;
+    }
+
+    private Map<Block, Map<BlockRow, List<Seat>>> groupByBlock(
+            Map<BlockRow, List<Seat>> rowSeatGroup) {
+        return rowSeatGroup.entrySet().stream()
+                .collect(
+                        Collectors.groupingBy(
+                                entry -> entry.getKey().getBlock(),
+                                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 }
