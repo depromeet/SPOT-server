@@ -15,4 +15,6 @@ public interface MemberRepository {
     Boolean existsByNickname(String nickname);
 
     Member findById(Long memberId);
+
+    void deleteByIdToken(String idToken);
 }

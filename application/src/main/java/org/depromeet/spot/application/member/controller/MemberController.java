@@ -8,6 +8,7 @@ import org.depromeet.spot.application.member.dto.response.JwtTokenResponse;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,5 +82,19 @@ public class MemberController {
                     @Parameter(name = "idCode", description = "카카오에서 발급 받은 idCode", required = true)
                     String idCode) {
         return memberUsecase.getAccessToken(idCode);
+    }
+
+    @DeleteMapping("/{accessToken}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "(개발용) Member 삭제 API")
+    public Boolean deleteMember(
+            @PathVariable("accessToken")
+                    @Parameter(
+                            name = "accessToken",
+                            description = "sns accessToken",
+                            required = true)
+                    String accessToken) {
+        // TODO : (개발용) 유저 탈퇴 아님! 단순 유저 삭제만 진행함.
+        return memberUsecase.deleteMember(accessToken);
     }
 }
