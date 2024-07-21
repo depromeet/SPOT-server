@@ -1,4 +1,4 @@
-package org.depromeet.spot.usecase.port.out.seat;
+package org.depromeet.spot.usecase.port.in.seat;
 
 import java.util.List;
 import java.util.Map;
@@ -7,9 +7,7 @@ import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.seat.Seat;
 
-public interface SeatRepository {
-
-    void saveAll(List<Seat> seats);
+public interface ReadSeatUsecase {
 
     Map<BlockRow, List<Seat>> findSeatsGroupByRowInBlock(Block block);
 
