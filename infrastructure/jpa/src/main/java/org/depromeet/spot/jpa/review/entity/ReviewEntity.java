@@ -92,30 +92,6 @@ public class ReviewEntity extends BaseEntity {
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewKeywordEntity> keywords;
 
-    //    public static Review createReviewWith(
-    //            ReviewEntity entity, List<ReviewImageEntity> images, List<KeywordEntity> keywords)
-    // {
-    //        return Review.builder()
-    //                .id(entity.getId())
-    //                .userId(entity.member.getId())
-    //                .stadiumId(entity.stadium.getId())
-    //                .blockId(entity.block.getId())
-    //                .rowId(entity.block.getId())
-    //                .seatId(entity.seat.getId())
-    //                .dateTime(entity.getDateTime())
-    //                .content(entity.getContent())
-    //                .createdAt(entity.getCreatedAt())
-    //                .updatedAt(entity.getUpdatedAt())
-    //                .deletedAt(entity.getDeletedAt())
-    //                .images(
-    //                        images.stream()
-    //                                .map(ReviewImageEntity::toDomain)
-    //                                .collect(Collectors.toList()))
-    //                .keywords(
-    //
-    // keywords.stream().map(KeywordEntity::toDomain).collect(Collectors.toList()))
-    //                .build();
-    //    }
     public static ReviewEntity from(Review review) {
         return new ReviewEntity(
                 MemberEntity.from(review.getMember()),
