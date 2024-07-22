@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // header가 null이거나 빈 문자열이면 안됨.
         if (header != null && !header.equalsIgnoreCase("")) {
-            if (header.startsWith("Bearer")) {
+            if (header.startsWith(JwtTokenEnums.BEARER.getValue())) {
                 String accessToken = header.split(" ")[1];
                 if (jwtTokenUtil.isValidateToken(accessToken)) {
                     Long memberId = jwtTokenUtil.getIdFromJWT(accessToken);

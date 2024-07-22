@@ -22,7 +22,7 @@ public class JwtTokenAspect {
 
     private final HttpServletRequest request;
 
-    @Around("@annotation(org.depromeet.spot.application.common.annotation.MemberId)")
+    @Around("@annotation(org.depromeet.spot.application.common.annotation.CurrentMember)")
     public Object getMemberIdFromTokenAspect(ProceedingJoinPoint joinPoint) throws Throwable {
         Long memberId = jwtTokenUtil.getIdFromJWT(jwtTokenUtil.getAccessToken(request));
 
