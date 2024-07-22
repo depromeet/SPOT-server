@@ -6,7 +6,7 @@ import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.result.BlockReviewListResult;
 import org.depromeet.spot.domain.review.result.MyReviewListResult;
 
-public interface ReviewReadUsecase {
+public interface ReadReviewUsecase {
     BlockReviewListResult findReviewsByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,

@@ -3,7 +3,7 @@ package org.depromeet.spot.domain.review.result;
 import java.util.List;
 
 import org.depromeet.spot.domain.review.Review;
-import org.depromeet.spot.domain.review.ReviewImage;
+import org.depromeet.spot.domain.review.image.ReviewImage;
 
 import lombok.Builder;
 import lombok.Getter;

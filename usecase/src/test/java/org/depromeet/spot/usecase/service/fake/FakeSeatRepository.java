@@ -26,6 +26,11 @@ public class FakeSeatRepository implements SeatRepository {
         return getById(seatId).orElseThrow(SeatNotFoundException::new);
     }
 
+    @Override
+    public Seat findByIdWith(Long seatId) {
+        return null;
+    }
+
     private Optional<Seat> getById(Long id) {
         return data.stream().filter(seat -> seat.getId().equals(id)).findAny();
     }
