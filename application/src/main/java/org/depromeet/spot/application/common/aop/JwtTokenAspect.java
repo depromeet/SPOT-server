@@ -34,9 +34,8 @@ public class JwtTokenAspect {
     public Object getMemberIdFromTokenAspect(ProceedingJoinPoint joinPoint) throws Throwable {
         String jwtToken = request.getHeader("Authorization");
         String access_token = jwtToken.split(" ")[1];
-        log.info("jwtToken : {}", access_token);
-        log.info("memberId : {}", jwtTokenUtil.getIdFromJWT(access_token));
-        Long memberId = Long.valueOf(jwtTokenUtil.getIdFromJWT(access_token));
+
+        Long memberId = jwtTokenUtil.getIdFromJWT(access_token);
         if (memberId != null) {
             // 동작하는 메소드의 시그니처를 가져옴.
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
