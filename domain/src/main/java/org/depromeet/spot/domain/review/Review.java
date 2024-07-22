@@ -28,8 +28,8 @@ public class Review {
     private final LocalDateTime dateTime;
     private final String content;
     private final LocalDateTime deletedAt;
-    private final List<ReviewImage> images;
-    private final List<ReviewKeyword> keywords;
+    private List<ReviewImage> images;
+    private List<ReviewKeyword> keywords;
 
     @Builder
     public Review(
@@ -59,27 +59,22 @@ public class Review {
         this.keywords = keywords != null ? keywords : new ArrayList<>();
     }
 
-    public Review addImagesAndKeywords(
-            List<ReviewImage> newImages, List<ReviewKeyword> newKeywords) {
-        List<ReviewImage> updatedImages = new ArrayList<>(this.images);
-        updatedImages.addAll(newImages);
+    public void addKeyword(ReviewKeyword keyword) {
+        if (this.keywords == null) {
+            this.keywords = new ArrayList<>();
+        }
+        this.keywords.add(keyword);
+    }
 
-        List<ReviewKeyword> updatedKeywords = new ArrayList<>(this.keywords);
-        updatedKeywords.addAll(newKeywords);
+    public void addImage(ReviewImage image) {
+        this.images.add(image);
+    }
 
-        return Review.builder()
-                .id(this.id)
-                .member(this.member)
-                .stadium(this.stadium)
-                .section(this.section)
-                .block(this.block)
-                .row(this.row)
-                .seat(this.seat)
-                .dateTime(this.dateTime)
-                .content(this.content)
-                .deletedAt(this.deletedAt)
-                .images(updatedImages)
-                .keywords(updatedKeywords)
-                .build();
+    public void setImages(List<ReviewImage> images) {
+        this.images = images;
+    }
+
+    public void setKeywords(List<ReviewKeyword> keywords) {
+        this.keywords = keywords;
     }
 }

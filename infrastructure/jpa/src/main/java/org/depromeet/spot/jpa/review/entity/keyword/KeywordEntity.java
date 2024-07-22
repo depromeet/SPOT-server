@@ -27,6 +27,16 @@ public class KeywordEntity extends BaseEntity {
     }
 
     public Keyword toDomain() {
-        return Keyword.builder().id(this.getId()).content(content).isPositive(isPositive).build();
+        return new Keyword(this.getId(), content, isPositive);
+    }
+
+    public static KeywordEntity withKeyword(Keyword keyword) {
+        return new KeywordEntity(keyword);
+    }
+
+    public KeywordEntity(Keyword keyword) {
+        super(keyword.getId(), null, null, null);
+        content = keyword.getContent();
+        isPositive = keyword.getIsPositive();
     }
 }

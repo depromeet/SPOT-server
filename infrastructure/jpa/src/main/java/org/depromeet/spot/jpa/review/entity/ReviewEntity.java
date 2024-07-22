@@ -1,6 +1,7 @@
 package org.depromeet.spot.jpa.review.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,14 +31,12 @@ import org.hibernate.annotations.BatchSize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "reviews")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 public class ReviewEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -88,9 +87,6 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "content", length = 300)
     private String content;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 30)
     private List<ReviewImageEntity> images;
@@ -100,47 +96,117 @@ public class ReviewEntity extends BaseEntity {
     private List<ReviewKeywordEntity> keywords;
 
     public static ReviewEntity from(Review review) {
-        ReviewEntity entity = new ReviewEntity();
-        entity.setMember(MemberEntity.from(review.getMember()));
-        entity.setStadium(StadiumEntity.from(review.getStadium()));
-        entity.setSection(SectionEntity.from(review.getSection()));
-        entity.setBlock(BlockEntity.from(review.getBlock()));
-        entity.setRow(BlockRowEntity.from(review.getRow()));
-        entity.setSeat(SeatEntity.from(review.getSeat()));
-        entity.setDateTime(review.getDateTime());
-        entity.setContent(review.getContent());
-        entity.setDeletedAt(review.getDeletedAt());
-        entity.setImages(
+        ReviewEntity entity =
+                new ReviewEntity(
+                        MemberEntity.withMember(review.getMember()),
+                        StadiumEntity.withStadium(review.getStadium()),
+                        SectionEntity.withSection(review.getSection()),
+                        BlockEntity.withBlock(review.getBlock()),
+                        BlockRowEntity.withBlockRow(review.getRow()),
+                        SeatEntity.withSeat(review.getSeat()),
+                        review.getDateTime(),
+                        review.getContent(),
+                        new ArrayList<>(),
+                        new ArrayList<>());
+
+        entity.images =
                 review.getImages().stream()
-                        .map(ReviewImageEntity::from)
-                        .collect(Collectors.toList()));
-        entity.setKeywords(
+                        .map(image -> ReviewImageEntity.from(image, entity))
+                        .collect(Collectors.toList());
+
+        entity.keywords =
                 review.getKeywords().stream()
-                        .map(ReviewKeywordEntity::from)
-                        .collect(Collectors.toList()));
+                        .map(keyword -> ReviewKeywordEntity.from(keyword, entity))
+                        .collect(Collectors.toList());
+
         return entity;
     }
 
     public Review toDomain() {
-        return Review.builder()
-                .id(this.getId())
-                .member(member.toDomain())
-                .stadium(stadium.toDomain())
-                .section(section.toDomain())
-                .block(block.toDomain())
-                .row(row.toDomain())
-                .seat(seat.toDomain())
-                .dateTime(dateTime)
-                .content(content)
-                .deletedAt(deletedAt)
-                .images(
-                        images.stream()
-                                .map(ReviewImageEntity::toDomain)
-                                .collect(Collectors.toList()))
-                .keywords(
-                        keywords.stream()
-                                .map(ReviewKeywordEntity::toDomain)
-                                .collect(Collectors.toList()))
-                .build();
+        Review review =
+                Review.builder()
+                        .id(this.getId())
+                        .member(this.member.toDomain())
+                        .stadium(this.stadium.toDomain())
+                        .section(this.section.toDomain())
+                        .block(this.block.toDomain())
+                        .row(this.row.toDomain())
+                        .seat(this.seat.toDomain())
+                        .dateTime(this.dateTime)
+                        .content(this.content)
+                        .build();
+
+        review.setImages(
+                this.images.stream().map(ReviewImageEntity::toDomain).collect(Collectors.toList()));
+
+        review.setKeywords(
+                this.keywords.stream()
+                        .map(ReviewKeywordEntity::toDomain)
+                        .collect(Collectors.toList()));
+
+        return review;
     }
+
+    public static ReviewEntity withReview(Review review) {
+        return new ReviewEntity(review);
+    }
+
+    public ReviewEntity(Review review) {
+        super(review.getId(), null, null, null);
+        member = MemberEntity.withMember(review.getMember());
+        stadium = StadiumEntity.withStadium(review.getStadium());
+        section = SectionEntity.withSection(review.getSection());
+        block = BlockEntity.withBlock(review.getBlock());
+        row = BlockRowEntity.withBlockRow(review.getRow());
+        seat = SeatEntity.withSeat(review.getSeat());
+        dateTime = review.getDateTime();
+        content = review.getContent();
+        //                images=
+        //                        getImages().stream()
+        //                                .map(ReviewImageEntity::withReviewImage)
+        //                                .collect(Collectors.toList()))
+        //                .keywords(
+        //                        keywords.stream()
+        //                                .map(ReviewKeywordEntity::toDomain)
+        //                                .collect(Collectors.toList()))
+    }
+
+    //    public Review toDomain() {
+    //        return Review.builder()
+    //                .id(this.getId())
+    //                .member(member.toDomain())
+    //                .stadium(stadium.toDomain())
+    //                .section(section.toDomain())
+    //                .block(block.toDomain())
+    //                .row(row.toDomain())
+    //                .seat(seat.toDomain())
+    //                .dateTime(dateTime)
+    //                .content(content)
+    //                .images(
+    //                        images.stream()
+    //                                .map(ReviewImageEntity::toDomain)
+    //                                .collect(Collectors.toList()))
+    //                .keywords(
+    //                        keywords.stream()
+    //                                .map(ReviewKeywordEntity::toDomain)
+    //                                .collect(Collectors.toList()))
+    //                .build();
+    //    }
+    //
+
+    //    public void addImage(ReviewImageEntity image) {
+    //        if (this.images == null) {
+    //            this.images = new ArrayList<>();
+    //        }
+    //        this.images.add(image);
+    //        image.setReview(this);
+    //    }
+    //
+    //    public void addReviewKeyword(ReviewKeywordEntity keyword) {
+    //        if (this.keywords == null) {
+    //            this.keywords = new ArrayList<>();
+    //        }
+    //        this.keywords.add(keyword);
+    //        keyword.setReview(this);
+    //    }
 }

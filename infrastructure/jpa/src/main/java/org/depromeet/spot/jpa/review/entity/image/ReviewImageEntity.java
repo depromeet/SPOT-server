@@ -32,15 +32,64 @@ public class ReviewImageEntity extends BaseEntity {
     @Column(name = "url", nullable = false, length = 255)
     private String url;
 
-    public static ReviewImageEntity from(ReviewImage reviewImage) {
-        return new ReviewImageEntity(null, reviewImage.getUrl());
+    public ReviewImage toDomain() {
+        return ReviewImage.builder().id(this.getId()).url(this.url).build();
     }
 
-    public ReviewImage toDomain() {
-        return ReviewImage.builder()
-                .id(this.getId())
-                .reviewId(review != null ? review.getId() : null)
-                .url(url)
-                .build();
+    public static ReviewImageEntity from(ReviewImage reviewImage, ReviewEntity review) {
+        ReviewImageEntity entity = new ReviewImageEntity();
+        entity.setId(reviewImage.getId());
+        entity.review = review; // 여기서 review 설정
+        entity.url = reviewImage.getUrl();
+        return entity;
     }
+
+    public void setReview(ReviewEntity entity) {
+        this.review = entity;
+    }
+
+    //    public static ReviewImageEntity from(ReviewImage reviewImage) {
+    //        ReviewImageEntity entity = new ReviewImageEntity();
+    //        entity.setId(reviewImage.getId());
+    //        entity.setReview(reviewImage.getReview());
+    //        entity.url = reviewImage.getUrl();
+    //        return entity;
+    //    }
+
+    //    public void setReview(Review review){
+    //        this.review=review
+    //    }
+
+    public static ReviewImageEntity withReviewImage(ReviewImage reviewImage) {
+        return new ReviewImageEntity(reviewImage);
+    }
+
+    public ReviewImageEntity(ReviewImage reviewImage) {
+        super(reviewImage.getId(), null, null, null);
+        review = ReviewEntity.withReview(reviewImage.getReview());
+        url = reviewImage.getUrl();
+    }
+
+    //    public static ReviewImageEntity from(ReviewImage reviewImage, ReviewEntity review) {
+    //        ReviewImageEntity entity = new ReviewImageEntity();
+    //        entity.setReview(review);
+    //        entity.setUrl(reviewImage.getUrl());
+    //        return entity;
+    //    }
+    //
+    //    public void setUrl(String url) {
+    //        this.url = url;
+    //    }
+    //
+    //    public void setReview(ReviewEntity review) {
+    //        this.review = review;
+    //    }
+    //
+    //    public ReviewImage toDomain() {
+    //        return ReviewImage.builder()
+    //                .id(this.getId())
+    //                .reviewId(review != null ? review.getId() : null)
+    //                .url(url)
+    //                .build();
+    //    }
 }
