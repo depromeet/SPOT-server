@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import org.depromeet.spot.domain.block.BlockTopKeyword;
+import org.depromeet.spot.domain.review.keyword.BlockTopKeyword;
 import org.depromeet.spot.jpa.block.entity.BlockEntity;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
@@ -34,7 +34,7 @@ public class BlockTopKeywordEntity extends BaseEntity {
             name = "keyword_id",
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private ReviewKeywordEntity keyword;
+    private KeywordEntity keyword;
 
     @Column(name = "count", nullable = false)
     private Long count;
@@ -42,7 +42,7 @@ public class BlockTopKeywordEntity extends BaseEntity {
     public static BlockTopKeywordEntity from(BlockTopKeyword blockTopKeyword) {
         return new BlockTopKeywordEntity(
                 BlockEntity.from(blockTopKeyword.getBlock()),
-                ReviewKeywordEntity.from(blockTopKeyword.getKeyword()),
+                KeywordEntity.from(blockTopKeyword.getKeyword()),
                 blockTopKeyword.getCount());
     }
 
