@@ -18,6 +18,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public class OauthRepositoryImpl implements OauthRepository {
 
+    private final String BEARER = "Bearer";
+
     // kakao에서 발급 받은 clientID
     @Value("${oauth.clientId}")
     private String CLIENT_ID;
@@ -93,7 +95,7 @@ public class OauthRepositoryImpl implements OauthRepository {
                                         uriBuilder.scheme("https").path("/v2/user/me").build(true))
                         .header(
                                 HttpHeaders.AUTHORIZATION,
-                                "Bearer " + accessToken) // access token 인가
+                                BEARER + " " + accessToken) // access token 인가
                         .header(
                                 HttpHeaders.CONTENT_TYPE,
                                 HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
