@@ -51,14 +51,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // header가 null이거나 빈 문자열이면 안됨.
         if (header != null && !header.equalsIgnoreCase("")) {
-            if (header.startsWith("Bearer")) {
-                String access_token = header.split(" ")[1];
-                if (jwtTokenUtil.isValidateToken(access_token)) {
-                    String memberId = jwtTokenUtil.getIdFromJWT(access_token);
-                    MemberRole role = MemberRole.valueOf(jwtTokenUtil.getRoleFromJWT(access_token));
+            if (header.startsWith(JwtTokenEnums.BEARER.getValue())) {
+                String accessToken = header.split(" ")[1];
+                if (jwtTokenUtil.isValidateToken(accessToken)) {
+                    Long memberId = jwtTokenUtil.getIdFromJWT(accessToken);
+                    MemberRole role = MemberRole.valueOf(jwtTokenUtil.getRoleFromJWT(accessToken));
                     JwtToken jwtToken = new JwtToken(memberId, role);
                     SecurityContextHolder.getContext().setAuthentication(jwtToken);
                     filterChain.doFilter(request, response);
+                    return;
                 }
             }
             // 토큰 검증 실패 -> Exception

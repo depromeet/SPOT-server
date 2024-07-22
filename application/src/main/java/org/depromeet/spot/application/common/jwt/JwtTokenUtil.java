@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,20 +56,19 @@ public class JwtTokenUtil {
 
         return Jwts.builder()
                 .setHeader(createHeader())
-                .setClaims(createClaims(memberRole))
-                .setSubject(memberId.toString())
+                .setClaims(createClaims(memberId, memberRole))
                 .setIssuedAt(current)
                 .setExpiration(expiredAt)
                 .signWith(SignatureAlgorithm.HS256, SECRETKEY.getBytes())
                 .compact();
     }
 
-    public String getIdFromJWT(String token) {
+    public Long getIdFromJWT(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRETKEY.getBytes())
                 .parseClaimsJws(token)
                 .getBody()
-                .get("id", String.class);
+                .get("memberId", Long.class);
     }
 
     public String getRoleFromJWT(String token) {
@@ -108,9 +109,10 @@ public class JwtTokenUtil {
     }
 
     // Claim -> 정보를 key-value 형태로 저장함.
-    private Map<String, Object> createClaims(MemberRole role) {
+    private Map<String, Object> createClaims(Long memberId, MemberRole role) {
         Map<String, Object> claims = new HashMap<>();
 
+        claims.put("memberId", memberId);
         claims.put("role", role);
         return claims;
     }
@@ -118,5 +120,10 @@ public class JwtTokenUtil {
     private Key createSignature() {
         byte[] apiKeySecretBytes = SECRETKEY.getBytes();
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+    }
+
+    public String getAccessToken(HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization");
+        return jwtToken.split(" ")[1];
     }
 }

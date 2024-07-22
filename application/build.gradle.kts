@@ -23,6 +23,9 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
+    // aop
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+
 }
 
 // spring boot main application이므로 실행 가능한 jar를 생성한다.
