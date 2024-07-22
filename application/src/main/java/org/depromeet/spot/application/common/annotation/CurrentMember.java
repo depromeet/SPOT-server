@@ -15,4 +15,4 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD) // 적용 대상 : 메소드
 @Retention(RetentionPolicy.RUNTIME) // 런타임에 사용할 수 있도록 설정
-public @interface MemberId {}
+public @interface CurrentMember {}
