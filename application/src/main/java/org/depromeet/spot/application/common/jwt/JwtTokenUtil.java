@@ -54,20 +54,19 @@ public class JwtTokenUtil {
 
         return Jwts.builder()
                 .setHeader(createHeader())
-                .setClaims(createClaims(memberRole))
-                .setSubject(memberId.toString())
+                .setClaims(createClaims(memberId, memberRole))
                 .setIssuedAt(current)
                 .setExpiration(expiredAt)
                 .signWith(SignatureAlgorithm.HS256, SECRETKEY.getBytes())
                 .compact();
     }
 
-    public String getIdFromJWT(String token) {
+    public Long getIdFromJWT(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRETKEY.getBytes())
                 .parseClaimsJws(token)
                 .getBody()
-                .get("id", String.class);
+                .get("memberId", Long.class);
     }
 
     public String getRoleFromJWT(String token) {
@@ -108,9 +107,10 @@ public class JwtTokenUtil {
     }
 
     // Claim -> 정보를 key-value 형태로 저장함.
-    private Map<String, Object> createClaims(MemberRole role) {
+    private Map<String, Object> createClaims(Long memberId, MemberRole role) {
         Map<String, Object> claims = new HashMap<>();
 
+        claims.put("memberId", memberId);
         claims.put("role", role);
         return claims;
     }

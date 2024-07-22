@@ -54,11 +54,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (header.startsWith("Bearer")) {
                 String access_token = header.split(" ")[1];
                 if (jwtTokenUtil.isValidateToken(access_token)) {
-                    String memberId = jwtTokenUtil.getIdFromJWT(access_token);
+                    Long memberId = jwtTokenUtil.getIdFromJWT(access_token);
                     MemberRole role = MemberRole.valueOf(jwtTokenUtil.getRoleFromJWT(access_token));
                     JwtToken jwtToken = new JwtToken(memberId, role);
                     SecurityContextHolder.getContext().setAuthentication(jwtToken);
                     filterChain.doFilter(request, response);
+                    return;
                 }
             }
             // 토큰 검증 실패 -> Exception

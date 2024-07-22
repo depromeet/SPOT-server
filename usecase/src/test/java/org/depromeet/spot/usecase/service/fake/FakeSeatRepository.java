@@ -3,9 +3,13 @@ package org.depromeet.spot.usecase.service.fake;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
+import org.depromeet.spot.domain.block.Block;
+import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
 
@@ -17,6 +21,20 @@ public class FakeSeatRepository implements SeatRepository {
     @Override
     public void saveAll(List<Seat> seats) {
         seats.forEach(this::save);
+    }
+
+    @Override
+    public Map<BlockRow, List<Seat>> findSeatsGroupByRowInBlock(Block block) {
+        return data.stream()
+                .filter(seat -> seat.getBlock().getId().equals(block.getId()))
+                .collect(Collectors.groupingBy(Seat::getRow));
+    }
+
+    @Override
+    public Map<BlockRow, List<Seat>> findSeatsGroupByRowInSection(final Long sectionId) {
+        return data.stream()
+                .filter(seat -> seat.getSection().getId().equals(sectionId))
+                .collect(Collectors.groupingBy(Seat::getRow));
     }
 
     private Seat save(Seat seat) {
