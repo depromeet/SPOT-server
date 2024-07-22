@@ -46,6 +46,20 @@ public class SectionEntity extends BaseEntity {
                 labelRgbCode.getBlue());
     }
 
+    public static SectionEntity withSection(Section section) {
+        return new SectionEntity(section);
+    }
+
+    public SectionEntity(Section section) {
+        super(section.getId(), null, null, null);
+        stadiumId = section.getStadiumId();
+        name = section.getName();
+        alias = section.getAlias();
+        red = section.getLabelRgbCode().getRed();
+        green = section.getLabelRgbCode().getGreen();
+        blue = section.getLabelRgbCode().getBlue();
+    }
+
     public Section toDomain() {
         RgbCode rgbCode = RgbCode.builder().red(red).green(green).blue(blue).build();
         return new Section(this.getId(), stadiumId, name, alias, rgbCode);

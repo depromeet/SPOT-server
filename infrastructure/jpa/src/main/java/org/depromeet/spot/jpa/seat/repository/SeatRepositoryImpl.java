@@ -28,4 +28,11 @@ public class SeatRepositoryImpl implements SeatRepository {
                 seatJpaRepository.findById(seatId).orElseThrow(SeatNotFoundException::new);
         return entity.toDomain();
     }
+
+    @Override
+    public Seat findByIdWith(Long seatId) {
+        SeatEntity entity =
+                seatJpaRepository.findByIdWith(seatId).orElseThrow(SeatNotFoundException::new);
+        return entity.toDomain();
+    }
 }

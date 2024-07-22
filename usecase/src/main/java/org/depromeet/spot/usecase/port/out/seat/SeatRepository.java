@@ -9,4 +9,6 @@ public interface SeatRepository {
     void saveAll(List<Seat> seats);
 
     Seat findById(Long seatId);
+
+    Seat findByIdWith(Long seatId);
 }

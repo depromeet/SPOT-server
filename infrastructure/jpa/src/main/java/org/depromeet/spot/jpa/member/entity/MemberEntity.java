@@ -75,6 +75,24 @@ public class MemberEntity extends BaseEntity {
                 member.getRole().getValue());
     }
 
+    public static MemberEntity withMember(Member member) {
+        return new MemberEntity(member);
+    }
+
+    public MemberEntity(Member member) {
+        super(member.getId(), null, null, null);
+        email = member.getEmail();
+        name = member.getName();
+        nickname = member.getNickname();
+        phoneNumber = member.getPhoneNumber();
+        profileImage = member.getProfileImage();
+        snsProvider = member.getSnsProvider().getValue();
+        idToken = member.getIdToken();
+        teamId = member.getTeamId();
+        myTeam = member.getTeamId();
+        role = member.getRole().getValue();
+    }
+
     public Member toDomain() {
         return new Member(
                 this.getId(),
