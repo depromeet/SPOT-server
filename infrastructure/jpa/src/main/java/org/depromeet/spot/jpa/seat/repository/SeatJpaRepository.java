@@ -1,5 +1,6 @@
 package org.depromeet.spot.jpa.seat.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.depromeet.spot.jpa.seat.entity.SeatEntity;
@@ -21,5 +22,4 @@ public interface SeatJpaRepository extends JpaRepository<SeatEntity, Long> {
     List<SeatEntity> findAllByBlockId(Long blockId);
 
     List<SeatEntity> findAllBySectionId(Long sectionId);
-
 }
