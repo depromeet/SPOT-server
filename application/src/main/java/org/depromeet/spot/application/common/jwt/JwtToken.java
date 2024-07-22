@@ -13,7 +13,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class JwtToken implements Authentication {
-    // TODO : Authentication을 상속받고 UserDetail을 상속받은 커스텀 유저 정보 객체 생성해줘야함.
     private Long memberId;
     private MemberRole memberRole;
 
