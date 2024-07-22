@@ -17,4 +17,9 @@ public interface SeatJpaRepository extends JpaRepository<SeatEntity, Long> {
                     + "JOIN FETCH s.row r "
                     + "where s.id = :id ")
     Optional<SeatEntity> findByIdWith(@Param("id") Long id);
+
+    List<SeatEntity> findAllByBlockId(Long blockId);
+
+    List<SeatEntity> findAllBySectionId(Long sectionId);
+
 }

@@ -51,4 +51,9 @@ public class MemberRepositoryImpl implements MemberRepository {
                 memberJpaRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return entity.toDomain();
     }
+
+    @Override
+    public void deleteByIdToken(String idToken) {
+        memberJpaRepository.deleteByIdToken(idToken);
+    }
 }

@@ -23,11 +23,10 @@ public class MemberService implements MemberUsecase {
     private final MemberRepository memberRepository;
 
     @Override
-    public Member create(Member member) {
+    public Member create(String accessToken, Member member) {
         if (memberRepository.existsByNickname(member.getNickname())) {
             throw new MemberNicknameConflictException();
         }
-        String accessToken = oauthRepository.getKakaoAccessToken(member.getIdToken());
         Member memberResult = oauthRepository.getRegisterUserInfo(accessToken, member);
         Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
         if (existedMember.isPresent()) {
@@ -38,12 +37,13 @@ public class MemberService implements MemberUsecase {
     }
 
     @Override
-    public Member login(String idCode) {
-        String accessToken = oauthRepository.getKakaoAccessToken(idCode);
+    public Member login(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
         Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
         if (existedMember.isEmpty()) {
-            throw new MemberNotFoundException();
+            // TODO : 404 말고 사용되지 않는 Exception 코드가 필요함.
+            //            throw new MemberNotFoundException();
+            return null;
         }
         return existedMember.get();
     }
@@ -53,5 +53,23 @@ public class MemberService implements MemberUsecase {
         if (memberRepository.existsByNickname(nickname))
             throw new MemberNicknameConflictException();
         return Boolean.FALSE;
+    }
+
+    @Override
+    public String getAccessToken(String idCode) {
+        return oauthRepository.getKakaoAccessToken(idCode);
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteMember(String accessToken) {
+        Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
+        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        // 멤버 없으면 오류 출력
+        if (existedMember.isEmpty()) {
+            throw new MemberNotFoundException();
+        }
+        memberRepository.deleteByIdToken(memberResult.getIdToken());
+        return Boolean.TRUE;
     }
 }
