@@ -23,7 +23,7 @@ public record BaseReviewResponse(
         LocalDateTime dateTime,
         String content,
         List<ReviewImageResponse> images,
-        List<ReviewKeywordResponse> keywords) {
+        List<KeywordResponse> keywords) {
 
     public static BaseReviewResponse from(Review review) {
         return new BaseReviewResponse(
@@ -40,7 +40,7 @@ public record BaseReviewResponse(
                         .map(ReviewImageResponse::from)
                         .collect(Collectors.toList()),
                 review.getKeywords().stream()
-                        .map(ReviewKeywordResponse::from)
+                        .map(KeywordResponse::from)
                         .collect(Collectors.toList()));
     }
 

@@ -1,6 +1,6 @@
 package org.depromeet.spot.domain.block;
 
-import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
+import org.depromeet.spot.domain.review.keyword.Keyword;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +10,6 @@ import lombok.Getter;
 public class BlockTopKeyword {
     private final Long id;
     private final Block block;
-    private final ReviewKeyword keyword;
+    private final Keyword keyword;
     private final Long count;
 }

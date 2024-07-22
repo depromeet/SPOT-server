@@ -1,6 +1,8 @@
 package org.depromeet.spot.application.review.dto.request;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -21,10 +23,12 @@ public record CreateReviewRequest(
                 .build();
     }
 
-    private LocalDateTime toLocalDateTime(String dateTimeStr) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private LocalDateTime toLocalDateTime(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd");
         try {
-            return LocalDateTime.parse(dateTimeStr, formatter);
+            LocalDate date = LocalDate.parse(dateStr, formatter);
+            // 시간 정보가 없으므로 자정(00:00)으로 설정
+            return LocalDateTime.of(date, LocalTime.MIDNIGHT);
         } catch (DateTimeParseException e) {
             throw new InvalidReviewDateTimeFormatException();
         }

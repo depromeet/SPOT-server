@@ -2,6 +2,7 @@ package org.depromeet.spot.jpa.review.entity.keyword;
 
 import jakarta.persistence.*;
 
+import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -21,15 +22,11 @@ public class KeywordEntity extends BaseEntity {
     @Column(name = "is_positive", nullable = false)
     private boolean isPositive;
 
-    public static KeywordEntity from(org.depromeet.spot.domain.keyword.Keyword keyword) {
+    public static KeywordEntity from(Keyword keyword) {
         return new KeywordEntity(keyword.getContent(), keyword.getIsPositive());
     }
 
-    public org.depromeet.spot.domain.keyword.Keyword toDomain() {
-        return org.depromeet.spot.domain.keyword.Keyword.builder()
-                .id(this.getId())
-                .content(content)
-                .isPositive(isPositive)
-                .build();
+    public Keyword toDomain() {
+        return Keyword.builder().id(this.getId()).content(content).isPositive(isPositive).build();
     }
 }

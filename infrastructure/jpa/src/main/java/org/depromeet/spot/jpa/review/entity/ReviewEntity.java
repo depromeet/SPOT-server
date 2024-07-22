@@ -1,7 +1,6 @@
 package org.depromeet.spot.jpa.review.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,18 +100,25 @@ public class ReviewEntity extends BaseEntity {
     private List<ReviewKeywordEntity> keywords;
 
     public static ReviewEntity from(Review review) {
-        return new ReviewEntity(
-                MemberEntity.from(review.getMember()),
-                StadiumEntity.from(review.getStadium()),
-                SectionEntity.from(review.getSection()),
-                BlockEntity.from(review.getBlock()),
-                BlockRowEntity.from(review.getRow()),
-                SeatEntity.from(review.getSeat()),
-                review.getDateTime(),
-                review.getContent(),
-                review.getDeletedAt(),
-                new ArrayList<>(),
-                new ArrayList<>());
+        ReviewEntity entity = new ReviewEntity();
+        entity.setMember(MemberEntity.from(review.getMember()));
+        entity.setStadium(StadiumEntity.from(review.getStadium()));
+        entity.setSection(SectionEntity.from(review.getSection()));
+        entity.setBlock(BlockEntity.from(review.getBlock()));
+        entity.setRow(BlockRowEntity.from(review.getRow()));
+        entity.setSeat(SeatEntity.from(review.getSeat()));
+        entity.setDateTime(review.getDateTime());
+        entity.setContent(review.getContent());
+        entity.setDeletedAt(review.getDeletedAt());
+        entity.setImages(
+                review.getImages().stream()
+                        .map(ReviewImageEntity::from)
+                        .collect(Collectors.toList()));
+        entity.setKeywords(
+                review.getKeywords().stream()
+                        .map(ReviewKeywordEntity::from)
+                        .collect(Collectors.toList()));
+        return entity;
     }
 
     public Review toDomain() {

@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
-import org.depromeet.spot.jpa.keyword.entity.KeywordEntity;
 import org.depromeet.spot.jpa.review.entity.ReviewEntity;
 
 import lombok.AllArgsConstructor;
