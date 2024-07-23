@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
+import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.review.dto.request.BlockReviewRequest;
 import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
@@ -32,8 +32,8 @@ import lombok.RequiredArgsConstructor;
 public class ReadReviewController {
 
     private final ReadReviewUsecase readReviewUsecase;
-    private final JwtTokenUtil jwtTokenUtil;
 
+    @CurrentMember
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/stadiums/{stadiumId}/blocks/{blockCode}/reviews")
     @Operation(summary = "특정 야구장의 특정 블록에 대한 리뷰 목록을 조회한다.")
@@ -61,44 +61,30 @@ public class ReadReviewController {
                 result, request.rowNumber(), request.seatNumber(), request.year(), request.month());
     }
 
+    @CurrentMember
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/reviews/months")
     @Operation(summary = "리뷰가 작성된 년도와 월 정보를 조회한다.")
-    public ReviewMonthsResponse findReviewMonths(
-            //        @RequestHeader("Authorization") String token
-            @RequestParam @Parameter(description = "유저 ID") Long userId) {
+    public ReviewMonthsResponse findReviewMonths(@Parameter(hidden = true) Long memberId) {
 
-        //        // "Bearer " 접두사 제거
-        //        String jwt = token.replace("Bearer ", "");
-        //
-        //        // ToDo: JWT 유효성 검사
-        //        //        if (!jwtTokenUtil.isValidateToken(jwt)) {
-        //        //            throw new UnauthorizedException("Invalid token");
-        //        //        }
-        //
-        //        // JWT에서 id 추출
-        //        String memberId = jwtTokenUtil.getIdFromJWT(jwt);
-        //
-        //        // memberId를 Long으로 변환
-        //        Long memberIdLong = Long.parseLong(memberId);
-
-        List<ReviewYearMonth> yearMonths = readReviewUsecase.findReviewMonths(userId);
+        List<ReviewYearMonth> yearMonths = readReviewUsecase.findReviewMonths(memberId);
         return ReviewMonthsResponse.from(yearMonths);
     }
 
+    @CurrentMember
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/reviews")
     @Operation(
             summary = "자신이 작성한 리뷰 목록을 조회한다.",
             description = "연도와 월로 필터링할 수 있다. 필터링 없이 전체를 조회하려면 year와 month를 null로 입력한다.")
     public MyReviewListResponse findMyReviews(
-            @RequestParam @Parameter(description = "유저 ID") Long userId,
+            @Parameter(hidden = true) Long memberId,
             @ModelAttribute @Valid MyReviewRequest request,
             @ParameterObject @PageableDefault(size = 20, page = 0) Pageable pageable) {
 
         ReadReviewUsecase.MyReviewListResult result =
                 readReviewUsecase.findMyReviewsByUserId(
-                        userId, request.year(), request.month(), pageable);
+                        memberId, request.year(), request.month(), pageable);
         return MyReviewListResponse.from(result, request.year(), request.month());
     }
 }
