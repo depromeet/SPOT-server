@@ -21,6 +21,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.diffplug.spotless")
+    apply(plugin = "io.sentry.jvm.gradle")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -37,10 +38,6 @@ subprojects {
 
         // configuration processor
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:_")
-
-        // sentry
-        implementation("io.sentry:sentry-logback:_")
-        implementation("io.sentry:sentry-spring-boot-starter-jakarta:_")
 
         // test
         testImplementation("org.springframework.boot:spring-boot-starter-test:_")
