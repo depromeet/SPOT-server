@@ -5,30 +5,59 @@ server:
 spring:
     # 서브모듈 profile
     profiles:
-        active: local
-        group:
-          local:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-          dev:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-          prod:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-              - sentry
-    # swagger를 이용해 API 명세서 생성
+        active: prod
+        include:
+            - jpa
+            - ncp
+            - jwt
+            - kakao
+            - sentry
     doc:
         swagger-ui:
             path: /swagger-ui.html
-
     servlet:
         multipart:
             max-file-size: 10MB
             max-request-size: 30MB
+---
+spring:
+    config:
+      activate:
+          on-profile: local
+    doc:
+        swagger-ui:
+            enabled: true
+
+decorator:
+    datasource:
+        p6spy:
+            enable-logging: true
+
+---
+spring:
+    config:
+        activate:
+            on-profile: dev
+    doc:
+        swagger-ui:
+            enabled: true
+
+decorator:
+    datasource:
+        p6spy:
+            enable-logging: true
+
+
+---
+spring:
+    config:
+        activate:
+            on-profile: prod
+    doc:
+        swagger-ui:
+            enabled: false
+
+decorator:
+    datasource:
+        p6spy:
+            enable-logging: false
