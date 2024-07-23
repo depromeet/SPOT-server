@@ -5,7 +5,10 @@ import java.util.Optional;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Member;
+import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
+import org.depromeet.spot.usecase.port.in.member.ReadMemberUsecase;
+import org.depromeet.spot.usecase.port.in.team.ReadBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.oauth.OauthRepository;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,10 @@ public class MemberService implements MemberUsecase {
     private final OauthRepository oauthRepository;
 
     private final MemberRepository memberRepository;
+
+    private final ReadMemberUsecase readMemberUsecase;
+
+    private final ReadBaseballTeamUsecase readBaseballTeamUsecase;
 
     @Override
     public Member create(String accessToken, Member member) {
@@ -65,11 +72,21 @@ public class MemberService implements MemberUsecase {
     public Boolean deleteMember(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
         Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+
         // 멤버 없으면 오류 출력
         if (existedMember.isEmpty()) {
             throw new MemberNotFoundException();
         }
         memberRepository.deleteByIdToken(memberResult.getIdToken());
         return Boolean.TRUE;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public MemberInfo findMemberInfo(Long memberId) {
+        Member member = readMemberUsecase.findById(memberId);
+        BaseballTeam baseballTeam = readBaseballTeamUsecase.findById(member.getTeamId());
+
+        return MemberInfo.of(member, baseballTeam);
     }
 }
