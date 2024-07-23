@@ -1,11 +1,16 @@
 package org.depromeet.spot.jpa.review.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +25,6 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public Review save(Review review) {
         ReviewEntity entity = ReviewEntity.from(review);
-
-        //        entity.getImages().forEach(image -> image.setReview(entity));
-        //        entity.getKeywords().forEach(keyword -> keyword.setReview(entity));
-
         ReviewEntity savedEntity = reviewJpaRepository.save(entity);
         return savedEntity.toDomain();
     }
@@ -34,13 +35,41 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public void delete(Review review) {
-        reviewJpaRepository.deleteById(review.getId());
+    public long countByUserId(Long id) {
+        return reviewJpaRepository.countByMemberId(id);
     }
 
     @Override
-    public long countByUserId(Long id) {
-        return reviewJpaRepository.countByMemberId(id);
+    public Page<Review> findByStadiumIdAndBlockCode(
+            Long stadiumId,
+            String blockCode,
+            Integer rowNumber,
+            Integer seatNumber,
+            Integer year,
+            Integer month,
+            Pageable pageable) {
+        Page<ReviewEntity> reviewEntities =
+                reviewJpaRepository.findByStadiumIdAndBlockCode(
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month, pageable);
+        return reviewEntities.map(ReviewEntity::toDomain);
+    }
+
+    @Override
+    public Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable) {
+        Page<ReviewEntity> reviewEntities =
+                reviewJpaRepository.findByUserId(userId, year, month, pageable);
+        return reviewEntities.map(ReviewEntity::toDomain);
+    }
+
+    @Override
+    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId) {
+        return reviewJpaRepository.findReviewMonthsByMemberId(memberId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        reviewJpaRepository.softDeleteById(reviewId);
     }
 
     //    @Override
