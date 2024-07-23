@@ -6,12 +6,23 @@ spring:
     # 서브모듈 profile
     profiles:
         active: prod
-        include:
-            - jpa
-            - ncp
-            - jwt
-            - kakao
-            - sentry
+        group:
+          local:
+              - jpa
+              - ncp
+              - jwt
+              - kakao
+          dev:
+              - jpa
+              - ncp
+              - jwt
+              - kakao
+          prod:
+              - jpa
+              - ncp
+              - jwt
+              - kakao
+              - sentry
     servlet:
         multipart:
             max-file-size: 10MB
@@ -49,4 +60,4 @@ decorator:
 
 springdoc:
   swagger-ui:
-      enabled: false
+      enabled: true
