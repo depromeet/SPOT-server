@@ -33,6 +33,18 @@ public class BlockEntity extends BaseEntity {
                 block.getStadiumId(), block.getSectionId(), block.getCode(), block.getMaxRows());
     }
 
+    public static BlockEntity withBlock(Block block) {
+        return new BlockEntity(block);
+    }
+
+    public BlockEntity(Block block) {
+        super(block.getId(), null, null, null);
+        stadiumId = block.getStadiumId();
+        sectionId = block.getSectionId();
+        code = block.getCode();
+        maxRows = block.getMaxRows();
+    }
+
     public Block toDomain() {
         return new Block(this.getId(), stadiumId, sectionId, code, maxRows);
     }

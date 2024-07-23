@@ -64,8 +64,7 @@ public class ImageUploader implements ImageUploadPort {
     }
 
     private void checkValidExtension(final String fileExtension, MediaProperty property) {
-        if (property == MediaProperty.STADIUM_SEAT
-                || property == MediaProperty.STADIUM_SEAT_LABEL) {
+        if (property == MediaProperty.STADIUM_SEAT_LABEL) {
             checkValidSeatExtension(fileExtension);
         } else {
             checkValidImageExtension(fileExtension);

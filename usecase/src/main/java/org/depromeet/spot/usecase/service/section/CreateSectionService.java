@@ -12,12 +12,14 @@ import org.depromeet.spot.usecase.port.in.section.CreateSectionUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.out.section.SectionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Builder
+@Transactional
 @RequiredArgsConstructor
 public class CreateSectionService implements CreateSectionUsecase {
 

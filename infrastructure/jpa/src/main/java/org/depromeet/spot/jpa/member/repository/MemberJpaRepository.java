@@ -25,4 +25,10 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
             @Param("profileImage") String profileImage,
             @Param("teamId") Long teamId,
             @Param("nickname") String nickname);
+
+    @Modifying
+    @Query("update MemberEntity m set m.level = :level where m.id = :memberId")
+    void updateLevel(@Param("memberId") Long memberId, @Param("level") int level);
+
+    void deleteByIdToken(String idToken);
 }

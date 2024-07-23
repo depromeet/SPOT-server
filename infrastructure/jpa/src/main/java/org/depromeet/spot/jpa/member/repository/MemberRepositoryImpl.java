@@ -23,9 +23,15 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Member update(Member member) {
+    public Member updateProfile(Member member) {
         memberJpaRepository.updateProfile(
                 member.getId(), member.getProfileImage(), member.getTeamId(), member.getNickname());
+        return member;
+    }
+
+    @Override
+    public Member updateLevel(Member member) {
+        memberJpaRepository.updateLevel(member.getId(), member.getLevel());
         return member;
     }
 
@@ -44,5 +50,10 @@ public class MemberRepositoryImpl implements MemberRepository {
         MemberEntity entity =
                 memberJpaRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return entity.toDomain();
+    }
+
+    @Override
+    public void deleteByIdToken(String idToken) {
+        memberJpaRepository.deleteByIdToken(idToken);
     }
 }

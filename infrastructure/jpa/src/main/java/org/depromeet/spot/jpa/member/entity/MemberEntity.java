@@ -51,10 +51,6 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "team_id", nullable = false, length = 10)
     private Long teamId;
 
-    // TODO : 얘는 테이블 차이로 인한 임시 필드이므로 추후 수정해서 삭제해야함.
-    @Column(name = "my_team", nullable = false, length = 10)
-    private Long myTeam;
-
     @Column(name = "role", nullable = false)
     private String role;
 
@@ -70,9 +66,24 @@ public class MemberEntity extends BaseEntity {
                 member.getSnsProvider().getValue(),
                 member.getIdToken(),
                 member.getTeamId(),
-                // TODO : 얘는 테이블 차이로 인한 임시 필드이므로 추후 수정해서 삭제해야함.
-                member.getTeamId(),
                 member.getRole().getValue());
+    }
+
+    public static MemberEntity withMember(Member member) {
+        return new MemberEntity(member);
+    }
+
+    public MemberEntity(Member member) {
+        super(member.getId(), null, null, null);
+        email = member.getEmail();
+        name = member.getName();
+        nickname = member.getNickname();
+        phoneNumber = member.getPhoneNumber();
+        profileImage = member.getProfileImage();
+        snsProvider = member.getSnsProvider().getValue();
+        idToken = member.getIdToken();
+        teamId = member.getTeamId();
+        role = member.getRole().getValue();
     }
 
     public Member toDomain() {

@@ -40,6 +40,17 @@ public class BlockRowEntity extends BaseEntity {
                 blockRow.getMaxSeats());
     }
 
+    public static BlockRowEntity withBlockRow(BlockRow blockRow) {
+        return new BlockRowEntity(blockRow);
+    }
+
+    public BlockRowEntity(BlockRow blockRow) {
+        super(blockRow.getId(), null, null, null);
+        block = BlockEntity.withBlock(blockRow.getBlock());
+        number = blockRow.getNumber();
+        maxSeats = blockRow.getMaxSeats();
+    }
+
     public BlockRow toDomain() {
         return new BlockRow(this.getId(), block.toDomain(), number, maxSeats);
     }

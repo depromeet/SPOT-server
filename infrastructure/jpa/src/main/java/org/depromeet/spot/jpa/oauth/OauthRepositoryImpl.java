@@ -18,6 +18,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public class OauthRepositoryImpl implements OauthRepository {
 
+    private final String BEARER = "Bearer";
+
     // kakao에서 발급 받은 clientID
     @Value("${oauth.clientId}")
     private String CLIENT_ID;
@@ -80,6 +82,7 @@ public class OauthRepositoryImpl implements OauthRepository {
 
         // TODO : idToken이 변경 될 수 있음. 등록된 email도 변경될 수 있기에 추 후 논의가 필요.
         // 기존 유저와 비교를 위해선 idToken만 필요함.
+        // 앱에서는 accessToken을 반환해주기에 accessToken으로 로직 처리
         return userInfo.toLoginDomain();
     }
 
@@ -92,7 +95,7 @@ public class OauthRepositoryImpl implements OauthRepository {
                                         uriBuilder.scheme("https").path("/v2/user/me").build(true))
                         .header(
                                 HttpHeaders.AUTHORIZATION,
-                                "Bearer " + accessToken) // access token 인가
+                                BEARER + " " + accessToken) // access token 인가
                         .header(
                                 HttpHeaders.CONTENT_TYPE,
                                 HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
