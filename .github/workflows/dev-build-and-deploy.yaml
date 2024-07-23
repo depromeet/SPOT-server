@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
+      - dev
 
 jobs:
   build-and-test:
@@ -70,7 +72,7 @@ jobs:
 
   deploy:
       needs: build-and-test
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#      if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push'
       runs-on: ubuntu-latest
 
       steps:
@@ -109,11 +111,19 @@ jobs:
                       -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
                       -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
                       -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
+                      -e SPRING_JWT_SECRET=${{ secrets.JWT_SECRET }} \
+                      -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
+                      -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
+                      -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
+                      -e NCP_OBJECT_STORAGE_ACCESS_KEY=${{ secrets.NCP_OBJECT_STORAGE_ACCESS_KEY }} \
+                      -e NCP_OBJECT_STORAGE_SECRET_KEY=${{ secrets.NCP_OBJECT_STORAGE_SECRET_KEY }} \
                       -e TZ=Asia/Seoul \
                       ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                     docker system prune -af
 
   create-release:
+      needs: [ build-and-test, deploy ]  # deploy job이 성공적으로 완료된 후에만 실행
+#      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
       runs-on: ubuntu-latest
       permissions:
           contents: write
@@ -133,3 +143,4 @@ jobs:
                 tag: ${{ steps.tag_version.outputs.new_tag }}
                 name: Release ${{ steps.tag_version.outputs.new_tag }}
                 body: ${{ steps.tag_version.outputs.changelog }}
+

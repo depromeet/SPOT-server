@@ -9,5 +9,5 @@ import org.springframework.context.annotation.Import;
 
 @ComponentScan(basePackages = {"org.depromeet.spot.application"})
 @Configuration
-@Import(value = {UsecaseConfig.class, JpaConfig.class, NcpConfig.class})
+@Import(value = {UsecaseConfig.class, JpaConfig.class, NcpConfig.class, SwaggerConfig.class})
 public class SpotApplicationConfig {}

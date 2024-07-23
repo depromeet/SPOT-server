@@ -54,11 +54,15 @@ public abstract class BaseEntity {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public boolean isDeleted() {
-        return null != this.deletedAt;
+    public void markAsDeleted() {
+        this.deletedAt = LocalDateTime.now();
     }
 
-    public void delete() {
-        this.deletedAt = LocalDateTime.now();
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

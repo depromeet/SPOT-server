@@ -1,62 +1,74 @@
 package org.depromeet.spot.jpa.review.repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-import org.depromeet.spot.domain.review.KeywordCount;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.jpa.review.entity.ReviewEntity;
-import org.depromeet.spot.jpa.review.entity.ReviewImageEntity;
-import org.depromeet.spot.jpa.review.entity.ReviewKeywordEntity;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ReviewRepositoryImpl implements ReviewRepository {
-    private final ReviewCustomRepository reviewCustomRepository;
+
+    private final ReviewJpaRepository reviewJpaRepository;
 
     @Override
-    public List<Review> findByBlockId(
-            Long stadiumId, Long blockId, Long rowId, Long seatNumber, int offset, int limit) {
-        List<ReviewEntity> reviews =
-                reviewCustomRepository.findByBlockIdWithFilters(
-                        stadiumId, blockId, rowId, seatNumber, offset, limit);
-        return reviews.stream().map(this::fetchReviewDetails).collect(Collectors.toList());
+    public Review save(Review review) {
+        ReviewEntity entity = ReviewEntity.from(review);
+        ReviewEntity savedEntity = reviewJpaRepository.save(entity);
+        return savedEntity.toDomain();
     }
 
     @Override
-    public List<Review> findByUserId(
-            Long userId, int offset, int limit, Integer year, Integer month) {
-        List<ReviewEntity> reviews =
-                reviewCustomRepository.findByUserIdWithFilters(userId, offset, limit, year, month);
-        return reviews.stream().map(this::fetchReviewDetails).collect(Collectors.toList());
+    public Optional<Review> findById(Long id) {
+        return reviewJpaRepository.findById(id).map(ReviewEntity::toDomain);
     }
 
     @Override
-    public Long countByBlockId(Long stadiumId, Long blockId, Long rowId, Long seatNumber) {
-        return reviewCustomRepository.countByBlockIdWithFilters(
-                stadiumId, blockId, rowId, seatNumber);
+    public long countByUserId(Long id) {
+        return reviewJpaRepository.countByMemberId(id);
     }
 
     @Override
-    public Long countByUserId(Long userId, Integer year, Integer month) {
-        return reviewCustomRepository.countByUserIdWithFilters(userId, year, month);
+    public Page<Review> findByStadiumIdAndBlockCode(
+            Long stadiumId,
+            String blockCode,
+            Integer rowNumber,
+            Integer seatNumber,
+            Integer year,
+            Integer month,
+            Pageable pageable) {
+        Page<ReviewEntity> reviewEntities =
+                reviewJpaRepository.findByStadiumIdAndBlockCode(
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month, pageable);
+        return reviewEntities.map(ReviewEntity::toDomain);
     }
 
     @Override
-    public List<KeywordCount> findTopKeywordsByBlockId(Long stadiumId, Long blockId, int limit) {
-        return reviewCustomRepository.findTopKeywordsByBlockId(stadiumId, blockId, limit);
+    public Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable) {
+        Page<ReviewEntity> reviewEntities =
+                reviewJpaRepository.findByUserId(userId, year, month, pageable);
+        return reviewEntities.map(ReviewEntity::toDomain);
     }
 
-    private Review fetchReviewDetails(ReviewEntity reviewEntity) {
-        List<ReviewImageEntity> images =
-                reviewCustomRepository.findImagesByReviewIds(List.of(reviewEntity.getId()));
-        List<ReviewKeywordEntity> keywords =
-                reviewCustomRepository.findKeywordsByReviewIds(List.of(reviewEntity.getId()));
+    @Override
+    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId) {
+        return reviewJpaRepository.findReviewMonthsByMemberId(memberId);
+    }
 
-        return ReviewEntity.createReviewWithDetails(reviewEntity, images, keywords);
+    @Override
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        reviewJpaRepository.softDeleteById(reviewId);
     }
 }

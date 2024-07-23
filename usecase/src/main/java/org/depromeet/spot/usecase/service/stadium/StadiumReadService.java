@@ -1,5 +1,7 @@
 package org.depromeet.spot.usecase.service.stadium;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +13,7 @@ import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
 import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Builder
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StadiumReadService implements StadiumReadUsecase {
 
     private final ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
@@ -27,29 +31,35 @@ public class StadiumReadService implements StadiumReadUsecase {
     public List<StadiumHomeTeamInfo> findAllStadiums() {
         Map<Stadium, List<BaseballTeam>> stadiumHomeTeams =
                 readStadiumHomeTeamUsecase.findAllStadiumHomeTeam();
-        return stadiumHomeTeams.entrySet().stream()
-                .map(
-                        entry -> {
-                            Stadium stadium = entry.getKey();
-                            List<BaseballTeam> teams = entry.getValue();
-                            List<HomeTeamInfo> homeTeamInfos =
-                                    teams.stream()
-                                            .map(
-                                                    t ->
-                                                            new HomeTeamInfo(
-                                                                    t.getId(),
-                                                                    t.getAlias(),
-                                                                    t.getLabelRgbCode()))
-                                            .toList();
+        List<StadiumHomeTeamInfo> immutableList =
+                stadiumHomeTeams.entrySet().stream()
+                        .map(
+                                entry -> {
+                                    Stadium stadium = entry.getKey();
+                                    List<BaseballTeam> teams = entry.getValue();
+                                    List<HomeTeamInfo> homeTeamInfos =
+                                            teams.stream()
+                                                    .map(
+                                                            t ->
+                                                                    new HomeTeamInfo(
+                                                                            t.getId(),
+                                                                            t.getAlias(),
+                                                                            t.getLabelRgbCode()))
+                                                    .toList();
 
-                            return new StadiumHomeTeamInfo(
-                                    stadium.getId(),
-                                    stadium.getName(),
-                                    homeTeamInfos,
-                                    stadium.getMainImage(),
-                                    stadium.isActive());
-                        })
-                .toList();
+                                    return new StadiumHomeTeamInfo(
+                                            stadium.getId(),
+                                            stadium.getName(),
+                                            homeTeamInfos,
+                                            stadium.getMainImage(),
+                                            stadium.isActive());
+                                })
+                        .toList();
+        List<StadiumHomeTeamInfo> result = new ArrayList<>(immutableList);
+        result.sort(
+                Comparator.comparing((StadiumHomeTeamInfo info) -> !info.isActive())
+                        .thenComparing(StadiumHomeTeamInfo::getName));
+        return result;
     }
 
     @Override

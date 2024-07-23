@@ -1,10 +1,15 @@
 package org.depromeet.spot.usecase.port.in.team;
 
-import java.util.List;
+import org.depromeet.spot.domain.common.RgbCode;
+import org.springframework.web.multipart.MultipartFile;
 
-import org.depromeet.spot.domain.team.BaseballTeam;
+import lombok.Builder;
 
 public interface CreateBaseballTeamUsecase {
 
-    void saveAll(List<BaseballTeam> teams);
+    void save(CreateBaseballTeamCommand command);
+
+    @Builder
+    record CreateBaseballTeamCommand(
+            MultipartFile logo, String name, String alias, RgbCode rgbCode) {}
 }

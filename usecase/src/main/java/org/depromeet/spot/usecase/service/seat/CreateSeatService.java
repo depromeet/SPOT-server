@@ -1,7 +1,6 @@
 package org.depromeet.spot.usecase.service.seat;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.depromeet.spot.domain.block.Block;
@@ -15,12 +14,14 @@ import org.depromeet.spot.usecase.port.in.seat.CreateSeatUsecase;
 import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Builder
+@Transactional
 @RequiredArgsConstructor
 public class CreateSeatService implements CreateSeatUsecase {
 
@@ -48,7 +49,6 @@ public class CreateSeatService implements CreateSeatUsecase {
     public List<Seat> createAutoIncrementSeats(
             Block block, Stadium stadium, Section section, List<BlockRow> rows) {
         List<Seat> seats = new ArrayList<>();
-        rows.sort(Comparator.comparingInt(BlockRow::getNumber));
 
         int blockSeatNum = BLOCK_SEAT_START_NUM;
         for (BlockRow row : rows) {
