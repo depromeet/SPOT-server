@@ -83,7 +83,6 @@ public class MemberEntity extends BaseEntity {
         snsProvider = member.getSnsProvider().getValue();
         idToken = member.getIdToken();
         teamId = member.getTeamId();
-        myTeam = member.getTeamId();
         role = member.getRole().getValue();
     }
 
