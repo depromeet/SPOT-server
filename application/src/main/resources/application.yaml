@@ -21,29 +21,21 @@ springdoc:
     swagger-ui:
         enabled: true
         path: /swagger-ui.html
+
+decorator:
+    datasource:
+        p6spy:
+            enable-logging: true
 ---
 spring:
     config:
       activate:
           on-profile: local
-
-decorator:
-    datasource:
-        p6spy:
-            enable-logging: true
-
 ---
 spring:
     config:
         activate:
             on-profile: dev
-
-decorator:
-    datasource:
-        p6spy:
-            enable-logging: true
-
-
 ---
 spring:
     config:
