@@ -38,6 +38,10 @@ subprojects {
         // configuration processor
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:_")
 
+        // sentry
+        implementation("io.sentry:sentry-logback:_")
+        implementation("io.sentry:sentry-spring-boot-starter-jakarta:_")
+
         // test
         testImplementation("org.springframework.boot:spring-boot-starter-test:_")
         testImplementation(platform("org.junit:junit-bom:_"))
