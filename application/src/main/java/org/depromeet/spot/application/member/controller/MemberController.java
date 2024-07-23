@@ -2,11 +2,14 @@ package org.depromeet.spot.application.member.controller;
 
 import jakarta.validation.Valid;
 
+import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.application.member.dto.request.RegisterReq;
 import org.depromeet.spot.application.member.dto.response.JwtTokenResponse;
+import org.depromeet.spot.application.member.dto.response.MyHomeResponse;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
+import org.depromeet.spot.usecase.port.in.member.MemberUsecase.MemberInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -96,5 +99,14 @@ public class MemberController {
                     String accessToken) {
         // TODO : (개발용) 유저 탈퇴 아님! 단순 유저 삭제만 진행함.
         return memberUsecase.deleteMember(accessToken);
+    }
+
+    @CurrentMember
+    @GetMapping("/memberInfo")
+    @ResponseStatus(HttpStatus.OK)
+    public MyHomeResponse findMyHomeInfo(@Parameter(hidden = true) Long memberId) {
+        MemberInfo memberInfo = memberUsecase.findMemberInfo(memberId);
+
+        return MyHomeResponse.from(memberInfo);
     }
 }
