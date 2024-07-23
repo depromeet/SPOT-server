@@ -72,7 +72,7 @@ jobs:
 
   deploy:
       needs: build-and-test
-      if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push'
+#      if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push'
       runs-on: ubuntu-latest
 
       steps:
@@ -144,3 +144,4 @@ jobs:
                 tag: ${{ steps.tag_version.outputs.new_tag }}
                 name: Release ${{ steps.tag_version.outputs.new_tag }}
                 body: ${{ steps.tag_version.outputs.changelog }}
+
