@@ -8,6 +8,7 @@ import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
@@ -40,7 +41,15 @@ public record BaseReviewResponse(
                         .map(ReviewImageResponse::from)
                         .collect(Collectors.toList()),
                 review.getKeywords().stream()
-                        .map(KeywordResponse::from)
+                        .map(
+                                reviewKeyword -> {
+                                    Keyword keyword =
+                                            review.getKeywordById(reviewKeyword.getKeywordId());
+                                    return new KeywordResponse(
+                                            reviewKeyword.getId(),
+                                            keyword.getContent(),
+                                            keyword.getIsPositive());
+                                })
                         .collect(Collectors.toList()));
     }
 

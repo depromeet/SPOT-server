@@ -3,11 +3,13 @@ package org.depromeet.spot.domain.review;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.image.ReviewImage;
+import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
@@ -30,6 +32,7 @@ public class Review {
     private final LocalDateTime deletedAt;
     private List<ReviewImage> images;
     private List<ReviewKeyword> keywords;
+    private transient Map<Long, Keyword> keywordMap;
 
     @Builder
     public Review(
@@ -76,5 +79,13 @@ public class Review {
 
     public void setKeywords(List<ReviewKeyword> keywords) {
         this.keywords = keywords;
+    }
+
+    public void setKeywordMap(Map<Long, Keyword> keywordMap) {
+        this.keywordMap = keywordMap;
+    }
+
+    public Keyword getKeywordById(Long keywordId) {
+        return keywordMap != null ? keywordMap.get(keywordId) : null;
     }
 }
