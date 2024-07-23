@@ -6,11 +6,5 @@ dependencies {
     implementation("io.sentry:sentry-spring-boot-starter-jakarta:_")
 }
 
-sentry {
-    includeSourceContext.set(true)
-    org.set("dpm15th-6team")
-    projectName.set("spot-server")
-}
-
 tasks.jar { enabled = true }
 tasks.bootJar { enabled = false }
