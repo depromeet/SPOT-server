@@ -9,12 +9,14 @@ import org.depromeet.spot.usecase.port.in.team.CreateBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.out.media.ImageUploadPort;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Builder
+@Transactional
 @RequiredArgsConstructor
 public class CreateBaseballTeamService implements CreateBaseballTeamUsecase {
 

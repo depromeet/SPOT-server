@@ -24,6 +24,11 @@ public class FakeSeatRepository implements SeatRepository {
     }
 
     @Override
+    public Seat findById(Long seatId) {
+        return null;
+    }
+
+    @Override
     public Map<BlockRow, List<Seat>> findSeatsGroupByRowInBlock(Block block) {
         return data.stream()
                 .filter(seat -> seat.getBlock().getId().equals(block.getId()))
@@ -55,5 +60,10 @@ public class FakeSeatRepository implements SeatRepository {
             data.add(seat);
             return seat;
         }
+    }
+
+    @Override
+    public Seat findByIdWith(Long seatId) {
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.seat.SeatException.SeatNotFoundException;
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.seat.Seat;
@@ -23,6 +24,20 @@ public class SeatRepositoryImpl implements SeatRepository {
     @Override
     public void saveAll(List<Seat> seats) {
         seatJdbcRepository.createSeats(seats);
+    }
+
+    @Override
+    public Seat findById(Long seatId) {
+        SeatEntity entity =
+                seatJpaRepository.findById(seatId).orElseThrow(SeatNotFoundException::new);
+        return entity.toDomain();
+    }
+
+    @Override
+    public Seat findByIdWith(Long seatId) {
+        SeatEntity entity =
+                seatJpaRepository.findByIdWith(seatId).orElseThrow(SeatNotFoundException::new);
+        return entity.toDomain();
     }
 
     @Override

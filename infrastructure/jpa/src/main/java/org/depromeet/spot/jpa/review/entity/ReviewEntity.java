@@ -1,15 +1,32 @@
 package org.depromeet.spot.jpa.review.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.jpa.block.entity.BlockEntity;
+import org.depromeet.spot.jpa.block.entity.BlockRowEntity;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
+import org.depromeet.spot.jpa.member.entity.MemberEntity;
+import org.depromeet.spot.jpa.review.entity.image.ReviewImageEntity;
+import org.depromeet.spot.jpa.review.entity.keyword.ReviewKeywordEntity;
+import org.depromeet.spot.jpa.seat.entity.SeatEntity;
+import org.depromeet.spot.jpa.section.entity.SectionEntity;
+import org.depromeet.spot.jpa.stadium.entity.StadiumEntity;
+import org.hibernate.annotations.BatchSize;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,20 +39,47 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ReviewEntity extends BaseEntity {
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "member_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private MemberEntity member;
 
-    @Column(name = "stadium_id", nullable = false)
-    private Long stadiumId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "stadium_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private StadiumEntity stadium;
 
-    @Column(name = "block_id", nullable = false)
-    private Long blockId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "section_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private SectionEntity section;
 
-    @Column(name = "row_id", nullable = false)
-    private Long rowId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "block_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private BlockEntity block;
 
-    @Column(name = "seat_number", nullable = false)
-    private Long seatNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "row_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private BlockRowEntity row;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "seat_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private SeatEntity seat;
 
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
@@ -43,61 +87,126 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "content", length = 300)
     private String content;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 30)
+    private List<ReviewImageEntity> images;
 
-    public static Review createReviewWithDetails(
-            ReviewEntity entity,
-            List<ReviewImageEntity> images,
-            List<ReviewKeywordEntity> keywords) {
-        return Review.builder()
-                .id(entity.getId())
-                .userId(entity.getUserId())
-                .stadiumId(entity.getStadiumId())
-                .blockId(entity.getBlockId())
-                .rowId(entity.getRowId())
-                .seatNumber(entity.getSeatNumber())
-                .dateTime(entity.getDateTime())
-                .content(entity.getContent())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .deletedAt(entity.getDeletedAt())
-                .images(
-                        images.stream()
-                                .map(ReviewImageEntity::toDomain)
-                                .collect(Collectors.toList()))
-                .keywords(
-                        keywords.stream()
-                                .map(ReviewKeywordEntity::toDomain)
-                                .collect(Collectors.toList()))
-                .build();
-    }
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 30)
+    private List<ReviewKeywordEntity> keywords;
 
     public static ReviewEntity from(Review review) {
-        return new ReviewEntity(
-                review.getUserId(),
-                review.getStadiumId(),
-                review.getBlockId(),
-                review.getRowId(),
-                review.getSeatNumber(),
-                review.getDateTime(),
-                review.getContent(),
-                review.getDeletedAt());
+        ReviewEntity entity =
+                new ReviewEntity(
+                        MemberEntity.withMember(review.getMember()),
+                        StadiumEntity.withStadium(review.getStadium()),
+                        SectionEntity.withSection(review.getSection()),
+                        BlockEntity.withBlock(review.getBlock()),
+                        BlockRowEntity.withBlockRow(review.getRow()),
+                        SeatEntity.withSeat(review.getSeat()),
+                        review.getDateTime(),
+                        review.getContent(),
+                        new ArrayList<>(),
+                        new ArrayList<>());
+
+        entity.images =
+                review.getImages().stream()
+                        .map(image -> ReviewImageEntity.from(image, entity))
+                        .collect(Collectors.toList());
+
+        entity.keywords =
+                review.getKeywords().stream()
+                        .map(keyword -> ReviewKeywordEntity.from(keyword, entity))
+                        .collect(Collectors.toList());
+
+        return entity;
     }
 
     public Review toDomain() {
-        return Review.builder()
-                .id(this.getId())
-                .userId(userId)
-                .stadiumId(stadiumId)
-                .blockId(blockId)
-                .rowId(rowId)
-                .seatNumber(seatNumber)
-                .dateTime(dateTime)
-                .content(content)
-                .createdAt(this.getCreatedAt())
-                .updatedAt(this.getUpdatedAt())
-                .deletedAt(deletedAt)
-                .build();
+        Review review =
+                Review.builder()
+                        .id(this.getId())
+                        .member(this.member.toDomain())
+                        .stadium(this.stadium.toDomain())
+                        .section(this.section.toDomain())
+                        .block(this.block.toDomain())
+                        .row(this.row.toDomain())
+                        .seat(this.seat.toDomain())
+                        .dateTime(this.dateTime)
+                        .content(this.content)
+                        .build();
+
+        review.setImages(
+                this.images.stream().map(ReviewImageEntity::toDomain).collect(Collectors.toList()));
+
+        review.setKeywords(
+                this.keywords.stream()
+                        .map(ReviewKeywordEntity::toDomain)
+                        .collect(Collectors.toList()));
+
+        return review;
     }
+
+    public static ReviewEntity withReview(Review review) {
+        return new ReviewEntity(review);
+    }
+
+    public ReviewEntity(Review review) {
+        super(review.getId(), null, null, null);
+        member = MemberEntity.withMember(review.getMember());
+        stadium = StadiumEntity.withStadium(review.getStadium());
+        section = SectionEntity.withSection(review.getSection());
+        block = BlockEntity.withBlock(review.getBlock());
+        row = BlockRowEntity.withBlockRow(review.getRow());
+        seat = SeatEntity.withSeat(review.getSeat());
+        dateTime = review.getDateTime();
+        content = review.getContent();
+        //                images=
+        //                        getImages().stream()
+        //                                .map(ReviewImageEntity::withReviewImage)
+        //                                .collect(Collectors.toList()))
+        //                .keywords(
+        //                        keywords.stream()
+        //                                .map(ReviewKeywordEntity::toDomain)
+        //                                .collect(Collectors.toList()))
+    }
+
+    //    public Review toDomain() {
+    //        return Review.builder()
+    //                .id(this.getId())
+    //                .member(member.toDomain())
+    //                .stadium(stadium.toDomain())
+    //                .section(section.toDomain())
+    //                .block(block.toDomain())
+    //                .row(row.toDomain())
+    //                .seat(seat.toDomain())
+    //                .dateTime(dateTime)
+    //                .content(content)
+    //                .images(
+    //                        images.stream()
+    //                                .map(ReviewImageEntity::toDomain)
+    //                                .collect(Collectors.toList()))
+    //                .keywords(
+    //                        keywords.stream()
+    //                                .map(ReviewKeywordEntity::toDomain)
+    //                                .collect(Collectors.toList()))
+    //                .build();
+    //    }
+    //
+
+    //    public void addImage(ReviewImageEntity image) {
+    //        if (this.images == null) {
+    //            this.images = new ArrayList<>();
+    //        }
+    //        this.images.add(image);
+    //        image.setReview(this);
+    //    }
+    //
+    //    public void addReviewKeyword(ReviewKeywordEntity keyword) {
+    //        if (this.keywords == null) {
+    //            this.keywords = new ArrayList<>();
+    //        }
+    //        this.keywords.add(keyword);
+    //        keyword.setReview(this);
+    //    }
 }

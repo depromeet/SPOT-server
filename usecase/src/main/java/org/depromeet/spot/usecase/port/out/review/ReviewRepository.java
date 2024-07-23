@@ -1,19 +1,31 @@
 package org.depromeet.spot.usecase.port.out.review;
 
-import java.util.List;
+import java.util.Optional;
 
-import org.depromeet.spot.domain.review.KeywordCount;
 import org.depromeet.spot.domain.review.Review;
 
 public interface ReviewRepository {
-    List<Review> findByBlockId(
-            Long stadiumId, Long blockId, Long rowId, Long seatNumber, int offset, int limit);
+    Review save(Review review);
 
-    List<Review> findByUserId(Long userId, int offset, int limit, Integer year, Integer month);
+    Optional<Review> findById(Long id);
 
-    Long countByBlockId(Long stadiumId, Long blockId, Long rowId, Long seatNumber);
+    void delete(Review review);
 
-    Long countByUserId(Long userId, Integer year, Integer month);
+    long countByUserId(Long userId);
 
-    List<KeywordCount> findTopKeywordsByBlockId(Long stadiumId, Long blockId, int limit);
+    //    ReviewImage saveReviewImage(ReviewImage reviewImage);
+    //
+    //    Optional<Keyword> findKeywordByContent(String content);
+    //
+    //    Keyword saveKeyword(Keyword keyword);
+    //
+    //    ReviewKeyword saveReviewKeyword(ReviewKeyword reviewKeyword);
+
+    //    void updateBlockTopKeyword(Long blockId, Long keywordId);
+    //
+    ////    long countByUserId(Long userId);
+    //
+    //    Review addImages(Long reviewId, List<ReviewImage> images);
+    //
+    //    Review addKeywords(Long reviewId, List<ReviewKeyword> keywords);
 }

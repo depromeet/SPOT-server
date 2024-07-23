@@ -6,11 +6,13 @@ import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.usecase.port.in.block.ReadBlockRowUsecase;
 import org.depromeet.spot.usecase.port.out.block.BlockRowRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReadBlockRowService implements ReadBlockRowUsecase {
 
     private final BlockRowRepository blockRowRepository;
