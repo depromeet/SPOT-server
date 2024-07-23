@@ -81,12 +81,6 @@ public class CreateReviewService implements CreateReviewUsecase {
         updateMemberUsecase.updateLevel(member, memberReviewCnt);
     }
 
-    //    private void processKeywords(
-    //            Review review, List<String> goodKeywords, List<String> badKeywords) {
-    //        processKeywordList(review, goodKeywords, true);
-    //        processKeywordList(review, badKeywords, false);
-    //    }
-
     private Map<Long, Keyword> processKeywords(
             Review review, List<String> goodKeywords, List<String> badKeywords) {
         Map<Long, Keyword> keywordMap = new HashMap<>();
@@ -114,22 +108,6 @@ public class CreateReviewService implements CreateReviewUsecase {
             keywordMap.put(keyword.getId(), keyword);
         }
     }
-
-    //    private void processKeywordList(
-    //            Review review, List<String> keywordContents, boolean isPositive) {
-    //        for (String content : keywordContents) {
-    //            Keyword keyword =
-    //                    keywordRepository
-    //                            .findByContent(content)
-    //                            .orElseGet(
-    //                                    () ->
-    //                                            keywordRepository.save(
-    //                                                    Keyword.create(null, content,
-    // isPositive)));
-    //            ReviewKeyword reviewKeyword = ReviewKeyword.create(null, keyword.getId());
-    //            review.addKeyword(reviewKeyword);
-    //        }
-    //    }
 
     private void processImages(Review review, List<String> imageUrls) {
         for (String url : imageUrls) {
