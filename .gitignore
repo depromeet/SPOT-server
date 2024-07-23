@@ -387,4 +387,4 @@ gradle-app.setting
 *.application-jwt.yml
 application-jwt.yml
 application-kakao.yml
-.env
+application-sentry.yml
