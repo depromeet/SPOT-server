@@ -80,6 +80,7 @@ public class MemberService implements MemberUsecase {
         return Boolean.TRUE;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MemberInfo findMemberInfo(Long memberId) {
         Member member = readMemberUsecase.findById(memberId);
