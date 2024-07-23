@@ -10,7 +10,6 @@ sentry {
     includeSourceContext.set(true)
     org.set("dpm15th-6team")
     projectName.set("spot-server")
-    authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
 }
 
 tasks.jar { enabled = true }
