@@ -42,19 +42,8 @@ public class CreateReviewService implements CreateReviewUsecase {
         Member member = memberRepository.findById(memberId);
         Seat seat = seatRepository.findByIdWith(seatId);
 
-        //         image와 keyword를 제외한 review 도메인 생성
+        // image와 keyword를 제외한 review 도메인 생성
         Review review = convertToDomain(seat, member, command);
-
-        //        Review review = Review.builder()
-        //            .member(member)
-        //            .stadium(seat.getStadium())
-        //            .section(seat.getSection())
-        //            .block(seat.getBlock())
-        //            .row(seat.getRow())
-        //            .seat(seat)
-        //            .dateTime(command.dateTime())
-        //            .content(command.content())
-        //            .build();
 
         // review 도메인에 keyword와 image를 추가
         processKeywords(review, command.good(), command.bad());
