@@ -115,6 +115,7 @@ jobs:
                       -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
                       -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
                       -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
+                      -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
                       -e NCP_OBJECT_STORAGE_ACCESS_KEY=${{ secrets.NCP_OBJECT_STORAGE_ACCESS_KEY }} \
                       -e NCP_OBJECT_STORAGE_SECRET_KEY=${{ secrets.NCP_OBJECT_STORAGE_SECRET_KEY }} \
                       -e TZ=Asia/Seoul \
