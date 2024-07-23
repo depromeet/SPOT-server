@@ -1,8 +1,9 @@
 plugins {
     id("java")
+    id("io.sentry.jvm.gradle")
+    id("com.diffplug.spotless")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
-    id("com.diffplug.spotless")
 }
 
 allprojects {
