@@ -9,7 +9,7 @@ dependencies {
 sentry {
     includeSourceContext.set(true)
     org.set("dpm15th-6team")
-    projectName.set("SPOT-server")
+    projectName.set("spot-server")
     authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
 }
 

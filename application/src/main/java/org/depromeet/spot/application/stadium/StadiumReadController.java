@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import org.depromeet.spot.application.stadium.dto.response.StadiumHomeTeamInfoResponse;
 import org.depromeet.spot.application.stadium.dto.response.StadiumInfoWithSeatChartResponse;
 import org.depromeet.spot.application.stadium.dto.response.StadiumNameInfoResponse;
+import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase.StadiumHomeTeamInfo;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase.StadiumInfoWithSeatChart;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.sentry.Sentry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,6 +38,13 @@ public class StadiumReadController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "SPOT에서 관리하는 모든 야구 경기장 정보를 조회한다.")
     public List<StadiumHomeTeamInfoResponse> findAllStadiums() {
+        try {
+            throw new StadiumNotFoundException();
+        } catch (StadiumNotFoundException e) {
+            System.out.println(e.getMessage());
+            Sentry.captureException(e);
+        }
+
         List<StadiumHomeTeamInfo> infos = stadiumReadUsecase.findAllStadiums();
         return infos.stream().map(StadiumHomeTeamInfoResponse::from).toList();
     }
