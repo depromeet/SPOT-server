@@ -3,7 +3,6 @@ dependencies {
 
     // sentry
     implementation("io.sentry:sentry-logback:_")
-    implementation("io.sentry:sentry-spring-boot-starter-jakarta:_")
 }
 
 tasks.jar { enabled = true }

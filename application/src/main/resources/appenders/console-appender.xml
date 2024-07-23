@@ -8,8 +8,6 @@
     </appender>
 
     <appender name="SENTRY_APPENDER" class="io.sentry.logback.SentryAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
+        <minimumEventLevel>ERROR</minimumEventLevel>
     </appender>
 </included>
