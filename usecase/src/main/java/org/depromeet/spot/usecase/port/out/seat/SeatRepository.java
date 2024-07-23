@@ -15,6 +15,8 @@ public interface SeatRepository {
 
     Seat findByIdWith(Long seatId);
 
+    Seat findByIdWith(Long blockId, Integer seatNumber);
+
     Map<BlockRow, List<Seat>> findSeatsGroupByRowInBlock(Block block);
 
     Map<BlockRow, List<Seat>> findSeatsGroupByRowInSection(Long sectionId);

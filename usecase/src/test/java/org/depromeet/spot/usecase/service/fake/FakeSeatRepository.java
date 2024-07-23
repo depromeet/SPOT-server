@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.seat.SeatException.SeatNotFoundException;
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.seat.Seat;
@@ -25,7 +27,11 @@ public class FakeSeatRepository implements SeatRepository {
 
     @Override
     public Seat findById(Long seatId) {
-        return null;
+        return getById(seatId).orElseThrow(SeatNotFoundException::new);
+    }
+
+    private Optional<Seat> getById(Long id) {
+        return data.stream().filter(seat -> seat.getId().equals(id)).findAny();
     }
 
     @Override
@@ -64,6 +70,18 @@ public class FakeSeatRepository implements SeatRepository {
 
     @Override
     public Seat findByIdWith(Long seatId) {
-        return null;
+        return getById(seatId).orElseThrow(SeatNotFoundException::new);
+    }
+
+    @Override
+    public Seat findByIdWith(Long blockId, Integer seatNumber) {
+        return getByBlockAndSeatNum(seatNumber, blockId).orElseThrow(SeatNotFoundException::new);
+    }
+
+    private Optional<Seat> getByBlockAndSeatNum(Integer seatNumber, Long blockId) {
+        return data.stream()
+                .filter(seat -> seat.getBlock().getId().equals(blockId))
+                .filter(seat -> seat.getSeatNumber().equals(seatNumber))
+                .findAny();
     }
 }

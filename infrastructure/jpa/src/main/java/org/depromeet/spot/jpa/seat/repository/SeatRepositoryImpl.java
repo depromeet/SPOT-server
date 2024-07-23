@@ -41,6 +41,15 @@ public class SeatRepositoryImpl implements SeatRepository {
     }
 
     @Override
+    public Seat findByIdWith(Long blockId, Integer seatNumber) {
+        SeatEntity entity =
+                seatJpaRepository
+                        .findByIdWith(blockId, seatNumber)
+                        .orElseThrow(SeatNotFoundException::new);
+        return entity.toDomain();
+    }
+
+    @Override
     public Map<BlockRow, List<Seat>> findSeatsGroupByRowInBlock(Block block) {
         List<SeatEntity> entities = seatJpaRepository.findAllByBlockId(block.getId());
         List<Seat> seats = entities.stream().map(SeatEntity::toDomain).toList();
