@@ -28,8 +28,7 @@ public class SecurityConfig {
         "/api-docs/**",
         "/swagger-ui.html",
         "/favicon.ico/**",
-        "/api/v1/members/**",
-        "/api/v1/myHome"
+        "/api/v1/members/**"
     };
 
     @Bean
