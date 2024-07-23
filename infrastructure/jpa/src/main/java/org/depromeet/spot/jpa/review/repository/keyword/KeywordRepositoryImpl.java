@@ -1,6 +1,10 @@
 package org.depromeet.spot.jpa.review.repository.keyword;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityManager;
 
@@ -27,5 +31,12 @@ public class KeywordRepositoryImpl implements KeywordRepository {
     @Override
     public Optional<Keyword> findByContent(String content) {
         return keywordJpaRepository.findByContent(content).map(KeywordEntity::toDomain);
+    }
+
+    @Override
+    public Map<Long, Keyword> findByIds(List<Long> keywordIds) {
+        return keywordJpaRepository.findAllById(keywordIds).stream()
+                .map(KeywordEntity::toDomain)
+                .collect(Collectors.toMap(Keyword::getId, Function.identity()));
     }
 }
