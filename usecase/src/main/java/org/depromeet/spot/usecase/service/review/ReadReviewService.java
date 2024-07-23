@@ -44,7 +44,6 @@ public class ReadReviewService implements ReadReviewUsecase {
             Pageable pageable) {
 
         // stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 reviews를 조회
-        //        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Review> reviewPage =
                 reviewRepository.findByStadiumIdAndBlockCode(
                         stadiumId, blockCode, rowNumber, seatNumber, year, month, pageable);

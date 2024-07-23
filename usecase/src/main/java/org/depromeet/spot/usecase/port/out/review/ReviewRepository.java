@@ -29,19 +29,4 @@ public interface ReviewRepository {
     List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
 
     void deleteReview(Long reviewId);
-    //    ReviewImage saveReviewImage(ReviewImage reviewImage);
-    //
-    //    Optional<Keyword> findKeywordByContent(String content);
-    //
-    //    Keyword saveKeyword(Keyword keyword);
-    //
-    //    ReviewKeyword saveReviewKeyword(ReviewKeyword reviewKeyword);
-
-    //    void updateBlockTopKeyword(Long blockId, Long keywordId);
-    //
-    ////    long countByUserId(Long userId);
-    //
-    //    Review addImages(Long reviewId, List<ReviewImage> images);
-    //
-    //    Review addKeywords(Long reviewId, List<ReviewKeyword> keywords);
 }
