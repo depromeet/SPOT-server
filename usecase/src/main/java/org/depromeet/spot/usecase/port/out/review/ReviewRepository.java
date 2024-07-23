@@ -1,31 +1,32 @@
 package org.depromeet.spot.usecase.port.out.review;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.ReviewYearMonth;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ReviewRepository {
     Review save(Review review);
 
     Optional<Review> findById(Long id);
 
-    void delete(Review review);
-
     long countByUserId(Long userId);
 
-    //    ReviewImage saveReviewImage(ReviewImage reviewImage);
-    //
-    //    Optional<Keyword> findKeywordByContent(String content);
-    //
-    //    Keyword saveKeyword(Keyword keyword);
-    //
-    //    ReviewKeyword saveReviewKeyword(ReviewKeyword reviewKeyword);
+    Page<Review> findByStadiumIdAndBlockCode(
+            Long stadiumId,
+            String blockCode,
+            Integer rowNumber,
+            Integer seatNumber,
+            Integer year,
+            Integer month,
+            Pageable pageable);
 
-    //    void updateBlockTopKeyword(Long blockId, Long keywordId);
-    //
-    ////    long countByUserId(Long userId);
-    //
-    //    Review addImages(Long reviewId, List<ReviewImage> images);
-    //
-    //    Review addKeywords(Long reviewId, List<ReviewKeyword> keywords);
+    Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable);
+
+    List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
+
+    void deleteReview(Long reviewId);
 }

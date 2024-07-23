@@ -161,52 +161,5 @@ public class ReviewEntity extends BaseEntity {
         seat = SeatEntity.withSeat(review.getSeat());
         dateTime = review.getDateTime();
         content = review.getContent();
-        //                images=
-        //                        getImages().stream()
-        //                                .map(ReviewImageEntity::withReviewImage)
-        //                                .collect(Collectors.toList()))
-        //                .keywords(
-        //                        keywords.stream()
-        //                                .map(ReviewKeywordEntity::toDomain)
-        //                                .collect(Collectors.toList()))
     }
-
-    //    public Review toDomain() {
-    //        return Review.builder()
-    //                .id(this.getId())
-    //                .member(member.toDomain())
-    //                .stadium(stadium.toDomain())
-    //                .section(section.toDomain())
-    //                .block(block.toDomain())
-    //                .row(row.toDomain())
-    //                .seat(seat.toDomain())
-    //                .dateTime(dateTime)
-    //                .content(content)
-    //                .images(
-    //                        images.stream()
-    //                                .map(ReviewImageEntity::toDomain)
-    //                                .collect(Collectors.toList()))
-    //                .keywords(
-    //                        keywords.stream()
-    //                                .map(ReviewKeywordEntity::toDomain)
-    //                                .collect(Collectors.toList()))
-    //                .build();
-    //    }
-    //
-
-    //    public void addImage(ReviewImageEntity image) {
-    //        if (this.images == null) {
-    //            this.images = new ArrayList<>();
-    //        }
-    //        this.images.add(image);
-    //        image.setReview(this);
-    //    }
-    //
-    //    public void addReviewKeyword(ReviewKeywordEntity keyword) {
-    //        if (this.keywords == null) {
-    //            this.keywords = new ArrayList<>();
-    //        }
-    //        this.keywords.add(keyword);
-    //        keyword.setReview(this);
-    //    }
 }

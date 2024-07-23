@@ -1,6 +1,11 @@
 package org.depromeet.spot.jpa.review.repository.keyword;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockKeywordInfo;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,5 +29,16 @@ public class BlockTopKeywordRepositoryImpl implements BlockTopKeywordRepository 
             blockTopKeywordJpaRepository.upsertCount(blockId, keywordId);
             log.debug("Performed upsert operation");
         }
+    }
+
+    @Override
+    public List<BlockKeywordInfo> findTopKeywordsByStadiumIdAndBlockCode(
+            Long stadiumId, String blockCode, int limit) {
+        return blockTopKeywordJpaRepository
+                .findTopKeywordsByStadiumIdAndBlockCode(
+                        stadiumId, blockCode, PageRequest.of(0, limit))
+                .stream()
+                .map(dto -> new BlockKeywordInfo(dto.content(), dto.count(), dto.isPositive()))
+                .collect(Collectors.toList());
     }
 }
