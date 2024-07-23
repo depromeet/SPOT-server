@@ -1,4 +1,0 @@
-sentry:
-    dsn: "${SENTRY_DSN}"
-    # 오류 발생 시 sentry로 전송되는 트랜잭션의 양
-    traces-sample-rate: 1.0
