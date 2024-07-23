@@ -1,24 +1,55 @@
 package org.depromeet.spot.jpa.review.repository;
 
+import java.util.List;
+
+import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.jpa.review.entity.ReviewEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
     long countByMemberId(Long memberId);
-    //
-    //    @Query("SELECT k FROM KeywordEntity k WHERE k.content = :content")
-    //    Optional<KeywordEntity> findKeywordByContent(@Param("content") String content);
-    //
-    //    @Modifying
-    //    @Query(
-    //            "UPDATE BlockTopKeywordEntity btk SET btk.count = btk.count + 1 "
-    //                    + "WHERE btk.block.id = :blockId AND btk.keyword.id = :keywordId")
-    //    int updateBlockTopKeyword(@Param("blockId") Long blockId, @Param("keywordId") Long
-    // keywordId);
-    //
-    //    @Query(
-    //            "SELECT COUNT(btk) > 0 FROM BlockTopKeywordEntity btk "
-    //                    + "WHERE btk.block.id = :blockId AND btk.keyword.id = :keywordId")
-    //    boolean existsBlockTopKeyword(
-    //            @Param("blockId") Long blockId, @Param("keywordId") Long keywordId);
+
+    @Query(
+            "SELECT r FROM ReviewEntity r WHERE r.stadium.id = :stadiumId AND r.block.code = :blockCode "
+                    + "AND (:rowNumber IS NULL OR r.row.number = :rowNumber) "
+                    + "AND (:seatNumber IS NULL OR r.seat.seatNumber = :seatNumber) "
+                    + "AND (:year IS NULL OR YEAR(r.dateTime) = :year) "
+                    + "AND (:month IS NULL OR MONTH(r.dateTime) = :month) "
+                    + "AND r.deletedAt IS NULL")
+    Page<ReviewEntity> findByStadiumIdAndBlockCode(
+            @Param("stadiumId") Long stadiumId,
+            @Param("blockCode") String blockCode,
+            @Param("rowNumber") Integer rowNumber,
+            @Param("seatNumber") Integer seatNumber,
+            @Param("year") Integer year,
+            @Param("month") Integer month,
+            Pageable pageable);
+
+    @Query(
+            "SELECT r FROM ReviewEntity r WHERE r.member.id = :userId "
+                    + "AND (:year IS NULL OR YEAR(r.dateTime) = :year) "
+                    + "AND (:month IS NULL OR MONTH(r.dateTime) = :month) "
+                    + "AND r.deletedAt IS NULL")
+    Page<ReviewEntity> findByUserId(
+            @Param("userId") Long userId,
+            @Param("year") Integer year,
+            @Param("month") Integer month,
+            Pageable pageable);
+
+    @Query(
+            "SELECT new org.depromeet.spot.domain.review.ReviewYearMonth(YEAR(r.dateTime), MONTH(r.dateTime)) "
+                    + "FROM ReviewEntity r WHERE r.member.id = :memberId "
+                    + "AND r.deletedAt IS NULL "
+                    + "GROUP BY YEAR(r.dateTime), MONTH(r.dateTime) "
+                    + "ORDER BY YEAR(r.dateTime) DESC, MONTH(r.dateTime) DESC")
+    List<ReviewYearMonth> findReviewMonthsByMemberId(@Param("memberId") Long memberId);
+
+    @Modifying
+    @Query("UPDATE ReviewEntity r SET r.deletedAt = CURRENT_TIMESTAMP WHERE r.id = :reviewId")
+    void softDeleteById(@Param("reviewId") Long reviewId);
 }
