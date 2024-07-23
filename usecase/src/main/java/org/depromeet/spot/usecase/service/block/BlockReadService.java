@@ -18,6 +18,7 @@ import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.out.block.BlockRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Builder
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BlockReadService implements BlockReadUsecase {
 
     private final BlockRepository blockRepository;

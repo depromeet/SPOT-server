@@ -40,6 +40,19 @@ public class StadiumEntity extends BaseEntity {
                 stadium.isActive());
     }
 
+    public static StadiumEntity withStadium(Stadium stadium) {
+        return new StadiumEntity(stadium);
+    }
+
+    public StadiumEntity(Stadium stadium) {
+        super(stadium.getId(), null, null, null);
+        name = stadium.getName();
+        mainImage = stadium.getMainImage();
+        seatingChartImage = stadium.getSeatingChartImage();
+        labeledSeatingChartImage = stadium.getLabeledSeatingChartImage();
+        isActive = stadium.isActive();
+    }
+
     public Stadium toDomain() {
         return Stadium.builder()
                 .id(this.getId())

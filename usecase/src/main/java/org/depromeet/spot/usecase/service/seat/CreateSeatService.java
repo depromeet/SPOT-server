@@ -14,12 +14,14 @@ import org.depromeet.spot.usecase.port.in.seat.CreateSeatUsecase;
 import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Builder
+@Transactional
 @RequiredArgsConstructor
 public class CreateSeatService implements CreateSeatUsecase {
 

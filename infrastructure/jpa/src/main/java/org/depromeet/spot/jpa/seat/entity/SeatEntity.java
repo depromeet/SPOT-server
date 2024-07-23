@@ -1,5 +1,6 @@
 package org.depromeet.spot.jpa.seat.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -25,28 +26,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SeatEntity extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(
             name = "stadium_id",
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private StadiumEntity stadium;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(
             name = "section_id",
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private SectionEntity section;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(
             name = "block_id",
             nullable = false,
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private BlockEntity block;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(
             name = "row_id",
             nullable = false,
@@ -63,6 +64,19 @@ public class SeatEntity extends BaseEntity {
                 BlockEntity.from(seat.getBlock()),
                 BlockRowEntity.from(seat.getRow()),
                 seat.getSeatNumber());
+    }
+
+    public static SeatEntity withSeat(Seat seat) {
+        return new SeatEntity(seat);
+    }
+
+    public SeatEntity(Seat seat) {
+        super(seat.getId(), null, null, null);
+        stadium = StadiumEntity.withStadium(seat.getStadium());
+        section = SectionEntity.withSection(seat.getSection());
+        block = BlockEntity.withBlock(seat.getBlock());
+        row = BlockRowEntity.withBlockRow(seat.getRow());
+        seatNumber = seat.getSeatNumber();
     }
 
     public Seat toDomain() {

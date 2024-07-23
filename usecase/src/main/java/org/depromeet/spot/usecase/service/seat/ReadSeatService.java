@@ -19,6 +19,11 @@ public class ReadSeatService implements ReadSeatUsecase {
     private final SeatRepository seatRepository;
 
     @Override
+    public Seat findById(Long seatId) {
+        return null;
+    }
+
+    @Override
     public Map<BlockRow, List<Seat>> findSeatsGroupByRowInBlock(Block block) {
         return seatRepository.findSeatsGroupByRowInBlock(block);
     }

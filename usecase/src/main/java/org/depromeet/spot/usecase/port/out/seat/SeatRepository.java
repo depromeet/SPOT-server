@@ -11,6 +11,10 @@ public interface SeatRepository {
 
     void saveAll(List<Seat> seats);
 
+    Seat findById(Long seatId);
+
+    Seat findByIdWith(Long seatId);
+
     Map<BlockRow, List<Seat>> findSeatsGroupByRowInBlock(Block block);
 
     Map<BlockRow, List<Seat>> findSeatsGroupByRowInSection(Long sectionId);

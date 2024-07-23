@@ -26,4 +26,14 @@ public abstract class ReviewException extends BusinessException {
             super(ReviewErrorCode.INVALID_REVIEW_DATA.appended(str));
         }
     }
+
+    public static class InvalidReviewDateTimeFormatException extends ReviewException {
+        public InvalidReviewDateTimeFormatException() {
+            super(ReviewErrorCode.INVALID_REVIEW_DATETIME_FORMAT);
+        }
+
+        public InvalidReviewDateTimeFormatException(String str) {
+            super(ReviewErrorCode.INVALID_REVIEW_DATETIME_FORMAT.appended(str));
+        }
+    }
 }

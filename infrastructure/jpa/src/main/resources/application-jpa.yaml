@@ -24,6 +24,7 @@ server:
 
 logging:
     level:
+        org.depromeet.spot: DEBUG
         org.hibernate.SQL: DEBUG
         org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
