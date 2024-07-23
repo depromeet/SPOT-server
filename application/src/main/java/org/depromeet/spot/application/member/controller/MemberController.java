@@ -104,7 +104,7 @@ public class MemberController {
     @CurrentMember
     @GetMapping("/memberInfo")
     @ResponseStatus(HttpStatus.OK)
-    public MyHomeResponse findMyHomeInfo(@Parameter(hidden = true) Long memberId) {
+    public MyHomeResponse findMemberInfo(@Parameter(hidden = true) Long memberId) {
         MemberInfo memberInfo = memberUsecase.findMemberInfo(memberId);
 
         return MyHomeResponse.from(memberInfo);
