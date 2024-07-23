@@ -2,7 +2,9 @@ package org.depromeet.spot.usecase.service.review;
 
 // import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 // import org.depromeet.spot.common.exception.seat.SeatException.SeatNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
@@ -46,12 +48,14 @@ public class CreateReviewService implements CreateReviewUsecase {
         Review review = convertToDomain(seat, member, command);
 
         // review 도메인에 keyword와 image를 추가
-        processKeywords(review, command.good(), command.bad());
+        Map<Long, Keyword> keywordMap = processKeywords(review, command.good(), command.bad());
         processImages(review, command.images());
 
         // 저장 및 blockTopKeyword에도 count 업데이트
         Review savedReview = reviewRepository.save(review);
         updateBlockTopKeywords(savedReview);
+
+        savedReview.setKeywordMap(keywordMap);
 
         // 회원 리뷰 경험치 업데이트
         calculateMemberLevel(member);
@@ -77,14 +81,25 @@ public class CreateReviewService implements CreateReviewUsecase {
         updateMemberUsecase.updateLevel(member, memberReviewCnt);
     }
 
-    private void processKeywords(
+    //    private void processKeywords(
+    //            Review review, List<String> goodKeywords, List<String> badKeywords) {
+    //        processKeywordList(review, goodKeywords, true);
+    //        processKeywordList(review, badKeywords, false);
+    //    }
+
+    private Map<Long, Keyword> processKeywords(
             Review review, List<String> goodKeywords, List<String> badKeywords) {
-        processKeywordList(review, goodKeywords, true);
-        processKeywordList(review, badKeywords, false);
+        Map<Long, Keyword> keywordMap = new HashMap<>();
+        processKeywordList(review, goodKeywords, true, keywordMap);
+        processKeywordList(review, badKeywords, false, keywordMap);
+        return keywordMap;
     }
 
     private void processKeywordList(
-            Review review, List<String> keywordContents, boolean isPositive) {
+            Review review,
+            List<String> keywordContents,
+            boolean isPositive,
+            Map<Long, Keyword> keywordMap) {
         for (String content : keywordContents) {
             Keyword keyword =
                     keywordRepository
@@ -93,10 +108,28 @@ public class CreateReviewService implements CreateReviewUsecase {
                                     () ->
                                             keywordRepository.save(
                                                     Keyword.create(null, content, isPositive)));
+
             ReviewKeyword reviewKeyword = ReviewKeyword.create(null, keyword.getId());
             review.addKeyword(reviewKeyword);
+            keywordMap.put(keyword.getId(), keyword);
         }
     }
+
+    //    private void processKeywordList(
+    //            Review review, List<String> keywordContents, boolean isPositive) {
+    //        for (String content : keywordContents) {
+    //            Keyword keyword =
+    //                    keywordRepository
+    //                            .findByContent(content)
+    //                            .orElseGet(
+    //                                    () ->
+    //                                            keywordRepository.save(
+    //                                                    Keyword.create(null, content,
+    // isPositive)));
+    //            ReviewKeyword reviewKeyword = ReviewKeyword.create(null, keyword.getId());
+    //            review.addKeyword(reviewKeyword);
+    //        }
+    //    }
 
     private void processImages(Review review, List<String> imageUrls) {
         for (String url : imageUrls) {
