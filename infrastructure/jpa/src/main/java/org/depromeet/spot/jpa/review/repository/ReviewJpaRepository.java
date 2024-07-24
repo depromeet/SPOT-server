@@ -68,5 +68,5 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
     @Query(
             "SELECT count(r) FROM ReviewEntity r WHERE r.member.id = :memberId "
                     + "AND r.deletedAt IS NULL")
-    Long countByIdByMemberId(@Param("memberId") Long memberId);
+    long countByIdByMemberId(@Param("memberId") Long memberId);
 }

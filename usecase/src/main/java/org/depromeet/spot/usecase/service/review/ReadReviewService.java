@@ -103,7 +103,7 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         Review review = reviewRepository.findByMemberId(memberId);
 
-        Long reviewCount = reviewRepository.countByIdByMemberId(memberId);
+        long reviewCount = reviewRepository.countByIdByMemberId(memberId);
 
         Review reviewWithKeywords = mapKeywordsToReview(review);
 

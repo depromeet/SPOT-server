@@ -32,5 +32,5 @@ public interface ReviewRepository {
 
     Review findByMemberId(Long memberId);
 
-    Long countByIdByMemberId(Long memberId);
+    long countByIdByMemberId(Long memberId);
 }
