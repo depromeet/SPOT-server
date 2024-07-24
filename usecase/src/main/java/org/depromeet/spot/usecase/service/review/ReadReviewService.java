@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.Level;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
@@ -11,6 +12,7 @@ import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
+import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
@@ -30,6 +32,7 @@ public class ReadReviewService implements ReadReviewUsecase {
     private final ReviewImageRepository reviewImageRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
     private final KeywordRepository keywordRepository;
+    private final MemberRepository memberRepository;
 
     private static final int TOP_KEYWORDS_LIMIT = 5;
     private static final int TOP_IMAGES_LIMIT = 5;
@@ -85,8 +88,10 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviewPage.getContent());
 
+        Member member = memberRepository.findById(userId);
+
         MemberInfoOnMyReviewResult memberInfo =
-                createMemberInfoFromReviews(reviewsWithKeywords, reviewPage.getTotalElements());
+                createMemberInfoFromMember(member, reviewPage.getTotalElements());
 
         return MyReviewListResult.builder()
                 .memberInfoOnMyReviewResult(memberInfo)
@@ -103,19 +108,15 @@ public class ReadReviewService implements ReadReviewUsecase {
         return reviewRepository.findReviewMonthsByMemberId(memberId);
     }
 
-    private MemberInfoOnMyReviewResult createMemberInfoFromReviews(
-            List<Review> reviews, long totalReviewCount) {
-        if (reviews.isEmpty()) {
-            return null;
-        }
+    private MemberInfoOnMyReviewResult createMemberInfoFromMember(
+            Member member, long totalReviewCount) {
 
-        Review firstReview = reviews.get(0);
         return MemberInfoOnMyReviewResult.builder()
-                .userId(firstReview.getMember().getId())
-                .profileImageUrl(firstReview.getMember().getProfileImage())
-                .level(firstReview.getMember().getLevel())
-                .levelTitle(Level.getTitleFrom(firstReview.getMember().getLevel()))
-                .nickname(firstReview.getMember().getNickname())
+                .userId(member.getId())
+                .profileImageUrl(member.getProfileImage())
+                .level(member.getLevel())
+                .levelTitle(Level.getTitleFrom(member.getLevel()))
+                .nickname(member.getNickname())
                 .reviewCount(totalReviewCount)
                 .build();
     }
