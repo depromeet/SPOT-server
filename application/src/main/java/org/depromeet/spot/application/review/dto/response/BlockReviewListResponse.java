@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockKeywordInfo;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockReviewListResult;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 
 public record BlockReviewListResponse(
+        LocationInfo location,
         List<KeywordCountResponse> keywords,
         List<BaseReviewResponse> reviews,
         List<TopReviewImageResponse> topReviewImages,
@@ -25,6 +27,7 @@ public record BlockReviewListResponse(
             Integer seatNumber,
             Integer year,
             Integer month) {
+
         List<BaseReviewResponse> reviewResponses =
                 result.reviews().stream()
                         .map(BaseReviewResponse::from)
@@ -46,6 +49,7 @@ public record BlockReviewListResponse(
         boolean last = result.number() == result.totalPages() - 1;
 
         return new BlockReviewListResponse(
+                result.location(),
                 keywordResponses,
                 reviewResponses,
                 topReviewImageResponses,

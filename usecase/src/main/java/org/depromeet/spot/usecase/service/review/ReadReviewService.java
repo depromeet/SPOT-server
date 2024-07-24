@@ -44,6 +44,10 @@ public class ReadReviewService implements ReadReviewUsecase {
             Integer month,
             Pageable pageable) {
 
+        // LocationInfo 조회
+        LocationInfo locationInfo =
+                reviewRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
+
         // stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 reviews를 조회
         Page<Review> reviewPage =
                 reviewRepository.findByStadiumIdAndBlockCode(
@@ -62,6 +66,7 @@ public class ReadReviewService implements ReadReviewUsecase {
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviewPage.getContent());
 
         return BlockReviewListResult.builder()
+                .location(locationInfo)
                 .reviews(reviewsWithKeywords)
                 .topKeywords(topKeywords)
                 .topReviewImages(topReviewImages)

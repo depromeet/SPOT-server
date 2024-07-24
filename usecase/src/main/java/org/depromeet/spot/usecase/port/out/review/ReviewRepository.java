@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,6 +30,8 @@ public interface ReviewRepository {
     List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
 
     Long softDeleteByIdAndMemberId(Long reviewId, Long memberId);
+
+    LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode);
 
     Review findLastReviewByMemberId(Long memberId);
 

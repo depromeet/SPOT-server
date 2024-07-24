@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.jpa.review.entity.ReviewEntity;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -57,6 +58,16 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
             @Param("reviewId") Long reviewId,
             @Param("memberId") Long memberId,
             @Param("deletedAt") LocalDateTime deletedAt);
+
+    @Query(
+            "SELECT new org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase$LocationInfo("
+                    + "s.name, sec.name, b.code) "
+                    + "FROM StadiumEntity s "
+                    + "JOIN BlockEntity b ON b.stadiumId = s.id "
+                    + "JOIN SectionEntity sec ON sec.id = b.sectionId "
+                    + "WHERE s.id = :stadiumId AND b.code = :blockCode")
+    LocationInfo findLocationInfoByStadiumIdAndBlockCode(
+            @Param("stadiumId") Long stadiumId, @Param("blockCode") String blockCode);
 
     @Query(
             "SELECT r FROM ReviewEntity r WHERE r.member.id = :memberId "
