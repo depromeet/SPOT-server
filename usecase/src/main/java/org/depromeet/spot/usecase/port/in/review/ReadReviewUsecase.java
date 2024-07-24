@@ -54,6 +54,7 @@ public interface ReadReviewUsecase {
             Long userId,
             String profileImageUrl,
             Integer level,
+            String levelTitle,
             String nickname,
             Long reviewCount) {}
 
