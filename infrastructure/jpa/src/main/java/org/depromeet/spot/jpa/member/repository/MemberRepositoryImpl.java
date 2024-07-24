@@ -64,4 +64,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     public void updateDeletedAt(Long memberId, LocalDateTime deletedAt) {
         memberJpaRepository.updateDeletedAt(memberId, deletedAt);
     }
+
+    @Override
+    public void updateDeletedAtAndUpdatedAt(Long memberId, LocalDateTime updatedAt) {
+        memberJpaRepository.updateDeletedAtAndUpdatedAt(memberId, updatedAt);
+    }
 }

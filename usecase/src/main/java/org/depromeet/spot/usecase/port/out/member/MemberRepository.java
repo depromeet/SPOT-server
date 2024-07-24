@@ -21,4 +21,6 @@ public interface MemberRepository {
     void deleteByIdToken(String idToken);
 
     void updateDeletedAt(Long memberId, LocalDateTime deletedAt);
+
+    void updateDeletedAtAndUpdatedAt(Long memberId, LocalDateTime updatedAt);
 }

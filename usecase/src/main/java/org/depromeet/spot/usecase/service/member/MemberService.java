@@ -34,11 +34,8 @@ public class MemberService implements MemberUsecase {
             throw new MemberNicknameConflictException();
         }
         Member memberResult = oauthRepository.getRegisterUserInfo(accessToken, member);
-        Member existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
-        if (existedMember != null) {
-            return existedMember;
-        }
 
+        // 이미 있는 유저를 검증할 필요 없음 -> 최초 시도가 로그인먼저 들어오기 때문.
         return memberRepository.save(memberResult);
     }
 
@@ -46,6 +43,13 @@ public class MemberService implements MemberUsecase {
     public Member login(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
         Member existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+
+        // 회원 탈퇴 유저일 경우 재가입
+        if (existedMember.getDeletedAt() != null) {
+            memberRepository.updateDeletedAtAndUpdatedAt(
+                    existedMember.getId(), LocalDateTime.now());
+            return memberRepository.findByIdToken(existedMember.getIdToken());
+        }
         return existedMember;
     }
 
