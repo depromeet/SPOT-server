@@ -120,6 +120,9 @@ jobs:
                       -e NCP_OBJECT_STORAGE_ACCESS_KEY=${{ secrets.NCP_OBJECT_STORAGE_ACCESS_KEY }} \
                       -e NCP_OBJECT_STORAGE_SECRET_KEY=${{ secrets.NCP_OBJECT_STORAGE_SECRET_KEY }} \
                       -e TZ=Asia/Seoul \
+                      -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+                      -e SENTRY_ENABLE_TRACING=true \
+                      -e SENTRY_ENVIRONMENT=prod \
                       ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                     docker system prune -af
 
