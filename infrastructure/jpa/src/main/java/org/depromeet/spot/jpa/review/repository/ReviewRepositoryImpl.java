@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.jpa.review.entity.ReviewEntity;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,5 +76,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
             throw new IllegalArgumentException("Review not found or not owned by the member");
         }
         return reviewId;
+    }
+
+    @Override
+    public LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode) {
+        return reviewJpaRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
     }
 }

@@ -27,6 +27,7 @@ public interface ReadReviewUsecase {
 
     @Builder
     record BlockReviewListResult(
+            LocationInfo location,
             List<Review> reviews,
             List<BlockKeywordInfo> topKeywords,
             List<TopReviewImage> topReviewImages,
@@ -37,6 +38,9 @@ public interface ReadReviewUsecase {
 
     @Builder
     record BlockKeywordInfo(String content, Long count, Boolean isPositive) {}
+
+    @Builder
+    record LocationInfo(String stadiumName, String sectionName, String blockCode) {}
 
     @Builder
     record MyReviewListResult(
