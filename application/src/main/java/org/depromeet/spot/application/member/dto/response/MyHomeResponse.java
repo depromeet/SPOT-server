@@ -6,13 +6,19 @@ import lombok.Builder;
 
 @Builder
 public record MyHomeResponse(
-        String profileImageUrl, String nickname, Integer level, String teamImageUrl) {
+        String profileImageUrl,
+        String nickname,
+        Integer level,
+        String levelTitle,
+        String teamImageUrl) {
+
     public static MyHomeResponse from(MemberInfo memberInfo) {
         return MyHomeResponse.builder()
-                .profileImageUrl(memberInfo.getMember().getProfileImage())
-                .nickname(memberInfo.getMember().getNickname())
-                .level(memberInfo.getMember().getLevel())
-                .teamImageUrl(memberInfo.getBaseballTeam().getLogo())
+                .profileImageUrl(memberInfo.getProfileImageUrl())
+                .nickname(memberInfo.getNickname())
+                .level(memberInfo.getLevel())
+                .levelTitle(memberInfo.getLevelTitle())
+                .teamImageUrl(memberInfo.getTeamImageUrl())
                 .build();
     }
 }

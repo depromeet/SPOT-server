@@ -41,7 +41,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Boolean existsByNickname(String nickname) {
+    public boolean existsByNickname(String nickname) {
         return memberJpaRepository.existsByNickname(nickname);
     }
 
