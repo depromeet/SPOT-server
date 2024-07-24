@@ -76,4 +76,15 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         }
         return reviewId;
     }
+
+    @Override
+    public Review findByMemberId(Long memberId) {
+        ReviewEntity reviewEntity = reviewJpaRepository.findRecentReviewByMemberId(memberId);
+        return reviewEntity.toDomain();
+    }
+
+    @Override
+    public Long countByIdByMemberId(Long memberId) {
+        return reviewJpaRepository.countByIdByMemberId(memberId);
+    }
 }

@@ -10,6 +10,7 @@ import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.review.dto.request.BlockReviewRequest;
 import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
+import org.depromeet.spot.application.review.dto.response.MyRecentReviewResponse;
 import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.ReviewMonthsResponse;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
@@ -86,5 +87,16 @@ public class ReadReviewController {
                 readReviewUsecase.findMyReviewsByUserId(
                         memberId, request.year(), request.month(), pageable);
         return MyReviewListResponse.from(result, request.year(), request.month());
+    }
+
+    @CurrentMember
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/reviews/recentReview")
+    @Operation(summary = "자신이 작성한 최근 리뷰를 조회한다.")
+    public MyRecentReviewResponse findMyRecentReview(@Parameter(hidden = true) Long memberId) {
+
+        ReadReviewUsecase.MyRecentReviewResult result =
+                readReviewUsecase.findMyRecentReviewByMemberId(memberId);
+        return MyRecentReviewResponse.from(result);
     }
 }

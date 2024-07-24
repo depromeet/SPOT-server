@@ -57,4 +57,16 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
             @Param("reviewId") Long reviewId,
             @Param("memberId") Long memberId,
             @Param("deletedAt") LocalDateTime deletedAt);
+
+    @Query(
+            "SELECT r FROM ReviewEntity r WHERE r.member.id = :memberId "
+                    + "AND r.deletedAt IS NULL "
+                    + "ORDER BY r.createdAt desc "
+                    + "LIMIT 1")
+    ReviewEntity findRecentReviewByMemberId(@Param("memberId") Long memberId);
+
+    @Query(
+            "SELECT count(r) FROM ReviewEntity r WHERE r.member.id = :memberId "
+                    + "AND r.deletedAt IS NULL")
+    Long countByIdByMemberId(@Param("memberId") Long memberId);
 }

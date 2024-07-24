@@ -29,4 +29,8 @@ public interface ReviewRepository {
     List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
 
     Long softDeleteByIdAndMemberId(Long reviewId, Long memberId);
+
+    Review findByMemberId(Long memberId);
+
+    Long countByIdByMemberId(Long memberId);
 }

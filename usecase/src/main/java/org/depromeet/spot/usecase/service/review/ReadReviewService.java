@@ -97,6 +97,21 @@ public class ReadReviewService implements ReadReviewUsecase {
         return reviewRepository.findReviewMonthsByMemberId(memberId);
     }
 
+    @Override
+    public MyRecentReviewResult findMyRecentReviewByMemberId(Long memberId) {
+
+        Review review = reviewRepository.findByMemberId(memberId);
+
+        Long reviewCount = reviewRepository.countByIdByMemberId(memberId);
+
+        Review reviewWithKeywords = mapKeywordsToReview(review);
+
+        return MyRecentReviewResult.builder()
+                .review(reviewWithKeywords)
+                .reviewCount(reviewCount)
+                .build();
+    }
+
     private MemberInfoOnMyReviewResult createMemberInfoFromReviews(
             List<Review> reviews, long totalReviewCount) {
         if (reviews.isEmpty()) {
@@ -162,5 +177,45 @@ public class ReadReviewService implements ReadReviewUsecase {
                             return mappedReview;
                         })
                 .collect(Collectors.toList());
+    }
+
+    private Review mapKeywordsToReview(Review review) {
+        List<Long> keywordIds =
+                review.getKeywords().stream()
+                        .map(ReviewKeyword::getKeywordId)
+                        .distinct()
+                        .collect(Collectors.toList());
+
+        Map<Long, Keyword> keywordMap = keywordRepository.findByIds(keywordIds);
+        List<ReviewKeyword> mappedKeywords =
+                review.getKeywords().stream()
+                        .map(
+                                reviewKeyword -> {
+                                    Keyword keyword = keywordMap.get(reviewKeyword.getKeywordId());
+                                    return ReviewKeyword.create(
+                                            reviewKeyword.getId(), keyword.getId());
+                                })
+                        .collect(Collectors.toList());
+
+        Review mappedReview =
+                Review.builder()
+                        .id(review.getId())
+                        .member(review.getMember())
+                        .stadium(review.getStadium())
+                        .section(review.getSection())
+                        .block(review.getBlock())
+                        .row(review.getRow())
+                        .seat(review.getSeat())
+                        .dateTime(review.getDateTime())
+                        .content(review.getContent())
+                        .deletedAt(review.getDeletedAt())
+                        .images(review.getImages())
+                        .keywords(mappedKeywords)
+                        .build();
+
+        // Keyword 정보를 Review 객체에 추가
+        mappedReview.setKeywordMap(keywordMap);
+
+        return mappedReview;
     }
 }
