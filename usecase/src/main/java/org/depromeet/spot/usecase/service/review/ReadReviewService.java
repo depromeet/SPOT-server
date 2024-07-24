@@ -187,6 +187,7 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     private Review mapKeywordsToReview(Review review) {
+        // TODO : (민성) 중복되는 Keywords 로직 처리 부분 메소드로 분리하기!
         List<Long> keywordIds =
                 review.getKeywords().stream()
                         .map(ReviewKeyword::getKeywordId)
@@ -217,10 +218,11 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .content(review.getContent())
                         .deletedAt(review.getDeletedAt())
                         .images(review.getImages())
-                        .keywords(mappedKeywords)
+                        .keywords(mappedKeywords) // 리뷰 키워드 담당
                         .build();
 
         // Keyword 정보를 Review 객체에 추가
+        // -> 리뷰에서 내에서 키워드가 map 형태가 아닌 List 형태로 되어 있음!
         mappedReview.setKeywordMap(keywordMap);
 
         return mappedReview;
