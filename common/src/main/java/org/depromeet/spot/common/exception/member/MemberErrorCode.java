@@ -10,6 +10,7 @@ public enum MemberErrorCode implements ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "요청 유저가 존재하지 않습니다."),
     MEMBER_NICKNAME_CONFLICT(HttpStatus.CONFLICT, "M002", "닉네임이 중복됩니다."),
     INVALID_LEVEL(HttpStatus.INTERNAL_SERVER_ERROR, "M003", "잘못된 레벨입니다."),
+    INACTIVE_MEMBER(HttpStatus.GONE, "M004", "탈퇴한 유저입니다."),
     ;
 
     private final HttpStatus status;
