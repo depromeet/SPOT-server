@@ -30,7 +30,7 @@ public interface ReviewRepository {
 
     Long softDeleteByIdAndMemberId(Long reviewId, Long memberId);
 
-    Review findByMemberId(Long memberId);
+    Review findLastReviewByMemberId(Long memberId);
 
     long countByIdByMemberId(Long memberId);
 }

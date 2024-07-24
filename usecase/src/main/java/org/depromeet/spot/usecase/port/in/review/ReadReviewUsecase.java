@@ -25,7 +25,7 @@ public interface ReadReviewUsecase {
 
     List<ReviewYearMonth> findReviewMonths(Long memberId);
 
-    MyRecentReviewResult findMyRecentReviewByMemberId(Long memberId);
+    MyRecentReviewResult findLastReviewByMemberId(Long memberId);
 
     @Builder
     record BlockReviewListResult(

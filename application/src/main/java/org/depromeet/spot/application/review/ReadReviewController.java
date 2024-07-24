@@ -96,7 +96,7 @@ public class ReadReviewController {
     public MyRecentReviewResponse findMyRecentReview(@Parameter(hidden = true) Long memberId) {
 
         ReadReviewUsecase.MyRecentReviewResult result =
-                readReviewUsecase.findMyRecentReviewByMemberId(memberId);
+                readReviewUsecase.findLastReviewByMemberId(memberId);
         return MyRecentReviewResponse.from(result);
     }
 }
