@@ -2,6 +2,7 @@ package org.depromeet.spot.usecase.service.member;
 
 import java.time.LocalDateTime;
 
+import org.depromeet.spot.common.exception.member.MemberException.InactiveMemberException;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.team.BaseballTeam;
@@ -46,9 +47,7 @@ public class MemberService implements MemberUsecase {
 
         // 회원 탈퇴 유저일 경우 재가입
         if (existedMember.getDeletedAt() != null) {
-            memberRepository.updateDeletedAtAndUpdatedAt(
-                    existedMember.getId(), LocalDateTime.now());
-            return memberRepository.findByIdToken(existedMember.getIdToken());
+            throw new InactiveMemberException();
         }
         return existedMember;
     }
