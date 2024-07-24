@@ -1,10 +1,8 @@
 package org.depromeet.spot.usecase.service.member;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
-import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
@@ -36,9 +34,9 @@ public class MemberService implements MemberUsecase {
             throw new MemberNicknameConflictException();
         }
         Member memberResult = oauthRepository.getRegisterUserInfo(accessToken, member);
-        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
-        if (existedMember.isPresent()) {
-            return existedMember.get();
+        Member existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        if (existedMember != null) {
+            return existedMember;
         }
 
         return memberRepository.save(memberResult);
@@ -47,13 +45,8 @@ public class MemberService implements MemberUsecase {
     @Override
     public Member login(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
-        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
-        if (existedMember.isEmpty()) {
-            // TODO : 404 말고 사용되지 않는 Exception 코드가 필요함.
-            //            throw new MemberNotFoundException();
-            return null;
-        }
-        return existedMember.get();
+        Member existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        return existedMember;
     }
 
     @Override
@@ -72,12 +65,8 @@ public class MemberService implements MemberUsecase {
     @Override
     public Boolean deleteMember(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
-        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        memberRepository.findByIdToken(memberResult.getIdToken());
 
-        // 멤버 없으면 오류 출력
-        if (existedMember.isEmpty()) {
-            throw new MemberNotFoundException();
-        }
         memberRepository.deleteByIdToken(memberResult.getIdToken());
         return Boolean.TRUE;
     }
