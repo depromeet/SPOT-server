@@ -27,6 +27,7 @@ public class Member {
     private final MemberRole role;
     private final LocalDateTime createdAt;
     private final LocalDateTime deletedAt;
+    private final LocalDateTime updatedAt;
 
     public int calculateLevel(long reviewCnt) {
         if (reviewCnt <= 2) {
@@ -62,6 +63,7 @@ public class Member {
                 .role(role)
                 .createdAt(createdAt)
                 .deletedAt(deletedAt)
+                .updatedAt(updatedAt)
                 .build();
     }
 
@@ -80,6 +82,7 @@ public class Member {
                 .role(role)
                 .createdAt(createdAt)
                 .deletedAt(deletedAt)
+                .updatedAt(updatedAt)
                 .build();
     }
 }

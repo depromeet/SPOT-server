@@ -100,6 +100,7 @@ public class MemberEntity extends BaseEntity {
                 teamId,
                 MemberRole.valueOf(role),
                 this.getCreatedAt(),
-                this.getDeletedAt());
+                this.getDeletedAt(),
+                this.getUpdatedAt());
     }
 }
