@@ -109,4 +109,12 @@ public class MemberController {
 
         return MyHomeResponse.from(memberInfo);
     }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Member 탈퇴 API")
+    @CurrentMember
+    public void softDelete(@Parameter(hidden = true) Long memberId) {
+        memberUsecase.softDelete(memberId);
+    }
 }

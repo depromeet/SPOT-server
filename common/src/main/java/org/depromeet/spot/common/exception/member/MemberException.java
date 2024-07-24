@@ -29,4 +29,11 @@ public abstract class MemberException extends BusinessException {
             super(MemberErrorCode.INVALID_LEVEL);
         }
     }
+
+    public static class InactiveMemberException extends MemberException {
+
+        public InactiveMemberException() {
+            super(MemberErrorCode.INACTIVE_MEMBER);
+        }
+    }
 }

@@ -22,6 +22,8 @@ public interface MemberUsecase {
 
     MemberInfo findMemberInfo(Long memberId);
 
+    void softDelete(Long memberId);
+
     @Getter
     @Builder
     @AllArgsConstructor
