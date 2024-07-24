@@ -1,5 +1,6 @@
 package org.depromeet.spot.usecase.service.member;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
@@ -88,5 +89,10 @@ public class MemberService implements MemberUsecase {
         BaseballTeam baseballTeam = readBaseballTeamUsecase.findById(member.getTeamId());
 
         return MemberInfo.of(member, baseballTeam);
+    }
+
+    @Override
+    public void softDelete(Long memberId) {
+        memberRepository.updateDeletedAt(memberId, LocalDateTime.now());
     }
 }

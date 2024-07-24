@@ -1,5 +1,6 @@
 package org.depromeet.spot.usecase.port.out.member;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.depromeet.spot.domain.member.Member;
@@ -19,4 +20,6 @@ public interface MemberRepository {
     Member findById(Long memberId);
 
     void deleteByIdToken(String idToken);
+
+    void updateDeletedAt(Long memberId, LocalDateTime deletedAt);
 }

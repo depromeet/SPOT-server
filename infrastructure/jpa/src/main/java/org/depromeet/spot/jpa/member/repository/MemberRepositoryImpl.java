@@ -1,5 +1,6 @@
 package org.depromeet.spot.jpa.member.repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
@@ -55,5 +56,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public void deleteByIdToken(String idToken) {
         memberJpaRepository.deleteByIdToken(idToken);
+    }
+
+    @Override
+    public void updateDeletedAt(Long memberId, LocalDateTime deletedAt) {
+        memberJpaRepository.updateDeletedAt(memberId, deletedAt);
     }
 }

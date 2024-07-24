@@ -1,5 +1,6 @@
 package org.depromeet.spot.jpa.member.repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.depromeet.spot.jpa.member.entity.MemberEntity;
@@ -31,4 +32,9 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
     void updateLevel(@Param("memberId") Long memberId, @Param("level") int level);
 
     void deleteByIdToken(String idToken);
+
+    @Modifying
+    @Query("update MemberEntity m set m.deletedAt = :deletedAt where m.id = :memberId")
+    void updateDeletedAt(
+            @Param("memberId") Long memberId, @Param("deletedAt") LocalDateTime deletedAt);
 }
