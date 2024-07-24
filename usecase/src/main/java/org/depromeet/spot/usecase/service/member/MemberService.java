@@ -56,10 +56,10 @@ public class MemberService implements MemberUsecase {
     }
 
     @Override
-    public Boolean duplicatedNickname(String nickname) {
+    public boolean duplicatedNickname(String nickname) {
         if (memberRepository.existsByNickname(nickname))
             throw new MemberNicknameConflictException();
-        return Boolean.FALSE;
+        return false;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MemberService implements MemberUsecase {
 
     @Transactional
     @Override
-    public Boolean deleteMember(String accessToken) {
+    public boolean deleteMember(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
         Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
 
@@ -78,7 +78,7 @@ public class MemberService implements MemberUsecase {
             throw new MemberNotFoundException();
         }
         memberRepository.deleteByIdToken(memberResult.getIdToken());
-        return Boolean.TRUE;
+        return true;
     }
 
     @Transactional(readOnly = true)

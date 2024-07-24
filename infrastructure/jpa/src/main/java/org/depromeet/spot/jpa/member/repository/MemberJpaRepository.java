@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
     Optional<MemberEntity> findByIdToken(String idToken);
 
-    Boolean existsByNickname(String nickname);
+    boolean existsByNickname(String nickname);
 
     @Modifying
     @Query(
