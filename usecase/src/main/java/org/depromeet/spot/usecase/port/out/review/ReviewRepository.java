@@ -28,5 +28,5 @@ public interface ReviewRepository {
 
     List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
 
-    void deleteReview(Long reviewId);
+    Long softDeleteByIdAndMemberId(Long reviewId, Long memberId);
 }

@@ -1,5 +1,6 @@
 package org.depromeet.spot.jpa.review.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +11,6 @@ import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,8 +67,13 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    @Transactional
-    public void deleteReview(Long reviewId) {
-        reviewJpaRepository.softDeleteById(reviewId);
+    public Long softDeleteByIdAndMemberId(Long reviewId, Long memberId) {
+        int updatedCount =
+                reviewJpaRepository.softDeleteByIdAndMemberId(
+                        reviewId, memberId, LocalDateTime.now());
+        if (updatedCount == 0) {
+            throw new IllegalArgumentException("Review not found or not owned by the member");
+        }
+        return reviewId;
     }
 }
