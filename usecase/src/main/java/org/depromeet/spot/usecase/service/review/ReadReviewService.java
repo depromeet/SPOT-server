@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.domain.member.enums.Level;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
@@ -108,6 +109,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .userId(firstReview.getMember().getId())
                 .profileImageUrl(firstReview.getMember().getProfileImage())
                 .level(firstReview.getMember().getLevel())
+                .levelTitle(Level.getTitleFrom(firstReview.getMember().getLevel()))
                 .nickname(firstReview.getMember().getNickname())
                 .reviewCount(totalReviewCount)
                 .build();
