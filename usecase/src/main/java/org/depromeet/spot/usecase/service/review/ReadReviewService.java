@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.domain.member.enums.Level;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
@@ -79,7 +80,11 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviewPage.getContent());
 
+        MemberInfoOnMyReviewResult memberInfo =
+                createMemberInfoFromReviews(reviewsWithKeywords, reviewPage.getTotalElements());
+
         return MyReviewListResult.builder()
+                .memberInfoOnMyReviewResult(memberInfo)
                 .reviews(reviewsWithKeywords)
                 .totalElements(reviewPage.getTotalElements())
                 .totalPages(reviewPage.getTotalPages())
@@ -91,6 +96,23 @@ public class ReadReviewService implements ReadReviewUsecase {
     @Override
     public List<ReviewYearMonth> findReviewMonths(Long memberId) {
         return reviewRepository.findReviewMonthsByMemberId(memberId);
+    }
+
+    private MemberInfoOnMyReviewResult createMemberInfoFromReviews(
+            List<Review> reviews, long totalReviewCount) {
+        if (reviews.isEmpty()) {
+            return null;
+        }
+
+        Review firstReview = reviews.get(0);
+        return MemberInfoOnMyReviewResult.builder()
+                .userId(firstReview.getMember().getId())
+                .profileImageUrl(firstReview.getMember().getProfileImage())
+                .level(firstReview.getMember().getLevel())
+                .levelTitle(Level.getTitleFrom(firstReview.getMember().getLevel()))
+                .nickname(firstReview.getMember().getNickname())
+                .reviewCount(totalReviewCount)
+                .build();
     }
 
     private List<Review> mapKeywordsToReviews(List<Review> reviews) {

@@ -40,5 +40,19 @@ public interface ReadReviewUsecase {
 
     @Builder
     record MyReviewListResult(
-            List<Review> reviews, long totalElements, int totalPages, int number, int size) {}
+            MemberInfoOnMyReviewResult memberInfoOnMyReviewResult,
+            List<Review> reviews,
+            long totalElements,
+            int totalPages,
+            int number,
+            int size) {}
+
+    @Builder
+    record MemberInfoOnMyReviewResult(
+            Long userId,
+            String profileImageUrl,
+            Integer level,
+            String levelTitle,
+            String nickname,
+            Long reviewCount) {}
 }

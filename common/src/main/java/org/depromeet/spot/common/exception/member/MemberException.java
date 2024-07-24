@@ -23,4 +23,10 @@ public abstract class MemberException extends BusinessException {
             super(MemberErrorCode.MEMBER_NICKNAME_CONFLICT);
         }
     }
+
+    public static class InvalidLevelException extends MemberException {
+        public InvalidLevelException() {
+            super(MemberErrorCode.INVALID_LEVEL);
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package org.depromeet.spot.usecase.service.review;
 
-// import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
-// import org.depromeet.spot.common.exception.seat.SeatException.SeatNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +37,11 @@ public class CreateReviewService implements CreateReviewUsecase {
 
     @Override
     @Transactional
-    public CreateReviewResult create(Long seatId, Long memberId, CreateReviewCommand command) {
+    public CreateReviewResult create(
+            Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command) {
         // ToDo: orElseThrow not found exception 처리하기
         Member member = memberRepository.findById(memberId);
-        Seat seat = seatRepository.findByIdWith(seatId);
+        Seat seat = seatRepository.findByIdWith(blockId, seatNumber);
 
         // image와 keyword를 제외한 review 도메인 생성
         Review review = convertToDomain(seat, member, command);

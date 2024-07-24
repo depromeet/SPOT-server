@@ -1,5 +1,6 @@
 package org.depromeet.spot.jpa.review.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.depromeet.spot.domain.review.ReviewYearMonth;
@@ -50,6 +51,10 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
     List<ReviewYearMonth> findReviewMonthsByMemberId(@Param("memberId") Long memberId);
 
     @Modifying
-    @Query("UPDATE ReviewEntity r SET r.deletedAt = CURRENT_TIMESTAMP WHERE r.id = :reviewId")
-    void softDeleteById(@Param("reviewId") Long reviewId);
+    @Query(
+            "UPDATE ReviewEntity r SET r.deletedAt = :deletedAt WHERE r.id = :reviewId AND r.member.id = :memberId AND r.deletedAt IS NULL")
+    int softDeleteByIdAndMemberId(
+            @Param("reviewId") Long reviewId,
+            @Param("memberId") Long memberId,
+            @Param("deletedAt") LocalDateTime deletedAt);
 }

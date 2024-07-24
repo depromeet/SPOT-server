@@ -69,12 +69,11 @@ public class MemberController {
     @GetMapping("/duplicatedNickname/{nickname}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "닉네임 중복확인 API")
-    public Boolean duplicatedNickname(
+    public boolean duplicatedNickname(
             @PathVariable("nickname")
                     @Parameter(name = "nickname", description = "닉네임", required = true)
                     String nickname) {
-        Boolean result = memberUsecase.duplicatedNickname(nickname);
-        return result;
+        return memberUsecase.duplicatedNickname(nickname);
     }
 
     @GetMapping("/accessToken/{idCode}")
@@ -104,6 +103,7 @@ public class MemberController {
     @CurrentMember
     @GetMapping("/memberInfo")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "로그인 유저 정보 조회 API")
     public MyHomeResponse findMemberInfo(@Parameter(hidden = true) Long memberId) {
         MemberInfo memberInfo = memberUsecase.findMemberInfo(memberId);
 
