@@ -68,4 +68,16 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
                     + "WHERE s.id = :stadiumId AND b.code = :blockCode")
     LocationInfo findLocationInfoByStadiumIdAndBlockCode(
             @Param("stadiumId") Long stadiumId, @Param("blockCode") String blockCode);
+
+    @Query(
+            "SELECT r FROM ReviewEntity r WHERE r.member.id = :memberId "
+                    + "AND r.deletedAt IS NULL "
+                    + "ORDER BY r.createdAt desc "
+                    + "LIMIT 1")
+    ReviewEntity findLastReviewByMemberId(@Param("memberId") Long memberId);
+
+    @Query(
+            "SELECT count(r) FROM ReviewEntity r WHERE r.member.id = :memberId "
+                    + "AND r.deletedAt IS NULL")
+    long countByIdByMemberId(@Param("memberId") Long memberId);
 }

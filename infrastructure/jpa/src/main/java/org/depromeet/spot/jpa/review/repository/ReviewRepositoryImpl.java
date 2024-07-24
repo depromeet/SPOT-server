@@ -82,4 +82,15 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode) {
         return reviewJpaRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
     }
+
+    @Override
+    public Review findLastReviewByMemberId(Long memberId) {
+        ReviewEntity reviewEntity = reviewJpaRepository.findLastReviewByMemberId(memberId);
+        return reviewEntity.toDomain();
+    }
+
+    @Override
+    public long countByIdByMemberId(Long memberId) {
+        return reviewJpaRepository.countByIdByMemberId(memberId);
+    }
 }

@@ -156,7 +156,7 @@ VALUES
 (5, 3, 5, 5, '2023-06-04 22:00:00', '2023-06-04 22:00:00');
 
 -- members
-INSERT INTO members (id, email, name, nickname, phone_number, level, profile_image, sns_provider, id_token, team_id, my_team, role, created_at, updated_at)
+INSERT INTO members (id, email, name, nickname, phone_number, level, profile_image, sns_provider, id_token, team_id, role, created_at, updated_at)
 VALUES
-(1, 'user1@example.com', '김철수', '축구팬1', '010-1234-5678', 1, 'http://example.com/profile1.jpg', 'KAKAO', 'idtoken1', 1, 1, 'ROLE_USER', '2023-06-01 10:00:00', '2023-06-01 10:00:00'),
-(2, 'user2@example.com', '이영희', '야구매니아', '010-2345-6789', 2, 'http://example.com/profile2.jpg', 'KAKAO', 'idtoken2', 2, 2, 'ROLE_USER', '2023-06-02 11:00:00', '2023-06-02 11:00:00');
+(1, 'user1@example.com', '김철수', '축구팬1', '010-1234-5678', 1, 'http://example.com/profile1.jpg', 'KAKAO', 'idtoken1', 1, 'ROLE_USER', '2023-06-01 10:00:00', '2023-06-01 10:00:00'),
+(2, 'user2@example.com', '이영희', '야구매니아', '010-2345-6789', 2, 'http://example.com/profile2.jpg', 'KAKAO', 'idtoken2', 2, 'ROLE_USER', '2023-06-02 11:00:00', '2023-06-02 11:00:00');
