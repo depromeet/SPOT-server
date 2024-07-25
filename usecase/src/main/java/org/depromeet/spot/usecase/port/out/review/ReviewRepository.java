@@ -36,4 +36,5 @@ public interface ReviewRepository {
     Review findLastReviewByMemberId(Long memberId);
 
     long countByIdByMemberId(Long memberId);
+
 }
