@@ -108,7 +108,6 @@ public class ReadReviewService implements ReadReviewUsecase {
         return reviewRepository.findReviewMonthsByMemberId(memberId);
     }
 
-
     private MemberInfoOnMyReviewResult createMemberInfoFromMember(
             Member member, long totalReviewCount) {
         return MemberInfoOnMyReviewResult.builder()
@@ -120,7 +119,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .reviewCount(totalReviewCount)
                 .build();
     }
-  
+
     @Override
     public MyRecentReviewResult findLastReviewByMemberId(Long memberId) {
         Review review = reviewRepository.findLastReviewByMemberId(memberId);
@@ -134,12 +133,6 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .reviewCount(reviewCount)
                 .build();
     }
-
-    private MemberInfoOnMyReviewResult createMemberInfoFromReviews(
-            List<Review> reviews, long totalReviewCount) {
-        if (reviews.isEmpty()) {
-            return null;
-        }
 
     private List<Review> mapKeywordsToReviews(List<Review> reviews) {
         List<Long> keywordIds =
