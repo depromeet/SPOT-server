@@ -108,9 +108,9 @@ public class ReadReviewService implements ReadReviewUsecase {
         return reviewRepository.findReviewMonthsByMemberId(memberId);
     }
 
+
     private MemberInfoOnMyReviewResult createMemberInfoFromMember(
             Member member, long totalReviewCount) {
-
         return MemberInfoOnMyReviewResult.builder()
                 .userId(member.getId())
                 .profileImageUrl(member.getProfileImage())
@@ -120,6 +120,26 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .reviewCount(totalReviewCount)
                 .build();
     }
+  
+    @Override
+    public MyRecentReviewResult findLastReviewByMemberId(Long memberId) {
+        Review review = reviewRepository.findLastReviewByMemberId(memberId);
+
+        long reviewCount = reviewRepository.countByIdByMemberId(memberId);
+
+        Review reviewWithKeywords = mapKeywordsToReview(review);
+
+        return MyRecentReviewResult.builder()
+                .review(reviewWithKeywords)
+                .reviewCount(reviewCount)
+                .build();
+    }
+
+    private MemberInfoOnMyReviewResult createMemberInfoFromReviews(
+            List<Review> reviews, long totalReviewCount) {
+        if (reviews.isEmpty()) {
+            return null;
+        }
 
     private List<Review> mapKeywordsToReviews(List<Review> reviews) {
         List<Long> keywordIds =
@@ -170,5 +190,47 @@ public class ReadReviewService implements ReadReviewUsecase {
                             return mappedReview;
                         })
                 .collect(Collectors.toList());
+    }
+
+    private Review mapKeywordsToReview(Review review) {
+        // TODO : (민성) 중복되는 Keywords 로직 처리 부분 메소드로 분리하기!
+        List<Long> keywordIds =
+                review.getKeywords().stream()
+                        .map(ReviewKeyword::getKeywordId)
+                        .distinct()
+                        .collect(Collectors.toList());
+
+        Map<Long, Keyword> keywordMap = keywordRepository.findByIds(keywordIds);
+        List<ReviewKeyword> mappedKeywords =
+                review.getKeywords().stream()
+                        .map(
+                                reviewKeyword -> {
+                                    Keyword keyword = keywordMap.get(reviewKeyword.getKeywordId());
+                                    return ReviewKeyword.create(
+                                            reviewKeyword.getId(), keyword.getId());
+                                })
+                        .collect(Collectors.toList());
+
+        Review mappedReview =
+                Review.builder()
+                        .id(review.getId())
+                        .member(review.getMember())
+                        .stadium(review.getStadium())
+                        .section(review.getSection())
+                        .block(review.getBlock())
+                        .row(review.getRow())
+                        .seat(review.getSeat())
+                        .dateTime(review.getDateTime())
+                        .content(review.getContent())
+                        .deletedAt(review.getDeletedAt())
+                        .images(review.getImages())
+                        .keywords(mappedKeywords) // 리뷰 키워드 담당
+                        .build();
+
+        // Keyword 정보를 Review 객체에 추가
+        // -> 리뷰에서 내에서 키워드가 map 형태가 아닌 List 형태로 되어 있음!
+        mappedReview.setKeywordMap(keywordMap);
+
+        return mappedReview;
     }
 }

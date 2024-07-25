@@ -1,9 +1,9 @@
 package org.depromeet.spot.usecase.service.member;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
+import org.depromeet.spot.common.exception.member.MemberException.InactiveMemberException;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
-import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
@@ -35,24 +35,21 @@ public class MemberService implements MemberUsecase {
             throw new MemberNicknameConflictException();
         }
         Member memberResult = oauthRepository.getRegisterUserInfo(accessToken, member);
-        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
-        if (existedMember.isPresent()) {
-            return existedMember.get();
-        }
 
+        // 이미 있는 유저를 검증할 필요 없음 -> 최초 시도가 로그인먼저 들어오기 때문.
         return memberRepository.save(memberResult);
     }
 
     @Override
     public Member login(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
-        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
-        if (existedMember.isEmpty()) {
-            // TODO : 404 말고 사용되지 않는 Exception 코드가 필요함.
-            //            throw new MemberNotFoundException();
-            return null;
+        Member existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+
+        // 회원 탈퇴 유저일 경우 재가입
+        if (existedMember.getDeletedAt() != null) {
+            throw new InactiveMemberException();
         }
-        return existedMember.get();
+        return existedMember;
     }
 
     @Override
@@ -71,12 +68,8 @@ public class MemberService implements MemberUsecase {
     @Override
     public boolean deleteMember(String accessToken) {
         Member memberResult = oauthRepository.getLoginUserInfo(accessToken);
-        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        memberRepository.findByIdToken(memberResult.getIdToken());
 
-        // 멤버 없으면 오류 출력
-        if (existedMember.isEmpty()) {
-            throw new MemberNotFoundException();
-        }
         memberRepository.deleteByIdToken(memberResult.getIdToken());
         return true;
     }
@@ -88,5 +81,10 @@ public class MemberService implements MemberUsecase {
         BaseballTeam baseballTeam = readBaseballTeamUsecase.findById(member.getTeamId());
 
         return MemberInfo.of(member, baseballTeam);
+    }
+
+    @Override
+    public void softDelete(Long memberId) {
+        memberRepository.updateDeletedAt(memberId, LocalDateTime.now());
     }
 }

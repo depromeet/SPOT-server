@@ -22,6 +22,8 @@ public interface MemberUsecase {
 
     MemberInfo findMemberInfo(Long memberId);
 
+    void softDelete(Long memberId);
+
     @Getter
     @Builder
     @AllArgsConstructor
@@ -31,6 +33,7 @@ public interface MemberUsecase {
         private final int level;
         private final String levelTitle;
         private String teamImageUrl;
+        private final Long teamId;
 
         public static MemberInfo of(Member member, BaseballTeam baseballTeam) {
             final int level = member.getLevel();
@@ -40,6 +43,7 @@ public interface MemberUsecase {
                     .level(level)
                     .levelTitle(Level.getTitleFrom(level))
                     .teamImageUrl(baseballTeam.getLogo())
+                    .teamId(baseballTeam.getId())
                     .build();
         }
     }

@@ -1,6 +1,6 @@
 package org.depromeet.spot.jpa.member.repository;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Member;
@@ -36,8 +36,11 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findByIdToken(String idToken) {
-        return memberJpaRepository.findByIdToken(idToken).map(MemberEntity::toDomain);
+    public Member findByIdToken(String idToken) {
+        return memberJpaRepository
+                .findByIdToken(idToken)
+                .map(MemberEntity::toDomain)
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     @Override
@@ -55,5 +58,15 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public void deleteByIdToken(String idToken) {
         memberJpaRepository.deleteByIdToken(idToken);
+    }
+
+    @Override
+    public void updateDeletedAt(Long memberId, LocalDateTime deletedAt) {
+        memberJpaRepository.updateDeletedAt(memberId, deletedAt);
+    }
+
+    @Override
+    public void updateDeletedAtAndUpdatedAt(Long memberId, LocalDateTime updatedAt) {
+        memberJpaRepository.updateDeletedAtAndUpdatedAt(memberId, updatedAt);
     }
 }

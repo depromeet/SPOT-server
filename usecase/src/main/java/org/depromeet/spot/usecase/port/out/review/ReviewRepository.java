@@ -32,4 +32,9 @@ public interface ReviewRepository {
     Long softDeleteByIdAndMemberId(Long reviewId, Long memberId);
 
     LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode);
+
+    Review findLastReviewByMemberId(Long memberId);
+
+    long countByIdByMemberId(Long memberId);
+
 }
