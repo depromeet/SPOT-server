@@ -1,8 +1,9 @@
 plugins {
     id("java")
+    id("io.sentry.jvm.gradle")
+    id("com.diffplug.spotless")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
-    id("com.diffplug.spotless")
 }
 
 allprojects {
@@ -20,6 +21,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.diffplug.spotless")
+    apply(plugin = "io.sentry.jvm.gradle")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17

@@ -21,16 +21,3 @@ spring:
 
 server:
     port: 8080
-
-logging:
-    level:
-        org.depromeet.spot: DEBUG
-        org.hibernate.SQL: DEBUG
-        org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-decorator:
-    datasource:
-        p6spy:
-            enable-logging: true
-
-# 필요한 경우 추가 설정

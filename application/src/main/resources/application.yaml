@@ -1,21 +1,63 @@
 server:
-  port: 8080
-  shutdown: graceful
+    port: 8080
+    shutdown: graceful
 
 spring:
-  # 서브모듈 profile
-  profiles:
-    include:
-        - jpa
-        - ncp
-        - jwt
-        - kakao
-  # swagger를 이용해 API 명세서 생성
-  doc:
-    swagger-ui:
-      path: /swagger-ui.html
+    # 서브모듈 profile
+    profiles:
+        active: local
+        group:
+          local:
+              - jpa
+              - ncp
+              - jwt
+              - kakao
+          dev:
+              - jpa
+              - ncp
+              - jwt
+              - kakao
+          prod:
+              - jpa
+              - ncp
+              - jwt
+              - kakao
+              - sentry
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 30MB
 
-  servlet:
-      multipart:
-          max-file-size: 10MB
-          max-request-size: 30MB
+springdoc:
+    swagger-ui:
+        enabled: true
+        path: /swagger-ui.html
+
+decorator:
+    datasource:
+        p6spy:
+            enable-logging: true
+---
+spring:
+    config:
+      activate:
+          on-profile: local
+---
+spring:
+    config:
+        activate:
+            on-profile: dev
+---
+spring:
+    config:
+        activate:
+            on-profile: prod
+
+decorator:
+    datasource:
+        p6spy:
+            enable-logging: false
+
+springdoc:
+  swagger-ui:
+      enabled: false
