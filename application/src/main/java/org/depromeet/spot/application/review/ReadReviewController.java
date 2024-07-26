@@ -17,6 +17,7 @@ import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,13 @@ public class ReadReviewController {
             @PathVariable("blockCode") @NotNull @Parameter(description = "블록 코드", required = true)
                     String blockCode,
             @ModelAttribute @Valid BlockReviewRequest request,
-            @ParameterObject @PageableDefault(size = 20, page = 0) Pageable pageable) {
+            @ParameterObject
+                    @PageableDefault(
+                            size = 20,
+                            page = 0,
+                            sort = "dateTime",
+                            direction = Sort.Direction.DESC)
+                    Pageable pageable) {
 
         ReadReviewUsecase.BlockReviewListResult result =
                 readReviewUsecase.findReviewsByStadiumIdAndBlockCode(
@@ -81,7 +88,13 @@ public class ReadReviewController {
     public MyReviewListResponse findMyReviews(
             @Parameter(hidden = true) Long memberId,
             @ModelAttribute @Valid MyReviewRequest request,
-            @ParameterObject @PageableDefault(size = 20, page = 0) Pageable pageable) {
+            @ParameterObject
+                    @PageableDefault(
+                            size = 20,
+                            page = 0,
+                            sort = "dateTime",
+                            direction = Sort.Direction.DESC)
+                    Pageable pageable) {
 
         ReadReviewUsecase.MyReviewListResult result =
                 readReviewUsecase.findMyReviewsByUserId(
