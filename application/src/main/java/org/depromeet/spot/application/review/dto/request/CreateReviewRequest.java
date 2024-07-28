@@ -8,6 +8,7 @@ import java.util.List;
 import jakarta.validation.constraints.NotNull;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
+import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewKeywordsException;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewCommand;
 
 public record CreateReviewRequest(
@@ -30,7 +31,7 @@ public record CreateReviewRequest(
 
     private void validateGoodAndBad() {
         if ((good == null || good.isEmpty()) && (bad == null || bad.isEmpty())) {
-            throw new IllegalArgumentException("At least one of 'good' or 'bad' must be provided");
+            throw new InvalidReviewKeywordsException();
         }
     }
 
