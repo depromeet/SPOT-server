@@ -37,7 +37,7 @@ public class CreateReviewController {
             @PathVariable @Positive @NotNull final Long blockId,
             @PathVariable @Positive @NotNull final Integer seatNumber,
             @Parameter(hidden = true) Long memberId,
-            @RequestBody @Valid @NotNull CreateReviewRequest request) {
+            @RequestBody @Valid CreateReviewRequest request) {
         CreateReviewUsecase.CreateReviewResult result =
                 createReviewUsecase.create(blockId, seatNumber, memberId, request.toCommand());
         return BaseReviewResponse.from(result.review());
