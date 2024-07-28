@@ -14,7 +14,7 @@ public record CreateReviewRequest(
         @NotNull List<String> images,
         List<String> good,
         List<String> bad,
-        @NotNull String content,
+        String content,
         @NotNull String dateTime) {
 
     public CreateReviewCommand toCommand() {
