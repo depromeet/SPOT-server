@@ -10,4 +10,6 @@ public interface BlockTopKeywordRepository {
 
     List<BlockKeywordInfo> findTopKeywordsByStadiumIdAndBlockCode(
             Long stadiumId, String blockCode, int limit);
+
+    void decrementCount(Long blockId, Long keywordId);
 }

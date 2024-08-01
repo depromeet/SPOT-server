@@ -20,6 +20,12 @@ public interface BlockTopKeywordJpaRepository extends JpaRepository<BlockTopKeyw
                     + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId")
     int incrementCount(Long blockId, Long keywordId);
 
+    @Modifying
+    @Query(
+            "UPDATE BlockTopKeywordEntity b SET b.count = b.count - 1, b.updatedAt = CURRENT_TIMESTAMP "
+                    + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId AND b.count > 0")
+    int decrementCount(@Param("blockId") Long blockId, @Param("keywordId") Long keywordId);
+
     // JPA에서 ON Duplicate key update 구문을 지원하지 않음 -> native query 사용
     @Modifying
     @Query(

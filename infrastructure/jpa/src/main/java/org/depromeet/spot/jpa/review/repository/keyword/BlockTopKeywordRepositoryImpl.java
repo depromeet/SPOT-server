@@ -32,6 +32,21 @@ public class BlockTopKeywordRepositoryImpl implements BlockTopKeywordRepository 
     }
 
     @Override
+    @Transactional
+    public void decrementCount(Long blockId, Long keywordId) {
+        log.debug(
+                "Decrementing block top keyword count: blockId={}, keywordId={}",
+                blockId,
+                keywordId);
+        int updatedRows = blockTopKeywordJpaRepository.decrementCount(blockId, keywordId);
+        log.debug("Rows updated by decrementCount: {}", updatedRows);
+        if (updatedRows == 0) {
+            log.debug(
+                    "No rows updated, possibly because count was already 0 or entry doesn't exist");
+        }
+    }
+
+    @Override
     public List<BlockKeywordInfo> findTopKeywordsByStadiumIdAndBlockCode(
             Long stadiumId, String blockCode, int limit) {
         return blockTopKeywordJpaRepository
