@@ -7,8 +7,7 @@ import lombok.Getter;
 
 @Getter
 public enum UtilErrorCode implements ErrorCode {
-    INVALID_RGB_CODE(HttpStatus.BAD_REQUEST, "UT001", "잘못된 RGB 코드 값 입니다."),
-    ;
+    INVALID_HEX_CODE(HttpStatus.BAD_REQUEST, "UT001", "잘못된 헥사 코드 입니다.");
 
     private final HttpStatus status;
     private final String code;

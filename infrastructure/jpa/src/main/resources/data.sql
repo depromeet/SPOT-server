@@ -5,10 +5,10 @@ VALUES (1, '잠실 야구 경기장', 'main_image_a.jpg', 'seating_chart_a.jpg',
        (3, '부산 야구 경기장', 'main_image_c.jpg', 'seating_chart_c.jpg', 'labeled_seating_chart_c.jpg', 0);
 
 -- Baseball Teams
-INSERT INTO baseball_teams (id, name, alias, logo, red, green, blue)
-VALUES (1, 'Team A', 'A', 'logo_a.png', 255, 0, 0),
-       (2, 'Team B', 'B', 'logo_b.png', 0, 255, 0),
-       (3, 'Team C', 'C', 'logo_c.png', 0, 0, 255);
+INSERT INTO baseball_teams (id, name, alias, logo, label_background_color)
+VALUES (1, 'Team A', 'A', 'logo_a.png', '#FFFFF0'),
+       (2, 'Team B', 'B', 'logo_b.png', '#FFFFF1'),
+       (3, 'Team C', 'C', 'logo_c.png', '#FFFFF2');
 
 -- Stadium Home Teams
 INSERT INTO stadium_home_teams (id, stadium_id, team_id)
@@ -18,10 +18,10 @@ VALUES (1, 1, 1),
        (4, 1, 2);
 
 -- Stadium Sections
-INSERT INTO sections (id, stadium_id, name, alias, red, green, blue)
-VALUES (1, 1, '오렌지석', '응원석', 255, 255, 255),
-       (2, 1, '네이비석', '프리미엄석', 100, 100, 100),
-       (3, 1, '레드석', null, 100, 0, 0);
+INSERT INTO sections (id, stadium_id, name, alias, label_color)
+VALUES (1, 1, '오렌지석', '응원석', '#FFFFFF'),
+       (2, 1, '네이비석', '프리미엄석', '#FE2314'),
+       (3, 1, '레드석', null, '#EH0122');
 
 -- Block
 INSERT INTO blocks (id, stadium_id, section_id, code, max_rows)

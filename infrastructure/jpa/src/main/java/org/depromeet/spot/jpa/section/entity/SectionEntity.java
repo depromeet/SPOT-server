@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-import org.depromeet.spot.domain.common.RgbCode;
+import org.depromeet.spot.domain.common.HexCode;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
@@ -26,24 +26,15 @@ public class SectionEntity extends BaseEntity {
     @Column(name = "alias", length = 20)
     private String alias;
 
-    @Column(name = "red")
-    private Integer red;
-
-    @Column(name = "green")
-    private Integer green;
-
-    @Column(name = "blue")
-    private Integer blue;
+    @Column(name = "label_color", nullable = false)
+    private String labelColor;
 
     public static SectionEntity from(Section section) {
-        RgbCode labelRgbCode = section.getLabelRgbCode();
         return new SectionEntity(
                 section.getStadiumId(),
                 section.getName(),
                 section.getAlias(),
-                labelRgbCode.getRed(),
-                labelRgbCode.getGreen(),
-                labelRgbCode.getBlue());
+                section.getLabelColor().getValue());
     }
 
     public static SectionEntity withSection(Section section) {
@@ -55,13 +46,11 @@ public class SectionEntity extends BaseEntity {
         stadiumId = section.getStadiumId();
         name = section.getName();
         alias = section.getAlias();
-        red = section.getLabelRgbCode().getRed();
-        green = section.getLabelRgbCode().getGreen();
-        blue = section.getLabelRgbCode().getBlue();
+        labelColor = section.getLabelColor().getValue();
     }
 
     public Section toDomain() {
-        RgbCode rgbCode = RgbCode.builder().red(red).green(green).blue(blue).build();
-        return new Section(this.getId(), stadiumId, name, alias, rgbCode);
+        HexCode labelHexColor = new HexCode(labelColor);
+        return new Section(this.getId(), stadiumId, name, alias, labelHexColor);
     }
 }

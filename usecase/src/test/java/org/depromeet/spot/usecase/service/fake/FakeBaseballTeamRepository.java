@@ -38,7 +38,7 @@ public class FakeBaseballTeamRepository implements BaseballTeamRepository {
                             .name(team.getName())
                             .alias(team.getAlias())
                             .logo(team.getLogo())
-                            .labelRgbCode(team.getLabelRgbCode())
+                            .labelBackgroundColor(team.getLabelBackgroundColor())
                             .build();
             data.add(newTeam);
             return newTeam;

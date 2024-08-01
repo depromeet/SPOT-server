@@ -28,7 +28,7 @@ public class FakeSectionRepository implements SectionRepository {
                             .stadiumId(section.getStadiumId())
                             .name(section.getName())
                             .alias(section.getAlias())
-                            .labelRgbCode(section.getLabelRgbCode())
+                            .labelColor(section.getLabelColor())
                             .build();
             data.add(newSection);
             return newSection;

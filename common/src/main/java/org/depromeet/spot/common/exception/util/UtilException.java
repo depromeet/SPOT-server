@@ -7,9 +7,9 @@ public abstract class UtilException extends BusinessException {
         super(errorCode);
     }
 
-    public static class InvalidRgbCodeException extends UtilException {
-        public InvalidRgbCodeException() {
-            super(UtilErrorCode.INVALID_RGB_CODE);
+    public static class InvalidHexCodeException extends UtilException {
+        public InvalidHexCodeException() {
+            super(UtilErrorCode.INVALID_HEX_CODE);
         }
     }
 }

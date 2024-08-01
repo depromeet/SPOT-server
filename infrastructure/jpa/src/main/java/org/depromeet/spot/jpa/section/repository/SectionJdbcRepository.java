@@ -20,16 +20,14 @@ public class SectionJdbcRepository {
     public void createSections(List<Section> sections) {
         jdbcTemplate.batchUpdate(
                 "insert into sections"
-                        + "(stadium_id, name, alias, red, green, blue) values (?, ?, ?, ?, ?, ?)",
+                        + "(stadium_id, name, alias, label_color) values (?, ?, ?, ?)",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setLong(1, sections.get(i).getStadiumId());
                         ps.setString(2, sections.get(i).getName());
                         ps.setString(3, sections.get(i).getAlias());
-                        ps.setInt(4, sections.get(i).getLabelRgbCode().getRed());
-                        ps.setInt(5, sections.get(i).getLabelRgbCode().getGreen());
-                        ps.setInt(6, sections.get(i).getLabelRgbCode().getBlue());
+                        ps.setString(4, sections.get(i).getLabelColor().getValue());
                     }
 
                     @Override

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import org.depromeet.spot.application.team.dto.request.CreateHomeTeamReq;
-import org.depromeet.spot.domain.common.RgbCode;
 import org.depromeet.spot.usecase.port.in.team.CreateBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.CreateBaseballTeamUsecase.CreateBaseballTeamCommand;
 import org.depromeet.spot.usecase.port.in.team.CreateHomeTeamUsecase;
@@ -39,16 +38,13 @@ public class CreateBaseballTeamController {
             @RequestParam("logo") MultipartFile logo,
             @RequestParam("name") String name,
             @RequestParam("alias") String alias,
-            @RequestParam("rgbRed") int rgbRed,
-            @RequestParam("rgbBlue") int rgbBlue,
-            @RequestParam("rgbGreen") int rgbGreen) {
-        RgbCode rgbCode = RgbCode.builder().blue(rgbBlue).red(rgbRed).green(rgbGreen).build();
+            @RequestParam("labelBackgroundColor") String labelBackgroundColor) {
         CreateBaseballTeamCommand command =
                 CreateBaseballTeamCommand.builder()
                         .logo(logo)
                         .name(name)
                         .alias(alias)
-                        .rgbCode(rgbCode)
+                        .labelBackgroundColor(labelBackgroundColor)
                         .build();
         createBaseballTeamUsecase.save(command);
     }
