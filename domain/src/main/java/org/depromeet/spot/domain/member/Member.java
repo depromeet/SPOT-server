@@ -30,19 +30,22 @@ public class Member {
     private final LocalDateTime updatedAt;
 
     public int calculateLevel(long reviewCnt) {
+        if (reviewCnt == 0) {
+            return 0;
+        }
         if (reviewCnt <= 2) {
             return 1;
         }
-        if (2 < reviewCnt && reviewCnt <= 6) {
+        if (2 < reviewCnt && reviewCnt <= 4) {
             return 2;
         }
-        if (6 < reviewCnt && reviewCnt <= 11) {
+        if (4 < reviewCnt && reviewCnt <= 7) {
             return 3;
         }
-        if (11 < reviewCnt && reviewCnt <= 20) {
+        if (7 < reviewCnt && reviewCnt <= 13) {
             return 4;
         }
-        if (20 < reviewCnt && reviewCnt <= 35) {
+        if (13 < reviewCnt && reviewCnt <= 20) {
             return 5;
         }
         return 6;
