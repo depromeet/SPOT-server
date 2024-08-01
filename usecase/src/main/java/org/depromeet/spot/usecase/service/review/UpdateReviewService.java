@@ -14,7 +14,6 @@ import org.depromeet.spot.domain.review.image.ReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.seat.Seat;
-import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.ReviewResult;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
@@ -39,7 +38,8 @@ public class UpdateReviewService implements UpdateReviewUsecase {
     private final MemberRepository memberRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
 
-    public ReviewResult updateReview(Long memberId, Long reviewId, UpdateReviewCommand command) {
+    public UpdateReviewResult updateReview(
+            Long memberId, Long reviewId, UpdateReviewCommand command) {
         Review existingReview =
                 reviewRepository
                         .findById(reviewId)
@@ -50,7 +50,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
             throw new UnauthorizedReviewModificationException();
         }
 
-        Member member = memberRepository.findById(memberId);
+        Member member = existingReview.getMember();
         Seat seat = seatRepository.findByIdWith(command.blockId(), command.seatNumber());
 
         // 새로운 Review 객체 생성
@@ -67,7 +67,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
 
         savedReview.setKeywordMap(keywordMap);
 
-        return new ReviewResult(savedReview, member, seat);
+        return new UpdateReviewResult(savedReview);
     }
 
     private Review createUpdatedReview(

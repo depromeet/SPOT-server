@@ -5,8 +5,8 @@ import jakarta.validation.Valid;
 import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.review.dto.request.UpdateReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BaseReviewResponse;
-import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
+import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase.UpdateReviewResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +33,9 @@ public class UpdateReviewController {
                     Long reviewId,
             @RequestBody @Valid UpdateReviewRequest request) {
 
-        CreateReviewUsecase.ReviewResult result =
+        UpdateReviewResult result =
                 updateReviewUsecase.updateReview(memberId, reviewId, request.toCommand());
 
-        return BaseReviewResponse.from(result);
+        return BaseReviewResponse.from(result.review());
     }
 }

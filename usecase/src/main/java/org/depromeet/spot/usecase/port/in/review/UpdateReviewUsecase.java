@@ -3,12 +3,12 @@ package org.depromeet.spot.usecase.port.in.review;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.ReviewResult;
+import org.depromeet.spot.domain.review.Review;
 
 import lombok.Builder;
 
 public interface UpdateReviewUsecase {
-    ReviewResult updateReview(Long memberId, Long reviewId, UpdateReviewCommand command);
+    UpdateReviewResult updateReview(Long memberId, Long reviewId, UpdateReviewCommand command);
 
     @Builder
     record UpdateReviewCommand(
@@ -21,4 +21,6 @@ public interface UpdateReviewUsecase {
             List<String> bad,
             String content,
             LocalDateTime dateTime) {}
+
+    record UpdateReviewResult(Review review) {}
 }
