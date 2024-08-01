@@ -40,6 +40,6 @@ public class CreateReviewController {
             @RequestBody @Valid CreateReviewRequest request) {
         CreateReviewUsecase.CreateReviewResult result =
                 createReviewUsecase.create(blockId, seatNumber, memberId, request.toCommand());
-        return BaseReviewResponse.from(result.review());
+        return BaseReviewResponse.from(result);
     }
 }
