@@ -5,18 +5,20 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
+
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewKeywordsException;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase.UpdateReviewCommand;
 
 public record UpdateReviewRequest(
-        Long blockId,
-        Integer seatNumber,
-        List<String> images,
+        @NotNull Long blockId,
+        @NotNull Integer seatNumber,
+        @NotNull List<String> images,
         List<String> good,
         List<String> bad,
         String content,
-        String dateTime) {
+        @NotNull String dateTime) {
 
     public UpdateReviewCommand toCommand() {
         validateGoodAndBad();
