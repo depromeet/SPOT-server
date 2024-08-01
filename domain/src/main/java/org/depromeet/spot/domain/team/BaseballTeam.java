@@ -17,12 +17,18 @@ public class BaseballTeam {
     private final String alias;
     private final String logo;
     private final HexCode labelBackgroundColor;
+    private final HexCode labelFontColor;
 
     private static final int MAX_NAME_LENGTH = 20;
     private static final int MAX_ALIAS_LENGTH = 10;
 
     public BaseballTeam(
-            Long id, String name, String alias, String logo, HexCode labelBackgroundColor) {
+            Long id,
+            String name,
+            String alias,
+            String logo,
+            HexCode labelBackgroundColor,
+            HexCode labelFontColor) {
         checkValidName(name);
         checkValidAlias(alias);
         checkValidLogo(logo);
@@ -32,6 +38,7 @@ public class BaseballTeam {
         this.alias = alias;
         this.logo = logo;
         this.labelBackgroundColor = labelBackgroundColor;
+        this.labelFontColor = labelFontColor;
     }
 
     private void checkValidName(final String name) {
