@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
-import org.depromeet.spot.domain.common.RgbCode;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase.SectionInfo;
@@ -59,7 +58,7 @@ public class SectionReadServiceTest {
                         .stadiumId(1L)
                         .name("오렌지석")
                         .alias("응원석")
-                        .labelRgbCode(new RgbCode(0, 0, 0))
+                        .labelColor("#FFFFFF")
                         .build();
         Section section2 =
                 Section.builder()
@@ -67,7 +66,7 @@ public class SectionReadServiceTest {
                         .stadiumId(1L)
                         .name("레드석")
                         .alias(null)
-                        .labelRgbCode(new RgbCode(110, 100, 0))
+                        .labelColor("#FFFFF1")
                         .build();
         fakeSectionRepository.save(section1);
         fakeSectionRepository.save(section2);
