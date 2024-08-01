@@ -80,7 +80,7 @@ public class MemberEntity extends BaseEntity {
     }
 
     public MemberEntity(Member member) {
-        super(member.getId(), null, null, null);
+        super(member.getId(), member.getCreatedAt(), member.getUpdatedAt(), member.getDeletedAt());
         email = member.getEmail();
         name = member.getName();
         nickname = member.getNickname();

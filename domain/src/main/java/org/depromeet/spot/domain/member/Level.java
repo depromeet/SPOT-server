@@ -1,5 +1,7 @@
 package org.depromeet.spot.domain.member;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,6 +13,9 @@ public class Level {
     private final int value;
     private final String title;
     private final String mascotImageUrl;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
+    private final LocalDateTime deletedAt;
 
     public static int calculateLevel(final long reviewCnt) {
         if (reviewCnt == 0) {

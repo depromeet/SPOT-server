@@ -26,7 +26,7 @@ public class LevelEntity extends BaseEntity {
     private String mascotImageUrl;
 
     public LevelEntity(Level level) {
-        super(level.getId(), null, null, null);
+        super(level.getId(), level.getCreatedAt(), level.getUpdatedAt(), level.getDeletedAt());
         value = level.getValue();
         title = level.getTitle();
         mascotImageUrl = level.getMascotImageUrl();
@@ -37,6 +37,13 @@ public class LevelEntity extends BaseEntity {
     }
 
     public Level toDomain() {
-        return new Level(this.getId(), value, title, mascotImageUrl);
+        return new Level(
+                this.getId(),
+                value,
+                title,
+                mascotImageUrl,
+                this.getCreatedAt(),
+                this.getUpdatedAt(),
+                this.getDeletedAt());
     }
 }
