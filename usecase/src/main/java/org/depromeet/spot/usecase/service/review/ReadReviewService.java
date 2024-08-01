@@ -193,58 +193,6 @@ public class ReadReviewService implements ReadReviewUsecase {
         return reviews.stream().map(this::mapKeywordsToSingleReview).collect(Collectors.toList());
     }
 
-    //    private List<Review> mapKeywordsToReviews(List<Review> reviews) {
-    //        List<Long> keywordIds =
-    //                reviews.stream()
-    //                        .flatMap(review -> review.getKeywords().stream())
-    //                        .map(ReviewKeyword::getKeywordId)
-    //                        .distinct()
-    //                        .collect(Collectors.toList());
-    //
-    //        Map<Long, Keyword> keywordMap = keywordRepository.findByIds(keywordIds);
-    //
-    //        return reviews.stream()
-    //                .map(
-    //                        review -> {
-    //                            List<ReviewKeyword> mappedKeywords =
-    //                                    review.getKeywords().stream()
-    //                                            .map(
-    //                                                    reviewKeyword -> {
-    //                                                        Keyword keyword =
-    //                                                                keywordMap.get(
-    //                                                                        reviewKeyword
-    //
-    // .getKeywordId());
-    //                                                        return ReviewKeyword.create(
-    //                                                                reviewKeyword.getId(),
-    //                                                                keyword.getId());
-    //                                                    })
-    //                                            .collect(Collectors.toList());
-    //
-    //                            Review mappedReview =
-    //                                    Review.builder()
-    //                                            .id(review.getId())
-    //                                            .member(review.getMember())
-    //                                            .stadium(review.getStadium())
-    //                                            .section(review.getSection())
-    //                                            .block(review.getBlock())
-    //                                            .row(review.getRow())
-    //                                            .seat(review.getSeat())
-    //                                            .dateTime(review.getDateTime())
-    //                                            .content(review.getContent())
-    //                                            .deletedAt(review.getDeletedAt())
-    //                                            .images(review.getImages())
-    //                                            .keywords(mappedKeywords)
-    //                                            .build();
-    //
-    //                            // Keyword 정보를 Review 객체에 추가
-    //                            mappedReview.setKeywordMap(keywordMap);
-    //
-    //                            return mappedReview;
-    //                        })
-    //                .collect(Collectors.toList());
-    //    }
-
     private Review mapKeywordsToReview(Review review) {
         // TODO : (민성) 중복되는 Keywords 로직 처리 부분 메소드로 분리하기!
         List<Long> keywordIds =
