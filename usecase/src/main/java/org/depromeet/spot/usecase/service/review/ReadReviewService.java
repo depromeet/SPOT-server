@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.domain.member.enums.Level;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
@@ -142,8 +141,8 @@ public class ReadReviewService implements ReadReviewUsecase {
         return MemberInfoOnMyReviewResult.builder()
                 .userId(member.getId())
                 .profileImageUrl(member.getProfileImage())
-                .level(member.getLevel())
-                .levelTitle(Level.getTitleFrom(member.getLevel()))
+                .level(member.getLevel().getValue())
+                .levelTitle(member.getLevel().getTitle())
                 .nickname(member.getNickname())
                 .reviewCount(totalReviewCount)
                 .build();

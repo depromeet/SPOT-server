@@ -100,7 +100,7 @@ public class MemberEntity extends BaseEntity {
                 name,
                 nickname,
                 phoneNumber,
-                level,
+                level.toDomain(),
                 profileImage,
                 SnsProvider.valueOf(snsProvider),
                 idToken,

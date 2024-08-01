@@ -86,7 +86,7 @@ public record BaseReviewResponse(
     public record MemberInfo(String profileImage, String nickname, Integer level) {
         public static MemberInfo from(Member member) {
             return new MemberInfo(
-                    member.getProfileImage(), member.getNickname(), member.getLevel());
+                    member.getProfileImage(), member.getNickname(), member.getLevel().getValue());
         }
     }
 }
