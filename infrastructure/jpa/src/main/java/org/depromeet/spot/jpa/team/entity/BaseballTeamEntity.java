@@ -29,16 +29,21 @@ public class BaseballTeamEntity extends BaseEntity {
     @Column(name = "label_background_color", nullable = false, unique = true, length = 10)
     private String labelBackgroundColor;
 
+    @Column(name = "label_font_color", nullable = false, length = 10)
+    private String labelFontColor;
+
     public static BaseballTeamEntity from(BaseballTeam baseballTeam) {
         return new BaseballTeamEntity(
                 baseballTeam.getName(),
                 baseballTeam.getAlias(),
                 baseballTeam.getLogo(),
-                baseballTeam.getLabelBackgroundColor().getValue());
+                baseballTeam.getLabelBackgroundColor().getValue(),
+                baseballTeam.getLabelFontColor().getValue());
     }
 
     public BaseballTeam toDomain() {
         HexCode backgroundColor = new HexCode(labelBackgroundColor);
-        return new BaseballTeam(this.getId(), name, alias, logo, backgroundColor);
+        HexCode fontColor = new HexCode(labelFontColor);
+        return new BaseballTeam(this.getId(), name, alias, logo, backgroundColor, fontColor);
     }
 }
