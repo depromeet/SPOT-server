@@ -37,7 +37,7 @@ public interface SectionReadUsecase {
                     .id(section.getId())
                     .name(section.getName())
                     .alias(section.getAlias())
-                    .color(section.getLabelColor())
+                    .color(section.getLabelColor().getValue())
                     .build();
         }
     }

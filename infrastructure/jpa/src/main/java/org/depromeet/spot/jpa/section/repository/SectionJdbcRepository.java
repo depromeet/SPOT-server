@@ -27,7 +27,7 @@ public class SectionJdbcRepository {
                         ps.setLong(1, sections.get(i).getStadiumId());
                         ps.setString(2, sections.get(i).getName());
                         ps.setString(3, sections.get(i).getAlias());
-                        ps.setString(4, sections.get(i).getLabelColor());
+                        ps.setString(4, sections.get(i).getLabelColor().getValue());
                     }
 
                     @Override

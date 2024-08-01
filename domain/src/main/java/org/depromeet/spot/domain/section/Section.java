@@ -1,5 +1,7 @@
 package org.depromeet.spot.domain.section;
 
+import org.depromeet.spot.domain.common.HexCode;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +17,5 @@ public class Section {
     private final Long stadiumId;
     private final String name;
     private final String alias;
-    private final String labelColor;
+    private final HexCode labelColor;
 }
