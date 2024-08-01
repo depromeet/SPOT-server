@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.Level;
 import org.depromeet.spot.domain.review.Review;
@@ -108,16 +109,18 @@ public class ReadReviewService implements ReadReviewUsecase {
         return reviewRepository.findReviewMonthsByMemberId(memberId);
     }
 
-    private MemberInfoOnMyReviewResult createMemberInfoFromMember(
-            Member member, long totalReviewCount) {
-        return MemberInfoOnMyReviewResult.builder()
-                .userId(member.getId())
-                .profileImageUrl(member.getProfileImage())
-                .level(member.getLevel())
-                .levelTitle(Level.getTitleFrom(member.getLevel()))
-                .nickname(member.getNickname())
-                .reviewCount(totalReviewCount)
-                .build();
+    @Override
+    public ReviewResult findReviewById(Long reviewId) {
+        Review review =
+                reviewRepository
+                        .findById(reviewId)
+                        .orElseThrow(
+                                () ->
+                                        new ReviewNotFoundException(
+                                                "Review not found with id: " + reviewId));
+        Review reviewWithKeywords = mapKeywordsToSingleReview(review);
+
+        return ReviewResult.builder().review(reviewWithKeywords).build();
     }
 
     @Override
@@ -134,55 +137,60 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .build();
     }
 
-    private List<Review> mapKeywordsToReviews(List<Review> reviews) {
+    private MemberInfoOnMyReviewResult createMemberInfoFromMember(
+            Member member, long totalReviewCount) {
+        return MemberInfoOnMyReviewResult.builder()
+                .userId(member.getId())
+                .profileImageUrl(member.getProfileImage())
+                .level(member.getLevel())
+                .levelTitle(Level.getTitleFrom(member.getLevel()))
+                .nickname(member.getNickname())
+                .reviewCount(totalReviewCount)
+                .build();
+    }
+
+    private Review mapKeywordsToSingleReview(Review review) {
         List<Long> keywordIds =
-                reviews.stream()
-                        .flatMap(review -> review.getKeywords().stream())
+                review.getKeywords().stream()
                         .map(ReviewKeyword::getKeywordId)
                         .distinct()
                         .collect(Collectors.toList());
 
         Map<Long, Keyword> keywordMap = keywordRepository.findByIds(keywordIds);
 
-        return reviews.stream()
-                .map(
-                        review -> {
-                            List<ReviewKeyword> mappedKeywords =
-                                    review.getKeywords().stream()
-                                            .map(
-                                                    reviewKeyword -> {
-                                                        Keyword keyword =
-                                                                keywordMap.get(
-                                                                        reviewKeyword
-                                                                                .getKeywordId());
-                                                        return ReviewKeyword.create(
-                                                                reviewKeyword.getId(),
-                                                                keyword.getId());
-                                                    })
-                                            .collect(Collectors.toList());
+        List<ReviewKeyword> mappedKeywords =
+                review.getKeywords().stream()
+                        .map(
+                                reviewKeyword -> {
+                                    Keyword keyword = keywordMap.get(reviewKeyword.getKeywordId());
+                                    return ReviewKeyword.create(
+                                            reviewKeyword.getId(), keyword.getId());
+                                })
+                        .collect(Collectors.toList());
 
-                            Review mappedReview =
-                                    Review.builder()
-                                            .id(review.getId())
-                                            .member(review.getMember())
-                                            .stadium(review.getStadium())
-                                            .section(review.getSection())
-                                            .block(review.getBlock())
-                                            .row(review.getRow())
-                                            .seat(review.getSeat())
-                                            .dateTime(review.getDateTime())
-                                            .content(review.getContent())
-                                            .deletedAt(review.getDeletedAt())
-                                            .images(review.getImages())
-                                            .keywords(mappedKeywords)
-                                            .build();
+        Review mappedReview =
+                Review.builder()
+                        .id(review.getId())
+                        .member(review.getMember())
+                        .stadium(review.getStadium())
+                        .section(review.getSection())
+                        .block(review.getBlock())
+                        .row(review.getRow())
+                        .seat(review.getSeat())
+                        .dateTime(review.getDateTime())
+                        .content(review.getContent())
+                        .deletedAt(review.getDeletedAt())
+                        .images(review.getImages())
+                        .keywords(mappedKeywords)
+                        .build();
 
-                            // Keyword 정보를 Review 객체에 추가
-                            mappedReview.setKeywordMap(keywordMap);
+        mappedReview.setKeywordMap(keywordMap);
 
-                            return mappedReview;
-                        })
-                .collect(Collectors.toList());
+        return mappedReview;
+    }
+
+    private List<Review> mapKeywordsToReviews(List<Review> reviews) {
+        return reviews.stream().map(this::mapKeywordsToSingleReview).collect(Collectors.toList());
     }
 
     private Review mapKeywordsToReview(Review review) {

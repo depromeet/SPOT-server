@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.review.dto.request.BlockReviewRequest;
 import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
+import org.depromeet.spot.application.review.dto.response.BaseReviewResponse;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.MyRecentReviewResponse;
 import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
@@ -111,5 +112,17 @@ public class ReadReviewController {
         ReadReviewUsecase.MyRecentReviewResult result =
                 readReviewUsecase.findLastReviewByMemberId(memberId);
         return MyRecentReviewResponse.from(result);
+    }
+
+    @CurrentMember
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/reviews/{reviewId}")
+    @Operation(summary = "리뷰 id(pk)로 특정 리뷰를 조회한다.")
+    public BaseReviewResponse findReviewByReviewId(
+            @Parameter(hidden = true) Long memberId,
+            @PathVariable("reviewId") @NotNull @Parameter(description = "리뷰 PK", required = true)
+                    Long reviewId) {
+        ReadReviewUsecase.ReviewResult reviewResult = readReviewUsecase.findReviewById(reviewId);
+        return BaseReviewResponse.from(reviewResult.review());
     }
 }
