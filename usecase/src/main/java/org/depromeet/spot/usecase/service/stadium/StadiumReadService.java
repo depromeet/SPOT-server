@@ -44,8 +44,8 @@ public class StadiumReadService implements StadiumReadUsecase {
                                                                     new HomeTeamInfo(
                                                                             t.getId(),
                                                                             t.getAlias(),
-                                                                            t
-                                                                                    .getLabelBackgroundColor()))
+                                                                            t.getLabelBackgroundColor()
+                                                                                    .getValue()))
                                                     .toList();
 
                                     return new StadiumHomeTeamInfo(

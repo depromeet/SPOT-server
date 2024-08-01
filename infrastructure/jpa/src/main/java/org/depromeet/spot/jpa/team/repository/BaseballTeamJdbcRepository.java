@@ -27,7 +27,7 @@ public class BaseballTeamJdbcRepository {
                         ps.setString(1, teams.get(i).getName());
                         ps.setString(2, teams.get(i).getAlias());
                         ps.setString(3, teams.get(i).getLogo());
-                        ps.setString(4, teams.get(i).getLabelBackgroundColor());
+                        ps.setString(4, teams.get(i).getLabelBackgroundColor().getValue());
                     }
 
                     @Override

@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.common.HexCode;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
 
@@ -33,10 +34,11 @@ public class BaseballTeamEntity extends BaseEntity {
                 baseballTeam.getName(),
                 baseballTeam.getAlias(),
                 baseballTeam.getLogo(),
-                baseballTeam.getLabelBackgroundColor());
+                baseballTeam.getLabelBackgroundColor().getValue());
     }
 
     public BaseballTeam toDomain() {
-        return new BaseballTeam(this.getId(), name, alias, logo, labelBackgroundColor);
+        HexCode backgroundColor = new HexCode(labelBackgroundColor);
+        return new BaseballTeam(this.getId(), name, alias, logo, backgroundColor);
     }
 }

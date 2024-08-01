@@ -3,6 +3,7 @@ package org.depromeet.spot.usecase.service.team;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.depromeet.spot.common.exception.team.TeamException.DuplicateTeamNameException;
+import org.depromeet.spot.domain.common.HexCode;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.service.fake.FakeBaseballTeamRepository;
 import org.depromeet.spot.usecase.service.fake.FakeImageUploadPort;
@@ -29,7 +30,7 @@ class CreateBaseballTeamServiceTest {
                         .name("두산 베어스")
                         .alias("두산")
                         .logo("logo1.png")
-                        .labelBackgroundColor("#FFFFFF")
+                        .labelBackgroundColor(new HexCode("#FFFFFF"))
                         .build();
         fakeBaseballTeamRepository.save(team);
     }
