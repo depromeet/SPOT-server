@@ -3,7 +3,6 @@ package org.depromeet.spot.application.review;
 import java.util.List;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -121,7 +120,7 @@ public class ReadReviewController {
     @Operation(summary = "리뷰 id(pk)로 특정 리뷰를 조회한다.")
     public BaseReviewResponse findReviewByReviewId(
             @Parameter(hidden = true) Long memberId,
-            @PathVariable("reviewId") @NotBlank @Parameter(description = "리뷰 PK", required = true)
+            @PathVariable("reviewId") @NotNull @Parameter(description = "리뷰 PK", required = true)
                     Long reviewId) {
         ReadReviewUsecase.ReviewResult reviewResult = readReviewUsecase.findReviewById(reviewId);
         return BaseReviewResponse.from(reviewResult.review());
