@@ -4,10 +4,10 @@ import java.util.Set;
 
 import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
+import org.depromeet.spot.usecase.port.in.member.ReadLevelUsecase;
 import org.depromeet.spot.usecase.port.in.member.ReadMemberUsecase;
 import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadBaseballTeamUsecase;
-import org.depromeet.spot.usecase.port.out.member.LevelRepository;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UpdateMemberService implements UpdateMemberUsecase {
 
     private final MemberRepository memberRepository;
-    private final LevelRepository levelRepository;
+    private final ReadLevelUsecase readLevelUsecase;
     private final ReadMemberUsecase readMemberUsecase;
     private final ReadBaseballTeamUsecase readBaseballTeamUsecase;
 
@@ -36,7 +36,7 @@ public class UpdateMemberService implements UpdateMemberUsecase {
     @Override
     public void updateLevel(Member member, long reviewCnt) {
         final int newLevelValue = Level.calculateLevel(reviewCnt);
-        Level newLevel = levelRepository.findByValue(newLevelValue);
+        Level newLevel = readLevelUsecase.findByValue(newLevelValue);
         Member updateMember = member.updateLevel(newLevel);
         memberRepository.updateLevel(updateMember);
     }
