@@ -10,7 +10,7 @@ import org.depromeet.spot.domain.seat.Seat;
 import lombok.Builder;
 
 public interface CreateReviewUsecase {
-    ReviewResult create(
+    CreateReviewResult create(
             Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command);
 
     @Builder
@@ -21,5 +21,5 @@ public interface CreateReviewUsecase {
             String content,
             LocalDateTime dateTime) {}
 
-    record ReviewResult(Review review, Member member, Seat seat) {}
+    record CreateReviewResult(Review review, Member member, Seat seat) {}
 }

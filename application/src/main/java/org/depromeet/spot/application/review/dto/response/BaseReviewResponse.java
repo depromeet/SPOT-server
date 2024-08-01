@@ -12,7 +12,7 @@ import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
-import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.ReviewResult;
+import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewResult;
 
 public record BaseReviewResponse(
         Long id,
@@ -27,7 +27,7 @@ public record BaseReviewResponse(
         List<ReviewImageResponse> images,
         List<KeywordResponse> keywords) {
 
-    public static BaseReviewResponse from(ReviewResult result) {
+    public static BaseReviewResponse from(CreateReviewResult result) {
         Review review = result.review();
         Member member = result.member();
         Seat seat = result.seat();

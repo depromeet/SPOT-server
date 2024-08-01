@@ -37,7 +37,7 @@ public class CreateReviewService implements CreateReviewUsecase {
 
     @Override
     @Transactional
-    public ReviewResult create(
+    public CreateReviewResult create(
             Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command) {
         // ToDo: orElseThrow not found exception 처리하기
         Member member = memberRepository.findById(memberId);
@@ -59,7 +59,7 @@ public class CreateReviewService implements CreateReviewUsecase {
         // 회원 리뷰 경험치 업데이트
         calculateMemberLevel(member);
 
-        return new ReviewResult(savedReview, member, seat);
+        return new CreateReviewResult(savedReview, member, seat);
     }
 
     private Review convertToDomain(Seat seat, Member member, CreateReviewCommand command) {
