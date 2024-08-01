@@ -12,6 +12,7 @@ import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
+import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.ReviewResult;
 
 public record BaseReviewResponse(
         Long id,
@@ -25,6 +26,34 @@ public record BaseReviewResponse(
         String content,
         List<ReviewImageResponse> images,
         List<KeywordResponse> keywords) {
+
+    public static BaseReviewResponse from(ReviewResult result) {
+        Review review = result.review();
+        Member member = result.member();
+        Seat seat = result.seat();
+        return new BaseReviewResponse(
+                review.getId(),
+                MemberInfo.from(member),
+                StadiumResponse.from(review.getStadium()),
+                SectionResponse.from(review.getSection()),
+                BlockResponse.from(review.getBlock()),
+                RowResponse.from(review.getRow()),
+                SeatResponse.from(seat),
+                review.getDateTime(),
+                review.getContent(),
+                review.getImages().stream().map(ReviewImageResponse::from).toList(),
+                review.getKeywords().stream()
+                        .map(
+                                reviewKeyword -> {
+                                    Keyword keyword =
+                                            review.getKeywordById(reviewKeyword.getKeywordId());
+                                    return new KeywordResponse(
+                                            reviewKeyword.getId(),
+                                            keyword.getContent(),
+                                            keyword.getIsPositive());
+                                })
+                        .toList());
+    }
 
     public static BaseReviewResponse from(Review review) {
         return new BaseReviewResponse(
