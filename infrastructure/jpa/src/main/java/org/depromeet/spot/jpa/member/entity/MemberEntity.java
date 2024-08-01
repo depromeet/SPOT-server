@@ -1,6 +1,5 @@
 package org.depromeet.spot.jpa.member.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -40,7 +39,7 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "phone_number", unique = true, length = 13)
     private String phoneNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "level_id",
             nullable = false,
@@ -86,6 +85,7 @@ public class MemberEntity extends BaseEntity {
         name = member.getName();
         nickname = member.getNickname();
         phoneNumber = member.getPhoneNumber();
+        level = new LevelEntity(member.getLevel());
         profileImage = member.getProfileImage();
         snsProvider = member.getSnsProvider().getValue();
         idToken = member.getIdToken();
