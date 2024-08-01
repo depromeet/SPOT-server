@@ -1,14 +1,19 @@
 package org.depromeet.spot.jpa.member.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
 import org.depromeet.spot.jpa.common.entity.BaseEntity;
-import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -34,10 +39,12 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "phone_number", unique = true, length = 13)
     private String phoneNumber;
 
-    // TODO : ERD nullable로 변경
-    @Column(name = "level")
-    @ColumnDefault("1")
-    private Integer level;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "level_id",
+            nullable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private LevelEntity level;
 
     @Column(name = "profile_image", length = 255)
     private String profileImage;
@@ -54,14 +61,13 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "role", nullable = false)
     private String role;
 
-    public static MemberEntity from(Member member) {
+    public static MemberEntity of(Member member, Level level) {
         return new MemberEntity(
                 member.getEmail(),
                 member.getName(),
                 member.getNickname(),
                 member.getPhoneNumber(),
-                // TODO : 레벨 - 추 후 PrePersist, DynamicInsert 등을 통해 기본값 넣기.
-                1,
+                new LevelEntity(level),
                 member.getProfileImage(),
                 member.getSnsProvider().getValue(),
                 member.getIdToken(),
@@ -74,11 +80,12 @@ public class MemberEntity extends BaseEntity {
     }
 
     public MemberEntity(Member member) {
-        super(member.getId(), null, null, null);
+        super(member.getId(), member.getCreatedAt(), member.getUpdatedAt(), member.getDeletedAt());
         email = member.getEmail();
         name = member.getName();
         nickname = member.getNickname();
         phoneNumber = member.getPhoneNumber();
+        level = new LevelEntity(member.getLevel());
         profileImage = member.getProfileImage();
         snsProvider = member.getSnsProvider().getValue();
         idToken = member.getIdToken();
@@ -93,7 +100,7 @@ public class MemberEntity extends BaseEntity {
                 name,
                 nickname,
                 phoneNumber,
-                level,
+                level.toDomain(),
                 profileImage,
                 SnsProvider.valueOf(snsProvider),
                 idToken,

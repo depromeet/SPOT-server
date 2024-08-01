@@ -2,11 +2,12 @@ package org.depromeet.spot.usecase.port.out.member;
 
 import java.time.LocalDateTime;
 
+import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 
 public interface MemberRepository {
 
-    Member save(Member member);
+    Member save(Member member, Level level);
 
     Member updateProfile(Member member);
 
