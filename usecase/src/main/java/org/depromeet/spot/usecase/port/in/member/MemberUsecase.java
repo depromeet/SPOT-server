@@ -32,18 +32,25 @@ public interface MemberUsecase {
         private final String profileImageUrl;
         private final int level;
         private final String levelTitle;
-        private String teamImageUrl;
+        private final String levelTitleUrl;
+        private final String teamImageUrl;
         private final Long teamId;
+        private final String teamName;
+        private final Long reviewCntToLevelUp;
 
-        public static MemberInfo of(Member member, BaseballTeam baseballTeam) {
+        public static MemberInfo of(
+                Member member, BaseballTeam baseballTeam, Long reviewCntToLevelUp) {
             final int level = member.getLevel();
             return MemberInfo.builder()
                     .nickname(member.getNickname())
                     .profileImageUrl(member.getProfileImage())
                     .level(level)
                     .levelTitle(Level.getTitleFrom(level))
+                    .levelTitleUrl(Level.getImageUrlFrom(level))
                     .teamImageUrl(baseballTeam.getLogo())
                     .teamId(baseballTeam.getId())
+                    .teamName(baseballTeam.getName())
+                    .reviewCntToLevelUp(reviewCntToLevelUp)
                     .build();
         }
     }
