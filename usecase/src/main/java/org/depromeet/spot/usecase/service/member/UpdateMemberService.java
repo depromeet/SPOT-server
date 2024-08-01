@@ -2,6 +2,7 @@ package org.depromeet.spot.usecase.service.member;
 
 import java.util.Set;
 
+import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.usecase.port.in.member.ReadMemberUsecase;
 import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
@@ -32,7 +33,8 @@ public class UpdateMemberService implements UpdateMemberUsecase {
 
     @Override
     public void updateLevel(Member member, long reviewCnt) {
-        final int newLevel = member.calculateLevel(reviewCnt);
+        final int newLevel = Level.calculateLevel(reviewCnt);
+        // TODO
         Member updateMember = member.updateLevel(newLevel);
         memberRepository.updateLevel(updateMember);
     }

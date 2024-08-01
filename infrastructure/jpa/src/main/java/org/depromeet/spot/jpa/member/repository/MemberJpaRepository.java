@@ -28,8 +28,8 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
             @Param("nickname") String nickname);
 
     @Modifying
-    @Query("update MemberEntity m set m.level = :level where m.id = :memberId")
-    void updateLevel(@Param("memberId") Long memberId, @Param("level") int level);
+    @Query("update MemberEntity m set m.level = :levelId where m.id = :memberId")
+    void updateLevel(@Param("memberId") Long memberId, @Param("levelId") Long levelId);
 
     void deleteByIdToken(String idToken);
 
