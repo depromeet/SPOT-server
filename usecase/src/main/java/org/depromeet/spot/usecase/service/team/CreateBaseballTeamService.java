@@ -33,7 +33,7 @@ public class CreateBaseballTeamService implements CreateBaseballTeamUsecase {
                         .name(name)
                         .alias(command.alias())
                         .logo(logoUrl)
-                        .labelRgbCode(command.rgbCode())
+                        .labelBackgroundColor(command.labelBackgroundColor())
                         .build();
         baseballTeamRepository.saveAll(List.of(team));
     }

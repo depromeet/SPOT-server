@@ -23,7 +23,7 @@ public class ReadStadiumHomeTeamService implements ReadStadiumHomeTeamUsecase {
     public List<HomeTeamInfo> findByStadium(final Long stadiumId) {
         List<BaseballTeam> teams = homeTeamRepository.findAllHomeTeamByStadium(stadiumId);
         return teams.stream()
-                .map(t -> new HomeTeamInfo(t.getId(), t.getAlias(), t.getLabelRgbCode()))
+                .map(t -> new HomeTeamInfo(t.getId(), t.getAlias(), t.getLabelBackgroundColor()))
                 .toList();
     }
 

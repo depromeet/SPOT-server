@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
-import org.depromeet.spot.domain.common.RgbCode;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.service.fake.FakeBaseballTeamRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +28,7 @@ class ReadBaseballTeamServiceTest {
                         .name("두산 베어스")
                         .alias("두산")
                         .logo("logo1.png")
-                        .labelRgbCode(new RgbCode(0, 0, 0))
+                        .labelBackgroundColor("#FFFFFF")
                         .build();
         BaseballTeam team2 =
                 BaseballTeam.builder()
@@ -37,7 +36,7 @@ class ReadBaseballTeamServiceTest {
                         .name("SSG 랜더스")
                         .alias("SSG")
                         .logo("logo2.png")
-                        .labelRgbCode(new RgbCode(100, 0, 0))
+                        .labelBackgroundColor("#FFFFF1")
                         .build();
 
         fakeBaseballTeamRepository.save(team1);
