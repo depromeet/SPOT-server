@@ -109,6 +109,8 @@ public class ReviewEntity extends BaseEntity {
                         new ArrayList<>(),
                         new ArrayList<>());
 
+        entity.setId(review.getId()); // ID 설정 추가
+
         entity.images =
                 review.getImages().stream()
                         .map(image -> ReviewImageEntity.from(image, entity))
