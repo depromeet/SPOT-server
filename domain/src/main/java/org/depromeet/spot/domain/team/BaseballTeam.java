@@ -3,7 +3,6 @@ package org.depromeet.spot.domain.team;
 import org.depromeet.spot.common.exception.team.TeamException.EmptyTeamLogoException;
 import org.depromeet.spot.common.exception.team.TeamException.InvalidBaseballAliasNameException;
 import org.depromeet.spot.common.exception.team.TeamException.InvalidBaseballTeamNameException;
-import org.depromeet.spot.domain.common.RgbCode;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,12 +15,13 @@ public class BaseballTeam {
     private final String name;
     private final String alias;
     private final String logo;
-    private final RgbCode labelRgbCode;
+    private final String labelBackgroundColor;
 
     private static final int MAX_NAME_LENGTH = 20;
     private static final int MAX_ALIAS_LENGTH = 10;
 
-    public BaseballTeam(Long id, String name, String alias, String logo, RgbCode labelRgbCode) {
+    public BaseballTeam(
+            Long id, String name, String alias, String logo, String labelBackgroundColor) {
         checkValidName(name);
         checkValidAlias(alias);
         checkValidLogo(logo);
@@ -30,7 +30,7 @@ public class BaseballTeam {
         this.name = name;
         this.alias = alias;
         this.logo = logo;
-        this.labelRgbCode = labelRgbCode;
+        this.labelBackgroundColor = labelBackgroundColor;
     }
 
     private void checkValidName(final String name) {
