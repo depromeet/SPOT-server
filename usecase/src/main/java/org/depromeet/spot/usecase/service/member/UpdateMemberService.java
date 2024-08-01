@@ -34,10 +34,10 @@ public class UpdateMemberService implements UpdateMemberUsecase {
     }
 
     @Override
-    public void updateLevel(Member member, long reviewCnt) {
+    public Member updateLevel(Member member, long reviewCnt) {
         final int newLevelValue = Level.calculateLevel(reviewCnt);
         Level newLevel = readLevelUsecase.findByValue(newLevelValue);
         Member updateMember = member.updateLevel(newLevel);
-        memberRepository.updateLevel(updateMember);
+        return memberRepository.updateLevel(updateMember);
     }
 }

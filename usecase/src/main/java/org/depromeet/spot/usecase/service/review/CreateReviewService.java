@@ -57,9 +57,9 @@ public class CreateReviewService implements CreateReviewUsecase {
         savedReview.setKeywordMap(keywordMap);
 
         // 회원 리뷰 경험치 업데이트
-        calculateMemberLevel(member);
+        Member levelUpdateMember = calculateMemberLevel(member);
 
-        return new CreateReviewResult(savedReview, member, seat);
+        return new CreateReviewResult(savedReview, levelUpdateMember, seat);
     }
 
     private Review convertToDomain(Seat seat, Member member, CreateReviewCommand command) {
@@ -75,9 +75,9 @@ public class CreateReviewService implements CreateReviewUsecase {
                 .build();
     }
 
-    public void calculateMemberLevel(final Member member) {
+    public Member calculateMemberLevel(final Member member) {
         final long memberReviewCnt = reviewRepository.countByUserId(member.getId());
-        updateMemberUsecase.updateLevel(member, memberReviewCnt);
+        return updateMemberUsecase.updateLevel(member, memberReviewCnt);
     }
 
     private Map<Long, Keyword> processKeywords(

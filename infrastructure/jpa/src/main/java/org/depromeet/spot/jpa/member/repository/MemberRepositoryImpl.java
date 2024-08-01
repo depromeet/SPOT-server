@@ -32,8 +32,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member updateLevel(Member member) {
-        memberJpaRepository.updateLevel(member.getId(), member.getLevel().getId());
-        return member;
+        MemberEntity memberEntity = memberJpaRepository.save(MemberEntity.withMember(member));
+        return memberEntity.toDomain();
     }
 
     @Override
