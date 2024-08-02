@@ -63,7 +63,8 @@ public interface ReadReviewUsecase {
             String levelTitle,
             String nickname,
             Long reviewCount,
-            Long teamId) {}
+            Long teamId,
+            String teamName) {}
 
     @Builder
     record MyRecentReviewResult(Review review, Long reviewCount) {}
