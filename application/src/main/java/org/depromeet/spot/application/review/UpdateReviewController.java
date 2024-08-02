@@ -1,6 +1,7 @@
 package org.depromeet.spot.application.review;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.review.dto.request.UpdateReviewRequest;
@@ -29,7 +30,7 @@ public class UpdateReviewController {
     @Operation(summary = "특정 리뷰를 수정한다.")
     public BaseReviewResponse updateReview(
             @Parameter(hidden = true) Long memberId,
-            @PathVariable("reviewId") @Parameter(description = "리뷰 PK", required = true)
+            @PathVariable("reviewId") @NotNull @Parameter(description = "리뷰 PK", required = true)
                     Long reviewId,
             @RequestBody @Valid UpdateReviewRequest request) {
 
