@@ -6,6 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewKeywordsException;
@@ -14,7 +15,7 @@ import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase.UpdateRevie
 public record UpdateReviewRequest(
         @NotNull Long blockId,
         @NotNull Integer seatNumber,
-        @NotNull List<String> images,
+        @Size(min = 1, max = 10) List<String> images,
         List<String> good,
         List<String> bad,
         String content,
