@@ -9,6 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Level {
 
+    private final int[][] LEVEL_UP_TABLE = {
+        {0, 0}, {1, 2}, {3, 4}, {5, 7}, {8, 13}, {14, 20}, {21}
+    };
+
     private final Long id;
     private final int value;
     private final String title;
@@ -37,5 +41,14 @@ public class Level {
             return 5;
         }
         return 6;
+    }
+
+    public Integer getMinimum() {
+        return LEVEL_UP_TABLE[value][0];
+    }
+
+    public Integer getMaximum() {
+        if (LEVEL_UP_TABLE[value].length == 1) return null;
+        return LEVEL_UP_TABLE[value][1];
     }
 }
