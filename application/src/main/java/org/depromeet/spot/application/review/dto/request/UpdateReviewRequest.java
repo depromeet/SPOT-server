@@ -15,7 +15,7 @@ import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase.UpdateRevie
 public record UpdateReviewRequest(
         @NotNull Long blockId,
         @NotNull Integer seatNumber,
-        @Size(min = 1, max = 10) List<String> images,
+        @Size(min = 1, max = 3) List<String> images,
         List<String> good,
         List<String> bad,
         String content,

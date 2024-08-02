@@ -13,7 +13,7 @@ import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewK
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewCommand;
 
 public record CreateReviewRequest(
-        @Size(min = 1, max = 10) List<String> images,
+        @Size(min = 1, max = 3) List<String> images,
         List<String> good,
         List<String> bad,
         String content,
