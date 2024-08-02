@@ -88,6 +88,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         Map<Long, Keyword> keywordMap = new HashMap<>();
         processKeywordList(review, goodKeywords, true, keywordMap);
         processKeywordList(review, badKeywords, false, keywordMap);
+
         return keywordMap;
     }
 
@@ -143,29 +144,4 @@ public class UpdateReviewService implements UpdateReviewUsecase {
                     newReview.getBlock().getId(), incrementIds, decrementIds);
         }
     }
-
-    //    private void updateBlockTopKeywords(Review oldReview, Review newReview) {
-    //        Set<Long> oldKeywordIds =
-    //                oldReview.getKeywords().stream()
-    //                        .map(ReviewKeyword::getKeywordId)
-    //                        .collect(Collectors.toSet());
-    //        Set<Long> newKeywordIds =
-    //                newReview.getKeywords().stream()
-    //                        .map(ReviewKeyword::getKeywordId)
-    //                        .collect(Collectors.toSet());
-    //
-    //        oldKeywordIds.stream()
-    //                .filter(id -> !newKeywordIds.contains(id))
-    //                .forEach(
-    //                        id ->
-    //                                blockTopKeywordRepository.decrementCount(
-    //                                        oldReview.getBlock().getId(), id));
-    //
-    //        newKeywordIds.stream()
-    //                .filter(id -> !oldKeywordIds.contains(id))
-    //                .forEach(
-    //                        id ->
-    //                                blockTopKeywordRepository.updateKeywordCount(
-    //                                        newReview.getBlock().getId(), id));
-    //    }
 }

@@ -14,12 +14,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BlockTopKeywordJpaRepository extends JpaRepository<BlockTopKeywordEntity, Long> {
 
-    //    @Modifying
-    //    @Query(
-    //            "UPDATE BlockTopKeywordEntity b SET b.count = b.count + 1, b.updatedAt =
-    // CURRENT_TIMESTAMP "
-    //                    + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId")
-    //    int incrementCount(Long blockId, Long keywordId);
+    @Modifying
+    @Query(
+            "UPDATE BlockTopKeywordEntity b SET b.count = b.count + 1, b.updatedAt = CURRENT_TIMESTAMP "
+                    + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId")
+    int incrementCount(Long blockId, Long keywordId);
 
     @Modifying
     @Query(
@@ -56,4 +55,18 @@ public interface BlockTopKeywordJpaRepository extends JpaRepository<BlockTopKeyw
             @Param("stadiumId") Long stadiumId,
             @Param("blockCode") String blockCode,
             Pageable pageable);
+
+    @Query(
+            "SELECT b.keyword.id FROM BlockTopKeywordEntity b WHERE b.block.id = :blockId AND b.keyword.id IN :keywordIds")
+    List<Long> findExistingKeywordIds(
+            @Param("blockId") Long blockId, @Param("keywordIds") List<Long> keywordIds);
+
+    @Modifying
+    @Query(
+            value =
+                    "INSERT INTO block_top_keywords (block_id, keyword_id, count, created_at, updated_at) "
+                            + "VALUES (:blockId, :keywordId, 1, NOW(), NOW())",
+            nativeQuery = true)
+    void insertNewBlockTopKeyword(
+            @Param("blockId") Long blockId, @Param("keywordId") Long keywordId);
 }

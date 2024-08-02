@@ -13,8 +13,6 @@ public interface UpdateReviewUsecase {
     @Builder
     record UpdateReviewCommand(
             Long blockId,
-            String sectionName,
-            Integer rowNumber,
             Integer seatNumber,
             List<String> images,
             List<String> good,

@@ -6,12 +6,10 @@ import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockKeywordI
 
 public interface BlockTopKeywordRepository {
 
-    //    void updateKeywordCount(Long blockId, Long keywordId);
+    void updateKeywordCount(Long blockId, Long keywordId);
 
     void batchUpdateCounts(Long blockId, List<Long> incrementIds, List<Long> decrementIds);
 
     List<BlockKeywordInfo> findTopKeywordsByStadiumIdAndBlockCode(
             Long stadiumId, String blockCode, int limit);
-
-    //    void decrementCount(Long blockId, Long keywordId);
 }
