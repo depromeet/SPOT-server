@@ -11,12 +11,14 @@ import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
+import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
+import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ public class ReadReviewService implements ReadReviewUsecase {
     private final BlockTopKeywordRepository blockTopKeywordRepository;
     private final KeywordRepository keywordRepository;
     private final MemberRepository memberRepository;
+    private final BaseballTeamRepository baseballTeamRepository;
 
     private static final int TOP_KEYWORDS_LIMIT = 5;
     private static final int TOP_IMAGES_LIMIT = 5;
@@ -90,8 +93,11 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         Member member = memberRepository.findById(userId);
 
+        BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
+
         MemberInfoOnMyReviewResult memberInfo =
-                createMemberInfoFromMember(member, reviewPage.getTotalElements());
+                createMemberInfoFromMember(
+                        member, reviewPage.getTotalElements(), baseballTeam.getName());
 
         return MyReviewListResult.builder()
                 .memberInfoOnMyReviewResult(memberInfo)
@@ -137,7 +143,7 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     private MemberInfoOnMyReviewResult createMemberInfoFromMember(
-            Member member, long totalReviewCount) {
+            Member member, long totalReviewCount, String teamName) {
         return MemberInfoOnMyReviewResult.builder()
                 .userId(member.getId())
                 .profileImageUrl(member.getProfileImage())
@@ -145,6 +151,8 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .levelTitle(member.getLevel().getTitle())
                 .nickname(member.getNickname())
                 .reviewCount(totalReviewCount)
+                .teamId(member.getTeamId())
+                .teamName(teamName)
                 .build();
     }
 

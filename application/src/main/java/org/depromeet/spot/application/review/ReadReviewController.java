@@ -16,6 +16,9 @@ import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.ReviewMonthsResponse;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockReviewListResult;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyRecentReviewResult;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyReviewListResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.ReadReviewResult;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +61,7 @@ public class ReadReviewController {
                             direction = Sort.Direction.DESC)
                     Pageable pageable) {
 
-        ReadReviewUsecase.BlockReviewListResult result =
+        BlockReviewListResult result =
                 readReviewUsecase.findReviewsByStadiumIdAndBlockCode(
                         stadiumId,
                         blockCode,
@@ -98,7 +101,7 @@ public class ReadReviewController {
                             direction = Sort.Direction.DESC)
                     Pageable pageable) {
 
-        ReadReviewUsecase.MyReviewListResult result =
+        MyReviewListResult result =
                 readReviewUsecase.findMyReviewsByUserId(
                         memberId, request.year(), request.month(), pageable);
         return MyReviewListResponse.from(result, request.year(), request.month());
@@ -107,11 +110,10 @@ public class ReadReviewController {
     @CurrentMember
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/reviews/recentReview")
-    @Operation(summary = "자신이 작성한 최근 리뷰를 조회한다.")
+    @Operation(summary = "자신이 작성한 가장 최근 리뷰 1개를 조회한다.")
     public MyRecentReviewResponse findMyRecentReview(@Parameter(hidden = true) Long memberId) {
 
-        ReadReviewUsecase.MyRecentReviewResult result =
-                readReviewUsecase.findLastReviewByMemberId(memberId);
+        MyRecentReviewResult result = readReviewUsecase.findLastReviewByMemberId(memberId);
         return MyRecentReviewResponse.from(result);
     }
 
