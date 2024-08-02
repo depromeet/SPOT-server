@@ -15,7 +15,6 @@ import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
-import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
@@ -35,7 +34,6 @@ public class UpdateReviewService implements UpdateReviewUsecase {
     private final ReviewRepository reviewRepository;
     private final SeatRepository seatRepository;
     private final KeywordRepository keywordRepository;
-    private final MemberRepository memberRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
 
     public UpdateReviewResult updateReview(
@@ -130,18 +128,44 @@ public class UpdateReviewService implements UpdateReviewUsecase {
                         .map(ReviewKeyword::getKeywordId)
                         .collect(Collectors.toSet());
 
-        oldKeywordIds.stream()
-                .filter(id -> !newKeywordIds.contains(id))
-                .forEach(
-                        id ->
-                                blockTopKeywordRepository.decrementCount(
-                                        oldReview.getBlock().getId(), id));
+        List<Long> decrementIds =
+                oldKeywordIds.stream()
+                        .filter(id -> !newKeywordIds.contains(id))
+                        .collect(Collectors.toList());
 
-        newKeywordIds.stream()
-                .filter(id -> !oldKeywordIds.contains(id))
-                .forEach(
-                        id ->
-                                blockTopKeywordRepository.updateKeywordCount(
-                                        newReview.getBlock().getId(), id));
+        List<Long> incrementIds =
+                newKeywordIds.stream()
+                        .filter(id -> !oldKeywordIds.contains(id))
+                        .collect(Collectors.toList());
+
+        if (!decrementIds.isEmpty() || !incrementIds.isEmpty()) {
+            blockTopKeywordRepository.batchUpdateCounts(
+                    newReview.getBlock().getId(), incrementIds, decrementIds);
+        }
     }
+
+    //    private void updateBlockTopKeywords(Review oldReview, Review newReview) {
+    //        Set<Long> oldKeywordIds =
+    //                oldReview.getKeywords().stream()
+    //                        .map(ReviewKeyword::getKeywordId)
+    //                        .collect(Collectors.toSet());
+    //        Set<Long> newKeywordIds =
+    //                newReview.getKeywords().stream()
+    //                        .map(ReviewKeyword::getKeywordId)
+    //                        .collect(Collectors.toSet());
+    //
+    //        oldKeywordIds.stream()
+    //                .filter(id -> !newKeywordIds.contains(id))
+    //                .forEach(
+    //                        id ->
+    //                                blockTopKeywordRepository.decrementCount(
+    //                                        oldReview.getBlock().getId(), id));
+    //
+    //        newKeywordIds.stream()
+    //                .filter(id -> !oldKeywordIds.contains(id))
+    //                .forEach(
+    //                        id ->
+    //                                blockTopKeywordRepository.updateKeywordCount(
+    //                                        newReview.getBlock().getId(), id));
+    //    }
 }

@@ -2,6 +2,7 @@ package org.depromeet.spot.jpa.review.repository.keyword;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockKeywordInfo;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
@@ -21,30 +22,47 @@ public class BlockTopKeywordRepositoryImpl implements BlockTopKeywordRepository 
 
     @Override
     @Transactional
-    public void updateKeywordCount(Long blockId, Long keywordId) {
-        log.debug("Updating block top keyword: blockId={}, keywordId={}", blockId, keywordId);
-        int updatedRows = blockTopKeywordJpaRepository.incrementCount(blockId, keywordId);
-        log.debug("Rows updated by incrementCount: {}", updatedRows);
-        if (updatedRows == 0) {
-            blockTopKeywordJpaRepository.upsertCount(blockId, keywordId);
-            log.debug("Performed upsert operation");
+    public void batchUpdateCounts(Long blockId, List<Long> incrementIds, List<Long> decrementIds) {
+        List<Long> allIds =
+                Stream.concat(incrementIds.stream(), decrementIds.stream())
+                        .distinct()
+                        .collect(Collectors.toList());
+
+        if (!allIds.isEmpty()) {
+            int updatedRows =
+                    blockTopKeywordJpaRepository.batchUpdateCounts(
+                            blockId, incrementIds, decrementIds, allIds);
+            log.debug("Batch update performed. Rows affected: {}", updatedRows);
         }
     }
 
-    @Override
-    @Transactional
-    public void decrementCount(Long blockId, Long keywordId) {
-        log.debug(
-                "Decrementing block top keyword count: blockId={}, keywordId={}",
-                blockId,
-                keywordId);
-        int updatedRows = blockTopKeywordJpaRepository.decrementCount(blockId, keywordId);
-        log.debug("Rows updated by decrementCount: {}", updatedRows);
-        if (updatedRows == 0) {
-            log.debug(
-                    "No rows updated, possibly because count was already 0 or entry doesn't exist");
-        }
-    }
+    //    @Override
+    //    @Transactional
+    //    public void updateKeywordCount(Long blockId, Long keywordId) {
+    //        log.debug("Updating block top keyword: blockId={}, keywordId={}", blockId, keywordId);
+    //        int updatedRows = blockTopKeywordJpaRepository.incrementCount(blockId, keywordId);
+    //        log.debug("Rows updated by incrementCount: {}", updatedRows);
+    //        if (updatedRows == 0) {
+    //            blockTopKeywordJpaRepository.upsertCount(blockId, keywordId);
+    //            log.debug("Performed upsert operation");
+    //        }
+    //    }
+    //
+    //    @Override
+    //    @Transactional
+    //    public void decrementCount(Long blockId, Long keywordId) {
+    //        log.debug(
+    //                "Decrementing block top keyword count: blockId={}, keywordId={}",
+    //                blockId,
+    //                keywordId);
+    //        int updatedRows = blockTopKeywordJpaRepository.decrementCount(blockId, keywordId);
+    //        log.debug("Rows updated by decrementCount: {}", updatedRows);
+    //        if (updatedRows == 0) {
+    //            log.debug(
+    //                    "No rows updated, possibly because count was already 0 or entry doesn't
+    // exist");
+    //        }
+    //    }
 
     @Override
     public List<BlockKeywordInfo> findTopKeywordsByStadiumIdAndBlockCode(

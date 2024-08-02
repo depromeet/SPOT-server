@@ -1,8 +1,10 @@
 package org.depromeet.spot.usecase.service.review;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
@@ -52,7 +54,14 @@ public class CreateReviewService implements CreateReviewUsecase {
 
         // 저장 및 blockTopKeyword에도 count 업데이트
         Review savedReview = reviewRepository.save(review);
-        updateBlockTopKeywords(savedReview);
+
+        // BlockTopKeyword 업데이트를 배치로 처리
+        List<Long> newKeywordIds =
+                savedReview.getKeywords().stream()
+                        .map(ReviewKeyword::getKeywordId)
+                        .collect(Collectors.toList());
+        blockTopKeywordRepository.batchUpdateCounts(
+                savedReview.getBlock().getId(), newKeywordIds, Collections.emptyList());
 
         savedReview.setKeywordMap(keywordMap);
 
@@ -115,10 +124,10 @@ public class CreateReviewService implements CreateReviewUsecase {
         }
     }
 
-    private void updateBlockTopKeywords(Review review) {
-        for (ReviewKeyword reviewKeyword : review.getKeywords()) {
-            blockTopKeywordRepository.updateKeywordCount(
-                    review.getBlock().getId(), reviewKeyword.getKeywordId());
-        }
-    }
+    //    private void updateBlockTopKeywords(Review review) {
+    //        for (ReviewKeyword reviewKeyword : review.getKeywords()) {
+    //            blockTopKeywordRepository.updateKeywordCount(
+    //                    review.getBlock().getId(), reviewKeyword.getKeywordId());
+    //        }
+    //    }
 }

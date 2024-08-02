@@ -14,17 +14,26 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BlockTopKeywordJpaRepository extends JpaRepository<BlockTopKeywordEntity, Long> {
 
-    @Modifying
-    @Query(
-            "UPDATE BlockTopKeywordEntity b SET b.count = b.count + 1, b.updatedAt = CURRENT_TIMESTAMP "
-                    + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId")
-    int incrementCount(Long blockId, Long keywordId);
+    //    @Modifying
+    //    @Query(
+    //            "UPDATE BlockTopKeywordEntity b SET b.count = b.count + 1, b.updatedAt =
+    // CURRENT_TIMESTAMP "
+    //                    + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId")
+    //    int incrementCount(Long blockId, Long keywordId);
 
     @Modifying
     @Query(
-            "UPDATE BlockTopKeywordEntity b SET b.count = b.count - 1, b.updatedAt = CURRENT_TIMESTAMP "
-                    + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId AND b.count > 0")
-    int decrementCount(@Param("blockId") Long blockId, @Param("keywordId") Long keywordId);
+            "UPDATE BlockTopKeywordEntity b SET b.count = CASE "
+                    + "WHEN b.keyword.id IN :incrementIds THEN b.count + 1 "
+                    + "WHEN b.keyword.id IN :decrementIds THEN GREATEST(0, b.count - 1) "
+                    + "ELSE b.count END, "
+                    + "b.updatedAt = CURRENT_TIMESTAMP "
+                    + "WHERE b.block.id = :blockId AND b.keyword.id IN :allIds")
+    int batchUpdateCounts(
+            @Param("blockId") Long blockId,
+            @Param("incrementIds") List<Long> incrementIds,
+            @Param("decrementIds") List<Long> decrementIds,
+            @Param("allIds") List<Long> allIds);
 
     // JPA에서 ON Duplicate key update 구문을 지원하지 않음 -> native query 사용
     @Modifying
