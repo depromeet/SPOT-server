@@ -145,6 +145,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .levelTitle(member.getLevel().getTitle())
                 .nickname(member.getNickname())
                 .reviewCount(totalReviewCount)
+                .teamId(member.getTeamId())
                 .build();
     }
 
