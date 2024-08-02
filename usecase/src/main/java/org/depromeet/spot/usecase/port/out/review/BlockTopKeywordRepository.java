@@ -8,6 +8,8 @@ public interface BlockTopKeywordRepository {
 
     void updateKeywordCount(Long blockId, Long keywordId);
 
+    void batchUpdateCounts(Long blockId, List<Long> incrementIds, List<Long> decrementIds);
+
     List<BlockKeywordInfo> findTopKeywordsByStadiumIdAndBlockCode(
             Long stadiumId, String blockCode, int limit);
 }

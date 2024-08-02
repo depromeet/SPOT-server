@@ -3,16 +3,18 @@ package org.depromeet.spot.usecase.service.review;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
+import org.depromeet.spot.common.exception.review.ReviewException.UnauthorizedReviewModificationException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.image.ReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.seat.Seat;
-import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
-import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
-import org.depromeet.spot.usecase.port.out.member.MemberRepository;
+import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
@@ -26,46 +28,50 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CreateReviewService implements CreateReviewUsecase {
+@Transactional
+public class UpdateReviewService implements UpdateReviewUsecase {
 
-    private final SeatRepository seatRepository;
-    private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
+    private final SeatRepository seatRepository;
     private final KeywordRepository keywordRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
-    private final UpdateMemberUsecase updateMemberUsecase;
 
-    @Override
-    @Transactional
-    public CreateReviewResult create(
-            Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command) {
-        // ToDo: orElseThrow not found exception 처리하기
-        Member member = memberRepository.findById(memberId);
-        Seat seat = seatRepository.findByIdWith(blockId, seatNumber);
+    public UpdateReviewResult updateReview(
+            Long memberId, Long reviewId, UpdateReviewCommand command) {
+        Review existingReview =
+                reviewRepository
+                        .findById(reviewId)
+                        .orElseThrow(
+                                () -> new ReviewNotFoundException("요청한 리뷰를 찾을 수 없습니다." + reviewId));
 
-        // image와 keyword를 제외한 review 도메인 생성
-        Review review = convertToDomain(seat, member, command);
+        if (!existingReview.getMember().getId().equals(memberId)) {
+            throw new UnauthorizedReviewModificationException();
+        }
 
-        // review 도메인에 keyword와 image를 추가
-        Map<Long, Keyword> keywordMap = processKeywords(review, command.good(), command.bad());
-        processImages(review, command.images());
+        Member member = existingReview.getMember();
+        Seat seat = seatRepository.findByIdWith(command.blockId(), command.seatNumber());
 
-        // 저장 및 blockTopKeyword에도 count 업데이트
-        Review savedReview = reviewRepository.save(review);
+        // 새로운 Review 객체 생성
+        Review updatedReview = createUpdatedReview(reviewId, member, seat, command);
 
-        // BlockTopKeyword 업데이트 및 생성
-        updateBlockTopKeywords(savedReview);
+        // keyword와 image 처리
+        Map<Long, Keyword> keywordMap =
+                processKeywords(updatedReview, command.good(), command.bad());
+        processImages(updatedReview, command.images());
+
+        // 저장 및 blockTopKeyword 업데이트
+        Review savedReview = reviewRepository.save(updatedReview);
+        updateBlockTopKeywords(existingReview, savedReview);
 
         savedReview.setKeywordMap(keywordMap);
 
-        // 회원 리뷰 경험치 업데이트
-        Member levelUpdateMember = calculateMemberLevel(member);
-
-        return new CreateReviewResult(savedReview, levelUpdateMember, seat);
+        return new UpdateReviewResult(savedReview);
     }
 
-    private Review convertToDomain(Seat seat, Member member, CreateReviewCommand command) {
+    private Review createUpdatedReview(
+            Long reviewId, Member member, Seat seat, UpdateReviewCommand command) {
         return Review.builder()
+                .id(reviewId)
                 .member(member)
                 .stadium(seat.getStadium())
                 .section(seat.getSection())
@@ -77,16 +83,12 @@ public class CreateReviewService implements CreateReviewUsecase {
                 .build();
     }
 
-    public Member calculateMemberLevel(final Member member) {
-        final long memberReviewCnt = reviewRepository.countByUserId(member.getId());
-        return updateMemberUsecase.updateLevel(member, memberReviewCnt);
-    }
-
     private Map<Long, Keyword> processKeywords(
             Review review, List<String> goodKeywords, List<String> badKeywords) {
         Map<Long, Keyword> keywordMap = new HashMap<>();
         processKeywordList(review, goodKeywords, true, keywordMap);
         processKeywordList(review, badKeywords, false, keywordMap);
+
         return keywordMap;
     }
 
@@ -117,10 +119,29 @@ public class CreateReviewService implements CreateReviewUsecase {
         }
     }
 
-    private void updateBlockTopKeywords(Review review) {
-        for (ReviewKeyword reviewKeyword : review.getKeywords()) {
-            blockTopKeywordRepository.updateKeywordCount(
-                    review.getBlock().getId(), reviewKeyword.getKeywordId());
+    private void updateBlockTopKeywords(Review oldReview, Review newReview) {
+        Set<Long> oldKeywordIds =
+                oldReview.getKeywords().stream()
+                        .map(ReviewKeyword::getKeywordId)
+                        .collect(Collectors.toSet());
+        Set<Long> newKeywordIds =
+                newReview.getKeywords().stream()
+                        .map(ReviewKeyword::getKeywordId)
+                        .collect(Collectors.toSet());
+
+        List<Long> decrementIds =
+                oldKeywordIds.stream()
+                        .filter(id -> !newKeywordIds.contains(id))
+                        .collect(Collectors.toList());
+
+        List<Long> incrementIds =
+                newKeywordIds.stream()
+                        .filter(id -> !oldKeywordIds.contains(id))
+                        .collect(Collectors.toList());
+
+        if (!decrementIds.isEmpty() || !incrementIds.isEmpty()) {
+            blockTopKeywordRepository.batchUpdateCounts(
+                    newReview.getBlock().getId(), incrementIds, decrementIds);
         }
     }
 }

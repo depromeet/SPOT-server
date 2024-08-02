@@ -1,7 +1,6 @@
 package org.depromeet.spot.usecase.port.in.member;
 
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.domain.member.enums.Level;
 import org.depromeet.spot.domain.team.BaseballTeam;
 
 import lombok.AllArgsConstructor;
@@ -32,21 +31,17 @@ public interface MemberUsecase {
         private final String profileImageUrl;
         private final int level;
         private final String levelTitle;
-        private final String levelTitleUrl;
-        private final String teamImageUrl;
+        private String teamImageUrl;
         private final Long teamId;
         private final String teamName;
         private final Long reviewCntToLevelUp;
 
-        public static MemberInfo of(
-                Member member, BaseballTeam baseballTeam, Long reviewCntToLevelUp) {
-            final int level = member.getLevel();
+        public static MemberInfo of(Member member, BaseballTeam baseballTeam) {
             return MemberInfo.builder()
                     .nickname(member.getNickname())
                     .profileImageUrl(member.getProfileImage())
-                    .level(level)
-                    .levelTitle(Level.getTitleFrom(level))
-                    .levelTitleUrl(Level.getImageUrlFrom(level))
+                    .level(member.getLevel().getValue())
+                    .levelTitle(member.getLevel().getTitle())
                     .teamImageUrl(baseballTeam.getLogo())
                     .teamId(baseballTeam.getId())
                     .teamName(baseballTeam.getName())

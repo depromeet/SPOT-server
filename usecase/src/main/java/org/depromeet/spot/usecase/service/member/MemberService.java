@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 
 import org.depromeet.spot.common.exception.member.MemberException.InactiveMemberException;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
+import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
+import org.depromeet.spot.usecase.port.in.member.ReadLevelUsecase;
 import org.depromeet.spot.usecase.port.in.member.ReadMemberUsecase;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadBaseballTeamUsecase;
@@ -23,11 +25,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberService implements MemberUsecase {
 
     private final OauthRepository oauthRepository;
-
     private final MemberRepository memberRepository;
-
     private final ReadMemberUsecase readMemberUsecase;
-
+    private final ReadLevelUsecase readLevelUsecase;
     private final ReadBaseballTeamUsecase readBaseballTeamUsecase;
 
     private final ReadReviewUsecase readReviewUsecase;
@@ -38,9 +38,9 @@ public class MemberService implements MemberUsecase {
             throw new MemberNicknameConflictException();
         }
         Member memberResult = oauthRepository.getRegisterUserInfo(accessToken, member);
-
+        Level initialLevel = readLevelUsecase.findInitialLevel();
         // 이미 있는 유저를 검증할 필요 없음 -> 최초 시도가 로그인먼저 들어오기 때문.
-        return memberRepository.save(memberResult);
+        return memberRepository.save(memberResult, initialLevel);
     }
 
     @Override

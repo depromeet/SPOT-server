@@ -8,6 +8,7 @@ import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.review.dto.request.CreateReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BaseReviewResponse;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
+import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +39,8 @@ public class CreateReviewController {
             @PathVariable @Positive @NotNull final Integer seatNumber,
             @Parameter(hidden = true) Long memberId,
             @RequestBody @Valid CreateReviewRequest request) {
-        CreateReviewUsecase.CreateReviewResult result =
+        CreateReviewResult result =
                 createReviewUsecase.create(blockId, seatNumber, memberId, request.toCommand());
-        return BaseReviewResponse.from(result.review());
+        return BaseReviewResponse.from(result);
     }
 }

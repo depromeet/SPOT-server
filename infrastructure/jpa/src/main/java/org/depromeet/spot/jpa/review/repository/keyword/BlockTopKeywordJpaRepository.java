@@ -20,6 +20,20 @@ public interface BlockTopKeywordJpaRepository extends JpaRepository<BlockTopKeyw
                     + "WHERE b.block.id = :blockId AND b.keyword.id = :keywordId")
     int incrementCount(Long blockId, Long keywordId);
 
+    @Modifying
+    @Query(
+            "UPDATE BlockTopKeywordEntity b SET b.count = CASE "
+                    + "WHEN b.keyword.id IN :incrementIds THEN b.count + 1 "
+                    + "WHEN b.keyword.id IN :decrementIds THEN GREATEST(0, b.count - 1) "
+                    + "ELSE b.count END, "
+                    + "b.updatedAt = CURRENT_TIMESTAMP "
+                    + "WHERE b.block.id = :blockId AND b.keyword.id IN :allIds")
+    int batchUpdateCounts(
+            @Param("blockId") Long blockId,
+            @Param("incrementIds") List<Long> incrementIds,
+            @Param("decrementIds") List<Long> decrementIds,
+            @Param("allIds") List<Long> allIds);
+
     // JPA에서 ON Duplicate key update 구문을 지원하지 않음 -> native query 사용
     @Modifying
     @Query(
@@ -41,4 +55,18 @@ public interface BlockTopKeywordJpaRepository extends JpaRepository<BlockTopKeyw
             @Param("stadiumId") Long stadiumId,
             @Param("blockCode") String blockCode,
             Pageable pageable);
+
+    @Query(
+            "SELECT b.keyword.id FROM BlockTopKeywordEntity b WHERE b.block.id = :blockId AND b.keyword.id IN :keywordIds")
+    List<Long> findExistingKeywordIds(
+            @Param("blockId") Long blockId, @Param("keywordIds") List<Long> keywordIds);
+
+    @Modifying
+    @Query(
+            value =
+                    "INSERT INTO block_top_keywords (block_id, keyword_id, count, created_at, updated_at) "
+                            + "VALUES (:blockId, :keywordId, 1, NOW(), NOW())",
+            nativeQuery = true)
+    void insertNewBlockTopKeyword(
+            @Param("blockId") Long blockId, @Param("keywordId") Long keywordId);
 }
