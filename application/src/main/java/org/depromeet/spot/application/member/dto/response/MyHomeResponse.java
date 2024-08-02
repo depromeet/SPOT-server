@@ -11,7 +11,7 @@ public record MyHomeResponse(
         Long teamId,
         String levelTitle,
         Long reviewCntToLevelUp,
-        String levelTitleUrl) {
+        String mascotImageUrl) {
 
     public static MyHomeResponse from(MemberInfo memberInfo) {
         return MyHomeResponse.builder()
@@ -20,7 +20,7 @@ public record MyHomeResponse(
                 .teamId(memberInfo.getTeamId())
                 .levelTitle(memberInfo.getLevelTitle())
                 .reviewCntToLevelUp(memberInfo.getReviewCntToLevelUp())
-                .levelTitleUrl(memberInfo.getLevelTitleUrl())
+                .mascotImageUrl(memberInfo.getMascotImageUrl())
                 .build();
     }
 }
