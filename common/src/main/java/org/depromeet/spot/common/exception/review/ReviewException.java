@@ -17,6 +17,16 @@ public abstract class ReviewException extends BusinessException {
         }
     }
 
+    public static class UnauthorizedReviewModificationException extends ReviewException {
+        public UnauthorizedReviewModificationException() {
+            super(ReviewErrorCode.UNAUTHORIZED_REVIEW_MODIFICATION_EXCEPTION);
+        }
+
+        public UnauthorizedReviewModificationException(String str) {
+            super(ReviewErrorCode.UNAUTHORIZED_REVIEW_MODIFICATION_EXCEPTION.appended(str));
+        }
+    }
+
     public static class InvalidReviewDataException extends ReviewException {
         public InvalidReviewDataException() {
             super(ReviewErrorCode.INVALID_REVIEW_DATA);

@@ -16,6 +16,7 @@ import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.ReviewMonthsResponse;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.ReadReviewResult;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -122,7 +123,7 @@ public class ReadReviewController {
             @Parameter(hidden = true) Long memberId,
             @PathVariable("reviewId") @NotNull @Parameter(description = "리뷰 PK", required = true)
                     Long reviewId) {
-        ReadReviewUsecase.ReviewResult reviewResult = readReviewUsecase.findReviewById(reviewId);
-        return BaseReviewResponse.from(reviewResult.review());
+        ReadReviewResult readReviewResult = readReviewUsecase.findReviewById(reviewId);
+        return BaseReviewResponse.from(readReviewResult.review());
     }
 }

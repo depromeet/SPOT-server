@@ -2,6 +2,7 @@ package org.depromeet.spot.jpa.review.repository.keyword;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockKeywordInfo;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
@@ -18,6 +19,37 @@ import lombok.extern.slf4j.Slf4j;
 public class BlockTopKeywordRepositoryImpl implements BlockTopKeywordRepository {
 
     private final BlockTopKeywordJpaRepository blockTopKeywordJpaRepository;
+
+    @Override
+    @Transactional
+    public void batchUpdateCounts(Long blockId, List<Long> incrementIds, List<Long> decrementIds) {
+        List<Long> allIds =
+                Stream.concat(incrementIds.stream(), decrementIds.stream())
+                        .distinct()
+                        .collect(Collectors.toList());
+
+        if (!allIds.isEmpty()) {
+            // 1단계: 기존 키워드 업데이트
+            int updatedRows =
+                    blockTopKeywordJpaRepository.batchUpdateCounts(
+                            blockId, incrementIds, decrementIds, allIds);
+            log.debug("Batch update performed. Rows affected: {}", updatedRows);
+
+            // 2단계: 새 키워드 삽입
+            List<Long> existingKeywordIds =
+                    blockTopKeywordJpaRepository.findExistingKeywordIds(blockId, incrementIds);
+            List<Long> newKeywordIds =
+                    incrementIds.stream().filter(id -> !existingKeywordIds.contains(id)).toList();
+
+            for (Long keywordId : newKeywordIds) {
+                blockTopKeywordJpaRepository.insertNewBlockTopKeyword(blockId, keywordId);
+                log.debug(
+                        "Inserted new BlockTopKeyword for blockId: {} and keywordId: {}",
+                        blockId,
+                        keywordId);
+            }
+        }
+    }
 
     @Override
     @Transactional

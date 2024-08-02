@@ -109,7 +109,7 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     @Override
-    public ReviewResult findReviewById(Long reviewId) {
+    public ReadReviewResult findReviewById(Long reviewId) {
         Review review =
                 reviewRepository
                         .findById(reviewId)
@@ -119,7 +119,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                                                 "Review not found with id: " + reviewId));
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
 
-        return ReviewResult.builder().review(reviewWithKeywords).build();
+        return ReadReviewResult.builder().review(reviewWithKeywords).build();
     }
 
     @Override

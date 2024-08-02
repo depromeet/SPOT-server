@@ -27,7 +27,7 @@ public interface ReadReviewUsecase {
 
     MyRecentReviewResult findLastReviewByMemberId(Long memberId);
 
-    ReviewResult findReviewById(Long reviewId);
+    ReadReviewResult findReviewById(Long reviewId);
 
     @Builder
     record BlockReviewListResult(
@@ -68,5 +68,5 @@ public interface ReadReviewUsecase {
     record MyRecentReviewResult(Review review, Long reviewCount) {}
 
     @Builder
-    record ReviewResult(Review review) {}
+    record ReadReviewResult(Review review) {}
 }
