@@ -5,7 +5,7 @@ import org.depromeet.spot.domain.member.Level;
 import lombok.Builder;
 
 @Builder
-public record LevelUpTableResponse(Integer level, String title, Integer minimum, Integer maximum) {
+public record LevelUpTableResponse(Integer level, String title, int minimum, Integer maximum) {
     public static LevelUpTableResponse from(Level level) {
         LevelUpTableResponse levelUpTableResponse =
                 LevelUpTableResponse.builder()

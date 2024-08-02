@@ -43,7 +43,7 @@ public class Level {
         return 6;
     }
 
-    public Integer getMinimum() {
+    public int getMinimum() {
         return LEVEL_UP_TABLE[value][0];
     }
 
