@@ -55,7 +55,7 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "id_token", nullable = false, unique = true, length = 255)
     private String idToken;
 
-    @Column(name = "team_id", nullable = false, length = 10)
+    @Column(name = "team_id", length = 10)
     private Long teamId;
 
     @Column(name = "role", nullable = false)
