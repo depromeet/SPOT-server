@@ -22,20 +22,20 @@ public class Level {
     private final LocalDateTime deletedAt;
 
     public static int calculateLevel(final long reviewCnt) {
-        if (reviewCnt >= LEVEL_UP_TABLE[0][1]) {
-            return 0;
-        } else if (reviewCnt >= LEVEL_UP_TABLE[1][1]) {
-            return 1;
-        } else if (reviewCnt >= LEVEL_UP_TABLE[2][1]) {
-            return 2;
-        } else if (reviewCnt >= LEVEL_UP_TABLE[3][1]) {
-            return 3;
-        } else if (reviewCnt >= LEVEL_UP_TABLE[4][1]) {
-            return 4;
-        } else if (reviewCnt >= LEVEL_UP_TABLE[5][1]) {
+        if (reviewCnt > LEVEL_UP_TABLE[6][0]) {
+            return 6;
+        } else if (reviewCnt > LEVEL_UP_TABLE[5][0]) {
             return 5;
+        } else if (reviewCnt > LEVEL_UP_TABLE[4][0]) {
+            return 4;
+        } else if (reviewCnt > LEVEL_UP_TABLE[3][0]) {
+            return 3;
+        } else if (reviewCnt > LEVEL_UP_TABLE[2][0]) {
+            return 2;
+        } else if (reviewCnt > LEVEL_UP_TABLE[1][0]) {
+            return 1;
         }
-        return 6;
+        return 0;
     }
 
     public static long calculateReviewCntToLevelUp(long reviewCnt) {
