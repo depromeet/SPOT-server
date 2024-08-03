@@ -2,8 +2,7 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":domain"))
     implementation(project(":usecase"))
-    implementation(project(":infrastructure:jpa"))
-    implementation(project(":infrastructure:ncp"))
+    implementation(project(":infrastructure"))
 
     // spring
     implementation("org.springframework:spring-aspects")
