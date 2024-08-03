@@ -10,6 +10,7 @@ import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
 import org.depromeet.spot.usecase.port.in.member.ReadLevelUsecase;
 import org.depromeet.spot.usecase.port.in.member.ReadMemberUsecase;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.oauth.OauthRepository;
@@ -28,6 +29,8 @@ public class MemberService implements MemberUsecase {
     private final ReadMemberUsecase readMemberUsecase;
     private final ReadLevelUsecase readLevelUsecase;
     private final ReadBaseballTeamUsecase readBaseballTeamUsecase;
+
+    private final ReadReviewUsecase readReviewUsecase;
 
     @Override
     public Member create(String accessToken, Member member) {
@@ -82,7 +85,11 @@ public class MemberService implements MemberUsecase {
             return MemberInfo.from(member);
         }
         BaseballTeam baseballTeam = readBaseballTeamUsecase.findById(member.getTeamId());
-        return MemberInfo.of(member, baseballTeam);
+
+        long reviewCount = readReviewUsecase.countByIdByMemberId(memberId);
+        long reviewCntToLevelUp = Level.calculateReviewCntToLevelUp(reviewCount);
+
+        return MemberInfo.of(member, baseballTeam, reviewCntToLevelUp);
     }
 
     @Override

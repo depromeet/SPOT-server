@@ -101,10 +101,10 @@ public class MemberController {
     }
 
     @CurrentMember
-    @GetMapping("/memberInfo")
+    @GetMapping("/homeFeed")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "로그인 유저 정보 조회 API")
-    public MyHomeResponse findMemberInfo(@Parameter(hidden = true) Long memberId) {
+    @Operation(summary = "홈 피드 화면 조회 API")
+    public MyHomeResponse findMemberHomeFeed(@Parameter(hidden = true) Long memberId) {
         MemberInfo memberInfo = memberUsecase.findMemberInfo(memberId);
 
         return MyHomeResponse.from(memberInfo);

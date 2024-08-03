@@ -29,6 +29,8 @@ public interface ReadReviewUsecase {
 
     ReadReviewResult findReviewById(Long reviewId);
 
+    long countByIdByMemberId(Long memberId);
+
     @Builder
     record BlockReviewListResult(
             LocationInfo location,

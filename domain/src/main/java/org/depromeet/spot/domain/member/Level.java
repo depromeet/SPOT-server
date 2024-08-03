@@ -38,4 +38,22 @@ public class Level {
         }
         return 6;
     }
+
+    public static long calculateReviewCntToLevelUp(long reviewCnt) {
+        int nextLevelMinimumReview;
+        if (reviewCnt == 0) {
+            nextLevelMinimumReview = 1;
+        } else if (reviewCnt <= 2) {
+            nextLevelMinimumReview = 3;
+        } else if (2 < reviewCnt && reviewCnt <= 4) {
+            nextLevelMinimumReview = 5;
+        } else if (4 < reviewCnt && reviewCnt <= 7) {
+            nextLevelMinimumReview = 8;
+        } else if (7 < reviewCnt && reviewCnt <= 13) {
+            nextLevelMinimumReview = 14;
+        } else if (13 < reviewCnt && reviewCnt <= 20) {
+            nextLevelMinimumReview = 21;
+        } else return 0;
+        return nextLevelMinimumReview - reviewCnt;
+    }
 }
