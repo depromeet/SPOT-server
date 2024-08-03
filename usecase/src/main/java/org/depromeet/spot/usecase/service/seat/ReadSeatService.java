@@ -11,7 +11,9 @@ import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReadSeatService implements ReadSeatUsecase {

@@ -36,7 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/favicon.ico",
         "/api/v1/members",
         "/actuator",
-        "/api/v1/levelUpConditions",
+        "/api/v1/levels/info",
+        "/api/v1/baseball-teams",
     };
 
     @Override
