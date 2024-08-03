@@ -32,6 +32,8 @@ public interface ReadReviewUsecase {
 
     long countByIdByMemberId(Long memberId);
 
+    long countByMember(Long memberId);
+
     @Builder
     record BlockReviewListResult(
             LocationInfo location,

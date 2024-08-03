@@ -12,6 +12,7 @@ import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
@@ -34,6 +35,7 @@ public class CreateReviewService implements CreateReviewUsecase {
     private final KeywordRepository keywordRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
     private final UpdateMemberUsecase updateMemberUsecase;
+    private final ReadReviewUsecase readReviewUsecase;
 
     @Override
     @Transactional
@@ -78,7 +80,7 @@ public class CreateReviewService implements CreateReviewUsecase {
     }
 
     public Member calculateMemberLevel(final Member member) {
-        final long memberReviewCnt = reviewRepository.countByUserId(member.getId());
+        final long memberReviewCnt = readReviewUsecase.countByMember(member.getId());
         return updateMemberUsecase.updateLevel(member, memberReviewCnt);
     }
 
