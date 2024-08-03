@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewImageJpaRepository extends JpaRepository<ReviewImageEntity, Long> {
     @Query(
-            "SELECT new org.depromeet.spot.jpa.review.dto.TopReviewImageDto(ri.url, r.id, b.code, br.number, s.seatNumber) "
+            "SELECT new org.depromeet.spot.infrastructure.jpa.review.dto.TopReviewImageDto(ri.url, r.id, b.code, br.number, s.seatNumber) "
                     + "FROM ReviewImageEntity ri "
                     + "JOIN ri.review r "
                     + "JOIN r.block b "

@@ -45,7 +45,7 @@ public interface BlockTopKeywordJpaRepository extends JpaRepository<BlockTopKeyw
     void upsertCount(Long blockId, Long keywordId);
 
     @Query(
-            "SELECT new org.depromeet.spot.jpa.review.dto.BlockTopKeywordDto(k.content, btk.count, k.isPositive) "
+            "SELECT new org.depromeet.spot.infrastructure.jpa.review.dto.BlockTopKeywordDto(k.content, btk.count, k.isPositive) "
                     + "FROM BlockTopKeywordEntity btk "
                     + "JOIN btk.keyword k "
                     + "JOIN btk.block b "
