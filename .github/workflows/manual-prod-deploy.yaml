@@ -24,7 +24,7 @@ jobs:
                     password: ${{ secrets.PROD_AWS_SERVER_PASSWORD }}
                     port: ${{ secrets.PROD_AWS_SERVER_PORT }}
                     script: |
-                        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.sha }}
+                        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.event.inputs.tag }}
                         docker stop spot-server-prod || true
                         docker rm spot-server-prod || true
                         docker run -d --name spot-server-prod \
@@ -44,5 +44,5 @@ jobs:
                           -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
                           -e SENTRY_ENABLE_TRACING=true \
                           -e SENTRY_ENVIRONMENT=prod \
-                          ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.sha }}
+                          ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.event.inputs.tag }}
                         docker system prune -af
