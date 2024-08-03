@@ -19,9 +19,11 @@ public record RegisterReq(
                         regexp = "^[a-zA-Z0-9가-힣]*$",
                         message = "닉네임은 알파벳 대소문자, 숫자, 한글만 허용하며, 공백은 불가능합니다.")
                 String nickname,
-        @NotNull(message = "응원 팀 선택은 필수입니다.")
-                @Schema(description = "응원 팀 pk")
-                @Range(min = 1, max = 11, message = "응원 팀은 1번(두산 베어스)부터 11번(없음)까지 입니다.")
+        @Schema(description = "응원 팀 pk")
+                @Range(
+                        min = 1,
+                        max = 10,
+                        message = "응원 팀은 null(모두 응원), 1번(두산 베어스)부터 10번(NC 다이노스)까지 입니다.")
                 Long teamId) {
 
     public Member toDomain() {
