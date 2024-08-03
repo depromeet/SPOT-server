@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@ComponentScan(basePackages = {"org.depromeet.spot.jpa"})
-@EnableJpaRepositories(basePackages = {"org.depromeet.spot.jpa"})
-@EntityScan(basePackages = {"org.depromeet.spot.jpa"})
+@ComponentScan(basePackages = {"org.depromeet.spot.infrastructure.jpa"})
+@EnableJpaRepositories(basePackages = {"org.depromeet.spot.infrastructure.jpa"})
+@EntityScan(basePackages = {"org.depromeet.spot.infrastructure.jpa"})
 public class JpaConfig {}
