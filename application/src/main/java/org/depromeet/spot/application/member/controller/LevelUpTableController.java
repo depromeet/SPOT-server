@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "레벨")
-@RequestMapping("/api/v1/levelUpTable")
+@RequestMapping("/api/v1/levelUpConditions")
 public class LevelUpTableController {
 
     private final LevelUsecase levelUsecase;
