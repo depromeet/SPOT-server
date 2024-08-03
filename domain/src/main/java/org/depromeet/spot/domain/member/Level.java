@@ -39,21 +39,12 @@ public class Level {
     }
 
     public static long calculateReviewCntToLevelUp(long reviewCnt) {
-        int nextLevelMinimumReview;
-        if (reviewCnt == 0) {
-            nextLevelMinimumReview = 1;
-        } else if (reviewCnt <= 2) {
-            nextLevelMinimumReview = 3;
-        } else if (2 < reviewCnt && reviewCnt <= 4) {
-            nextLevelMinimumReview = 5;
-        } else if (4 < reviewCnt && reviewCnt <= 7) {
-            nextLevelMinimumReview = 8;
-        } else if (7 < reviewCnt && reviewCnt <= 13) {
-            nextLevelMinimumReview = 14;
-        } else if (13 < reviewCnt && reviewCnt <= 20) {
-            nextLevelMinimumReview = 21;
-        } else return 0;
-        return nextLevelMinimumReview - reviewCnt;
+        int level = calculateLevel(reviewCnt);
+        if (level > 5) {
+            return 0;
+        }
+        // (다음 레벨의 최소 리뷰 조건) - (현재 작성한 리뷰 수)
+        return LEVEL_UP_TABLE[level + 1][0] - reviewCnt;
     }
 
     public int getMinimum() {
