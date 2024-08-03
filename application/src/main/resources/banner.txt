@@ -1,16 +1,41 @@
-${AnsiColor.RED}                                            _--_     dMb
-${AnsiColor.RED}                                         __(._  )   d0P
-${AnsiColor.BRIGHT_YELLOW}                                           <  (D)  .MP
-${AnsiColor.BRIGHT_YELLOW}                                         .~ \ /~```M-.
-${AnsiColor.BRIGHT_GREEN}                                       .~    V    Mo_ \
-${AnsiColor.BRIGHT_GREEN} -------============((((}{)            (   (___. {:)-./
-${AnsiColor.GREEN}                                        ~._____.(:}
-${AnsiColor.GREEN}                        spot the best    /     .M\
-${AnsiColor.BRIGHT_CYAN}                                        /      "" \
-${AnsiColor.BRIGHT_CYAN}                                        |    /\   |
-${AnsiColor.BLUE}                                        /   /  \   \
-${AnsiColor.BLUE}                                       /   /    \   \
-${AnsiColor.BRIGHT_MAGENTA}                                       \__/      \__/
-${AnsiColor.BRIGHT_MAGENTA}                                       / /        | |
-${AnsiColor.MAGENTA}                                      .^V^.      .^V^.
-${AnsiColor.MAGENTA}                                       +-+        +-+
+
+${AnsiColor.RED}      :--
+${AnsiColor.RED}    ...:-=**
+${AnsiColor.RED}    :..::-+*
+${AnsiColor.RED}    :.::::=+
+${AnsiColor.RED}    ::::::=+*
+${AnsiColor.RED}    ::::::=+*
+${AnsiColor.BRIGHT_YELLOW}     :::::-+*
+${AnsiColor.BRIGHT_YELLOW}     -::::-+*
+${AnsiColor.BRIGHT_YELLOW}      -::::=+*                              ====::-+
+${AnsiColor.BRIGHT_YELLOW}      -::::=+*                    --==== -----...:::-*
+${AnsiColor.BRIGHT_YELLOW}       -:::-+*                     +==-===-::....::-=+*
+${AnsiColor.BRIGHT_YELLOW}       -:::-+*                    ....:-====-:...::---+*
+${AnsiColor.BRIGHT_GREEN}       --:::+*                 ........::::::::::::-==+*
+${AnsiColor.BRIGHT_GREEN}        -:::+*              ...........::::::::::::--++*
+${AnsiColor.BRIGHT_GREEN}        -:....:::-        ............::::::::::::::-----
+${AnsiColor.BRIGHT_GREEN}        ......:::-=     ..........-=:.::=*-::::::::::------
+${AnsiColor.BRIGHT_GREEN}       ......::::--    ...........-**-:++-:::::::::::-------
+${AnsiColor.BRIGHT_GREEN}       .....::::::-== :.....................:::::::::--------
+${AnsiColor.GREEN}        ::::::::::---=:.........:*#=...:*#%:.::::::::::-------
+${AnsiColor.GREEN}          ::::::::::--.........-*##%+.:**#%%:::::::::::::------
+${AnsiColor.GREEN}           -:-+-::::-:.........=###%+::####%::::::::::::::-----
+${AnsiColor.GREEN}           -::+  :::-:..........+##*::.:###:.::::::::::::::----
+${AnsiColor.GREEN}          --::-+    -...............:::-::.::::::::::::::::::---
+${AnsiColor.GREEN}                    :.............::-====+=::::::::::::::::::::---
+${AnsiColor.BRIGHT_CYAN}                    :.............::==++==+::::::::::::::::::::::--
+${AnsiColor.BRIGHT_CYAN}                     :...........:::-=====:::::::::::::::::::::::::-=
+${AnsiColor.BRIGHT_CYAN}                     :::::::.:::::::::::::::::::::::::::::::::::::::----
+${AnsiColor.BRIGHT_CYAN}                      :::::::::::::::::::::::::::::::::::::::::::::::::--
+${AnsiColor.BRIGHT_CYAN}                       ::::::::::::::::::::::::::::::::::::: -:::::::::::
+${AnsiColor.BRIGHT_CYAN}                        --:::::::::::::::::::::::::::::::::  -:::::::::::
+${AnsiColor.BLUE}                         ::--::::::::::::::::::::::::::::     ::::::::::
+${AnsiColor.BLUE}                   ....::::::::::::::::::::::::::::::::          ::::
+${AnsiColor.BLUE}                  :::::::::::----:::::::::::::::::::-
+${AnsiColor.BLUE}                   :::::::::::::::::::::::::::::::::-
+${AnsiColor.BLUE}                     :::::::::::::::     ---:::::::---
+${AnsiColor.MAGENTA}                      :::::::::::::      =----:::-----
+${AnsiColor.MAGENTA}                          :::::::::       ---:----------
+${AnsiColor.MAGENTA}                             ::::          ::::::::::---
+${AnsiColor.MAGENTA}                                           :::::::::::::
+${AnsiColor.MAGENTA}                                             :::::::::
