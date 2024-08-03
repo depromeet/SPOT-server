@@ -48,7 +48,7 @@ jobs:
                         docker rm spot-server-prod || true
                         docker run -d --name spot-server-prod \
                           -p 8080:8080 \
-                          -e SPRING_PROFILES_ACTIVE=prod \
+                          -e SPRING_PROFILES_ACTIVE=dev \
                           -e SPRING_DATASOURCE_URL=${{ secrets.PROD_DB_URL }} \
                           -e SPRING_DATASOURCE_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
                           -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
