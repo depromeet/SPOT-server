@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
@@ -19,14 +19,13 @@ import lombok.RequiredArgsConstructor;
 public class ObjectStorageConfig {
 
     private final ObjectStorageProperties objectStorageProperties;
-    private static final String ENDPOINT = "https://kr.object.ncloudstorage.com";
-    private static final String REGION = "kr-standard";
-    public static final String BUCKET_NAME = "spot-image-bucket";
+    private final Regions clientRegion = Regions.AP_NORTHEAST_2;
+    public static final String BUCKET_NAME = "spot-image-bucket-v2";
 
     @Bean
     public AmazonS3 getAmazonS3() {
         return AmazonS3ClientBuilder.standard()
-                .withEndpointConfiguration(new EndpointConfiguration(ENDPOINT, REGION))
+                .withRegion(clientRegion)
                 .withCredentials(
                         new AWSStaticCredentialsProvider(
                                 new BasicAWSCredentials(
