@@ -37,8 +37,18 @@ public interface MemberUsecase {
         private final String teamName;
         private final Long reviewCntToLevelUp;
 
-        public static MemberInfo of(
-                Member member, BaseballTeam baseballTeam, Long reviewCntToLevelUp) {
+        public static MemberInfo from(Member member) {
+            return MemberInfo.builder()
+                    .nickname(member.getNickname())
+                    .profileImageUrl(member.getProfileImage())
+                    .level(member.getLevel().getValue())
+                    .levelTitle(member.getLevel().getTitle())
+                    .teamImageUrl(null)
+                    .teamId(null)
+                    .build();
+        }
+
+        public static MemberInfo of(Member member, BaseballTeam baseballTeam) {
             return MemberInfo.builder()
                     .nickname(member.getNickname())
                     .profileImageUrl(member.getProfileImage())
