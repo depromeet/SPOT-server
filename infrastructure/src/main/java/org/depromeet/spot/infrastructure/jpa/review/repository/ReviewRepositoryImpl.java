@@ -37,7 +37,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public long countByUserId(Long id) {
-        return reviewJpaRepository.countByMemberId(id);
+        return reviewJpaRepository.countByMemberIdAndDeletedAtIsNull(id);
     }
 
     @Override

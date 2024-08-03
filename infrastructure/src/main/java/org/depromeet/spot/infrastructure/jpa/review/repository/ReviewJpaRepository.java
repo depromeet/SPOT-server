@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
-    long countByMemberId(Long memberId);
+    long countByMemberIdAndDeletedAtIsNull(Long memberId);
 
     @Query(
             "SELECT r FROM ReviewEntity r WHERE r.stadium.id = :stadiumId AND r.block.code = :blockCode "
