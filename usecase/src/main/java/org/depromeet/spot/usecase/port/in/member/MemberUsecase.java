@@ -48,7 +48,8 @@ public interface MemberUsecase {
                     .build();
         }
 
-        public static MemberInfo of(Member member, BaseballTeam baseballTeam) {
+        public static MemberInfo of(
+                Member member, BaseballTeam baseballTeam, Long reviewCntToLevelUp) {
             return MemberInfo.builder()
                     .nickname(member.getNickname())
                     .profileImageUrl(member.getProfileImage())

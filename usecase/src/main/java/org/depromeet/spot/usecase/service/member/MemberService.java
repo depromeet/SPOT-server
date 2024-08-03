@@ -85,7 +85,6 @@ public class MemberService implements MemberUsecase {
             return MemberInfo.from(member);
         }
         BaseballTeam baseballTeam = readBaseballTeamUsecase.findById(member.getTeamId());
-        return MemberInfo.of(member, baseballTeam);
 
         long reviewCount = readReviewUsecase.countByIdByMemberId(memberId);
         long reviewCntToLevelUp = Level.calculateReviewCntToLevelUp(reviewCount);
