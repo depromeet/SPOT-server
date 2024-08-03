@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +41,7 @@ public class CacheConfig {
                         .softValues()
                         .recordStats()
                         .maximumSize(type.getSize())
+                        .scheduler(Scheduler.systemScheduler())
                         .expireAfterWrite(type.getExpireSeconds(), TimeUnit.SECONDS)
                         .removalListener(
                                 ((key, value, cause) ->
