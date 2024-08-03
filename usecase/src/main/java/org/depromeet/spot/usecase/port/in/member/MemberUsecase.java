@@ -37,14 +37,17 @@ public interface MemberUsecase {
         private final String teamName;
         private final Long reviewCntToLevelUp;
 
-        public static MemberInfo from(Member member) {
+        public static MemberInfo of(Member member, Long reviewCntToLevelUp) {
             return MemberInfo.builder()
                     .nickname(member.getNickname())
                     .profileImageUrl(member.getProfileImage())
                     .level(member.getLevel().getValue())
                     .levelTitle(member.getLevel().getTitle())
+                    .mascotImageUrl(member.getLevel().getMascotImageUrl())
                     .teamImageUrl(null)
                     .teamId(null)
+                    .teamName(null)
+                    .reviewCntToLevelUp(reviewCntToLevelUp)
                     .build();
         }
 
