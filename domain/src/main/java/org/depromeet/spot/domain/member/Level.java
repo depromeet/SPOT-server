@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Level {
 
-    private final int[][] LEVEL_UP_TABLE = {
+    private static final int[][] LEVEL_UP_TABLE = {
         {0, 0}, {1, 2}, {3, 4}, {5, 7}, {8, 13}, {14, 20}, {21}
     };
 
@@ -22,22 +22,17 @@ public class Level {
     private final LocalDateTime deletedAt;
 
     public static int calculateLevel(final long reviewCnt) {
-        if (reviewCnt == 0) {
+        if (reviewCnt >= LEVEL_UP_TABLE[0][1]) {
             return 0;
-        }
-        if (reviewCnt <= 2) {
+        } else if (reviewCnt >= LEVEL_UP_TABLE[1][1]) {
             return 1;
-        }
-        if (2 < reviewCnt && reviewCnt <= 4) {
+        } else if (reviewCnt >= LEVEL_UP_TABLE[2][1]) {
             return 2;
-        }
-        if (4 < reviewCnt && reviewCnt <= 7) {
+        } else if (reviewCnt >= LEVEL_UP_TABLE[3][1]) {
             return 3;
-        }
-        if (7 < reviewCnt && reviewCnt <= 13) {
+        } else if (reviewCnt >= LEVEL_UP_TABLE[4][1]) {
             return 4;
-        }
-        if (13 < reviewCnt && reviewCnt <= 20) {
+        } else if (reviewCnt >= LEVEL_UP_TABLE[5][1]) {
             return 5;
         }
         return 6;
