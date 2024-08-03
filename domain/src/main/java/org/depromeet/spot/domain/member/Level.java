@@ -2,6 +2,8 @@ package org.depromeet.spot.domain.member;
 
 import java.time.LocalDateTime;
 
+import com.google.common.collect.ImmutableMap;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,10 +11,26 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Level {
 
-    private static final int[][] LEVEL_UP_TABLE = {
-        {0, 0}, {1, 2}, {3, 4}, {5, 7}, {8, 13}, {14, 20}, {21}
-    };
+    private static final ImmutableMap<Integer, Integer> LEVEL_MINIMUM_CONDITIONS =
+            ImmutableMap.<Integer, Integer>builder()
+                    .put(0, 0)
+                    .put(1, 1)
+                    .put(2, 3)
+                    .put(3, 5)
+                    .put(4, 8)
+                    .put(5, 14)
+                    .put(6, 21)
+                    .build();
 
+    private static final ImmutableMap<Integer, Integer> LEVEL_MAXIMUM_CONDITIONS =
+            ImmutableMap.<Integer, Integer>builder()
+                    .put(0, 0)
+                    .put(1, 2)
+                    .put(2, 4)
+                    .put(3, 7)
+                    .put(4, 13)
+                    .put(5, 20)
+                    .build();
     private final Long id;
     private final int value;
     private final String title;
@@ -22,17 +40,17 @@ public class Level {
     private final LocalDateTime deletedAt;
 
     public static int calculateLevel(final long reviewCnt) {
-        if (reviewCnt > LEVEL_UP_TABLE[6][0]) {
+        if (reviewCnt > LEVEL_MINIMUM_CONDITIONS.get(6)) {
             return 6;
-        } else if (reviewCnt > LEVEL_UP_TABLE[5][0]) {
+        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(5)) {
             return 5;
-        } else if (reviewCnt > LEVEL_UP_TABLE[4][0]) {
+        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(4)) {
             return 4;
-        } else if (reviewCnt > LEVEL_UP_TABLE[3][0]) {
+        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(3)) {
             return 3;
-        } else if (reviewCnt > LEVEL_UP_TABLE[2][0]) {
+        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(2)) {
             return 2;
-        } else if (reviewCnt > LEVEL_UP_TABLE[1][0]) {
+        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(1)) {
             return 1;
         }
         return 0;
@@ -44,15 +62,15 @@ public class Level {
             return 0;
         }
         // (다음 레벨의 최소 리뷰 조건) - (현재 작성한 리뷰 수)
-        return LEVEL_UP_TABLE[level + 1][0] - reviewCnt;
+        return LEVEL_MINIMUM_CONDITIONS.get(level + 1) - reviewCnt;
     }
 
     public int getMinimum() {
-        return LEVEL_UP_TABLE[value][0];
+        return LEVEL_MINIMUM_CONDITIONS.get(value);
     }
 
     public Integer getMaximum() {
-        if (LEVEL_UP_TABLE[value].length == 1) return null;
-        return LEVEL_UP_TABLE[value][1];
+        if (value > 5) return null;
+        return LEVEL_MAXIMUM_CONDITIONS.get(value);
     }
 }
