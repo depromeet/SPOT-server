@@ -93,11 +93,17 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         Member member = memberRepository.findById(userId);
 
-        BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
+        MemberInfoOnMyReviewResult memberInfo;
+        if (member.getTeamId() == null) {
+            memberInfo = MemberInfoOnMyReviewResult.of(member, reviewPage.getTotalElements());
 
-        MemberInfoOnMyReviewResult memberInfo =
-                createMemberInfoFromMember(
-                        member, reviewPage.getTotalElements(), baseballTeam.getName());
+        } else {
+            BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
+
+            memberInfo =
+                    MemberInfoOnMyReviewResult.of(
+                            member, reviewPage.getTotalElements(), baseballTeam.getName());
+        }
 
         return MyReviewListResult.builder()
                 .memberInfoOnMyReviewResult(memberInfo)
@@ -144,20 +150,6 @@ public class ReadReviewService implements ReadReviewUsecase {
         return MyRecentReviewResult.builder()
                 .review(reviewWithKeywords)
                 .reviewCount(reviewCount)
-                .build();
-    }
-
-    private MemberInfoOnMyReviewResult createMemberInfoFromMember(
-            Member member, long totalReviewCount, String teamName) {
-        return MemberInfoOnMyReviewResult.builder()
-                .userId(member.getId())
-                .profileImageUrl(member.getProfileImage())
-                .level(member.getLevel().getValue())
-                .levelTitle(member.getLevel().getTitle())
-                .nickname(member.getNickname())
-                .reviewCount(totalReviewCount)
-                .teamId(member.getTeamId())
-                .teamName(teamName)
                 .build();
     }
 
