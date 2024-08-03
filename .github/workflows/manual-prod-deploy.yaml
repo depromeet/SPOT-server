@@ -1,11 +1,14 @@
 name: Manual Production Deployment
 
 on:
-    workflow_dispatch:
-        inputs:
-            tag:
-                description: 'Tag to deploy  (v0.33.8)'
-                required: true
+    push:
+        branches:
+            - release
+#    workflow_dispatch:
+#        inputs:
+#            tag:
+#                description: 'Tag to deploy  (v0.33.8)'
+#                required: true
 
 jobs:
     deploy-to-prod:
