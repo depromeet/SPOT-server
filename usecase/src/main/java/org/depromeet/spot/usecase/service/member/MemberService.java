@@ -78,8 +78,10 @@ public class MemberService implements MemberUsecase {
     @Override
     public MemberInfo findMemberInfo(Long memberId) {
         Member member = readMemberUsecase.findById(memberId);
+        if (member.getTeamId() == null) {
+            return MemberInfo.from(member);
+        }
         BaseballTeam baseballTeam = readBaseballTeamUsecase.findById(member.getTeamId());
-
         return MemberInfo.of(member, baseballTeam);
     }
 

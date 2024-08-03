@@ -34,6 +34,17 @@ public interface MemberUsecase {
         private String teamImageUrl;
         private final Long teamId;
 
+        public static MemberInfo from(Member member) {
+            return MemberInfo.builder()
+                    .nickname(member.getNickname())
+                    .profileImageUrl(member.getProfileImage())
+                    .level(member.getLevel().getValue())
+                    .levelTitle(member.getLevel().getTitle())
+                    .teamImageUrl(null)
+                    .teamId(null)
+                    .build();
+        }
+
         public static MemberInfo of(Member member, BaseballTeam baseballTeam) {
             return MemberInfo.builder()
                     .nickname(member.getNickname())
