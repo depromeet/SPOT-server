@@ -40,6 +40,8 @@ decorator:
 
 # spring actuator
 management:
+    server:
+        port: 9292
     endpoints:
         prometheus:
             enabled: true
