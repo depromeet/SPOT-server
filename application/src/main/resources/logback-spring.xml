@@ -18,6 +18,7 @@
         <root level="ERROR">
             <appender-ref ref="CONSOLE_APPENDER"/>
             <appender-ref ref="SENTRY_APPENDER"/>
+            <appender-ref ref="LOKI_APPENDER"/>
         </root>
     </springProfile>
 </configuration>
