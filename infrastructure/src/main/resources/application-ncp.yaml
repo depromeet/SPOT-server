@@ -1,5 +1,4 @@
 ncp:
     object-storage:
-#        accessKey: ${NCP_OBJECT_STORAGE_ACCESS_KEY}
         accessKey: ${AWS_OBJECT_STORAGE_ACCESS_KEY}
         secretKey: ${AWS_OBJECT_STORAGE_SECRET_KEY}
