@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api/v1/members",
         "/actuator",
         "/api/v1/levelUpConditions",
+        "/api/v1/baseball-teams",
     };
 
     @Override
