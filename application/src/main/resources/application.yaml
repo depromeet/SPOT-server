@@ -37,6 +37,15 @@ decorator:
     datasource:
         p6spy:
             enable-logging: true
+
+# spring actuator
+management:
+    endpoints:
+        prometheus:
+            enabled: true
+        web:
+            exposure:
+                include: prometheus
 ---
 spring:
     config:
