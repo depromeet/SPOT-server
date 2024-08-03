@@ -1,7 +1,7 @@
 package org.depromeet.spot.application.common.config;
 
-import org.depromeet.spot.jpa.config.JpaConfig;
-import org.depromeet.spot.ncp.NcpConfig;
+import org.depromeet.spot.infrastructure.aws.NcpConfig;
+import org.depromeet.spot.infrastructure.jpa.config.JpaConfig;
 import org.depromeet.spot.usecase.config.UsecaseConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
