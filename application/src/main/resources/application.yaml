@@ -42,6 +42,9 @@ decorator:
 management:
     server:
         port: 9292
+    endpoint:
+      health:
+          show-details: always
     endpoints:
         prometheus:
             enabled: true
