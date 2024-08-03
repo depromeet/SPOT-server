@@ -17,6 +17,7 @@ import org.depromeet.spot.usecase.port.in.seat.ReadSeatUsecase;
 import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.out.block.BlockRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,9 @@ public class BlockReadService implements BlockReadUsecase {
     }
 
     @Override
+    @Cacheable(
+            cacheNames = {"sectionSeatsCache"},
+            key = "#stadiumId + '_' + #sectionId")
     public List<BlockInfo> findAllBlockInfoBy(final Long stadiumId, final Long sectionId) {
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
         sectionReadUsecase.checkIsExistsInStadium(stadiumId, sectionId);
@@ -58,6 +62,9 @@ public class BlockReadService implements BlockReadUsecase {
     }
 
     @Override
+    @Cacheable(
+            cacheNames = {"blockSeatsCache"},
+            key = "#stadiumId + '_' + #blockCode")
     public BlockInfo findBlockInfoBy(final Long stadiumId, final String blockCode) {
         stadiumReadUsecase.checkIsExistsBy(stadiumId);
         Block block = findByStadiumAndCode(stadiumId, blockCode);

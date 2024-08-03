@@ -29,7 +29,21 @@ public interface SeatJpaRepository extends JpaRepository<SeatEntity, Long> {
     Optional<SeatEntity> findByIdWith(
             @Param("blockId") Long blockId, @Param("seatNumber") Integer seatNumber);
 
-    List<SeatEntity> findAllByBlockId(Long blockId);
+    @Query(
+            "SELECT s FROM SeatEntity s "
+                    + "JOIN FETCH s.stadium st "
+                    + "JOIN FETCH s.section sc "
+                    + "JOIN FETCH s.block b "
+                    + "JOIN FETCH s.row r "
+                    + "where s.block.id = :blockId")
+    List<SeatEntity> findAllByBlockId(@Param("blockId") Long blockId);
 
-    List<SeatEntity> findAllBySectionId(Long sectionId);
+    @Query(
+            "SELECT s FROM SeatEntity s "
+                    + "JOIN FETCH s.stadium st "
+                    + "JOIN FETCH s.section sc "
+                    + "JOIN FETCH s.block b "
+                    + "JOIN FETCH s.row r "
+                    + "where s.section.id = :sectionId")
+    List<SeatEntity> findAllBySectionId(@Param("sectionId") Long sectionId);
 }

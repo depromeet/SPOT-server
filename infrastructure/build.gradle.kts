@@ -6,6 +6,7 @@ dependencies {
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:_")
 
     // mysql
@@ -25,6 +26,9 @@ dependencies {
 
     // webflux (HTTP 요청에 사용)
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    // caffeine cache
+    implementation("com.github.ben-manes.caffeine:caffeine:_")
 }
 
 tasks.bootJar { enabled = false }
