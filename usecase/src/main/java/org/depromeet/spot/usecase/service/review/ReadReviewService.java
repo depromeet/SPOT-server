@@ -93,11 +93,17 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         Member member = memberRepository.findById(userId);
 
-        BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
+        MemberInfoOnMyReviewResult memberInfo;
+        if (member.getTeamId() == null) {
+            memberInfo = MemberInfoOnMyReviewResult.of(member, reviewPage.getTotalElements());
 
-        MemberInfoOnMyReviewResult memberInfo =
-                createMemberInfoFromMember(
-                        member, reviewPage.getTotalElements(), baseballTeam.getName());
+        } else {
+            BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
+
+            memberInfo =
+                    MemberInfoOnMyReviewResult.of(
+                            member, reviewPage.getTotalElements(), baseballTeam.getName());
+        }
 
         return MyReviewListResult.builder()
                 .memberInfoOnMyReviewResult(memberInfo)
