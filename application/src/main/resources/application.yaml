@@ -7,22 +7,22 @@ spring:
     profiles:
         active: local
         group:
-          local:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-          dev:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-          prod:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-              - sentry
+            local:
+                - jpa
+                - ncp
+                - jwt
+                - kakao
+            dev:
+                - jpa
+                - ncp
+                - jwt
+                - kakao
+            prod:
+                - jpa
+                - ncp
+                - jwt
+                - kakao
+                - sentry
     servlet:
         multipart:
             max-file-size: 10MB
@@ -37,11 +37,25 @@ decorator:
     datasource:
         p6spy:
             enable-logging: true
+
+# spring actuator
+management:
+    server:
+        port: 9292
+    endpoint:
+      health:
+          show-details: always
+    endpoints:
+        prometheus:
+            enabled: true
+        web:
+            exposure:
+                include: "*"
 ---
 spring:
     config:
-      activate:
-          on-profile: local
+        activate:
+            on-profile: local
 ---
 spring:
     config:
@@ -59,5 +73,5 @@ decorator:
             enable-logging: false
 
 springdoc:
-  swagger-ui:
-      enabled: false
+    swagger-ui:
+        enabled: false
