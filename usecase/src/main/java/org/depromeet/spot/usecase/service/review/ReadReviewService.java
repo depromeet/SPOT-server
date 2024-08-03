@@ -147,20 +147,6 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .build();
     }
 
-    private MemberInfoOnMyReviewResult createMemberInfoFromMember(
-            Member member, long totalReviewCount, String teamName) {
-        return MemberInfoOnMyReviewResult.builder()
-                .userId(member.getId())
-                .profileImageUrl(member.getProfileImage())
-                .level(member.getLevel().getValue())
-                .levelTitle(member.getLevel().getTitle())
-                .nickname(member.getNickname())
-                .reviewCount(totalReviewCount)
-                .teamId(member.getTeamId())
-                .teamName(teamName)
-                .build();
-    }
-
     private Review mapKeywordsToSingleReview(Review review) {
         List<Long> keywordIds =
                 review.getKeywords().stream()

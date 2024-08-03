@@ -2,6 +2,7 @@ package org.depromeet.spot.usecase.port.in.review;
 
 import java.util.List;
 
+import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
@@ -66,7 +67,34 @@ public interface ReadReviewUsecase {
             String nickname,
             Long reviewCount,
             Long teamId,
-            String teamName) {}
+            String teamName) {
+        public static MemberInfoOnMyReviewResult of(Member member, long totalReviewCount) {
+            return MemberInfoOnMyReviewResult.builder()
+                    .userId(member.getId())
+                    .profileImageUrl(member.getProfileImage())
+                    .level(member.getLevel().getValue())
+                    .levelTitle(member.getLevel().getTitle())
+                    .nickname(member.getNickname())
+                    .reviewCount(totalReviewCount)
+                    .teamId(null)
+                    .teamName(null)
+                    .build();
+        }
+
+        public static MemberInfoOnMyReviewResult of(
+                Member member, long totalReviewCount, String teamName) {
+            return MemberInfoOnMyReviewResult.builder()
+                    .userId(member.getId())
+                    .profileImageUrl(member.getProfileImage())
+                    .level(member.getLevel().getValue())
+                    .levelTitle(member.getLevel().getTitle())
+                    .nickname(member.getNickname())
+                    .reviewCount(totalReviewCount)
+                    .teamId(member.getTeamId())
+                    .teamName(teamName)
+                    .build();
+        }
+    }
 
     @Builder
     record MyRecentReviewResult(Review review, Long reviewCount) {}
