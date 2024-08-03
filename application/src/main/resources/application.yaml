@@ -7,22 +7,22 @@ spring:
     profiles:
         active: local
         group:
-          local:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-          dev:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-          prod:
-              - jpa
-              - ncp
-              - jwt
-              - kakao
-              - sentry
+            local:
+                - jpa
+                - ncp
+                - jwt
+                - kakao
+            dev:
+                - jpa
+                - ncp
+                - jwt
+                - kakao
+            prod:
+                - jpa
+                - ncp
+                - jwt
+                - kakao
+                - sentry
     servlet:
         multipart:
             max-file-size: 10MB
@@ -45,12 +45,12 @@ management:
             enabled: true
         web:
             exposure:
-                include: prometheus
+                include: "*"
 ---
 spring:
     config:
-      activate:
-          on-profile: local
+        activate:
+            on-profile: local
 ---
 spring:
     config:
@@ -68,5 +68,5 @@ decorator:
             enable-logging: false
 
 springdoc:
-  swagger-ui:
-      enabled: false
+    swagger-ui:
+        enabled: false
