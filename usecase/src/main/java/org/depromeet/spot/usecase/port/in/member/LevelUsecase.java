@@ -6,4 +6,6 @@ import org.depromeet.spot.domain.member.Level;
 
 public interface LevelUsecase {
     List<Level> findAllLevels();
+
+    Level findLevelUpDialogInfo(int nextLevel);
 }
