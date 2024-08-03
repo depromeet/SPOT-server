@@ -34,6 +34,7 @@ public class Level {
     private final int value;
     private final String title;
     private final String mascotImageUrl;
+    private final String levelUpImageUrl;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final LocalDateTime deletedAt;

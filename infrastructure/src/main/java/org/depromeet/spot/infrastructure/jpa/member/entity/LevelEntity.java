@@ -25,15 +25,23 @@ public class LevelEntity extends BaseEntity {
     @Column(name = "mascot_image_url")
     private String mascotImageUrl;
 
+    @Column(name = "level_up_image_url")
+    private String levelUpImageUrl;
+
     public LevelEntity(Level level) {
         super(level.getId(), level.getCreatedAt(), level.getUpdatedAt(), level.getDeletedAt());
         value = level.getValue();
         title = level.getTitle();
         mascotImageUrl = level.getMascotImageUrl();
+        levelUpImageUrl = level.getLevelUpImageUrl();
     }
 
     public static LevelEntity from(Level level) {
-        return new LevelEntity(level.getValue(), level.getTitle(), level.getMascotImageUrl());
+        return new LevelEntity(
+                level.getValue(),
+                level.getTitle(),
+                level.getMascotImageUrl(),
+                level.getLevelUpImageUrl());
     }
 
     public Level toDomain() {
@@ -42,6 +50,7 @@ public class LevelEntity extends BaseEntity {
                 value,
                 title,
                 mascotImageUrl,
+                levelUpImageUrl,
                 this.getCreatedAt(),
                 this.getUpdatedAt(),
                 this.getDeletedAt());
