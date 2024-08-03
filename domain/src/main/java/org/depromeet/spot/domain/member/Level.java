@@ -10,7 +10,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Level {
-
     private static final ImmutableMap<Integer, Integer> LEVEL_MINIMUM_CONDITIONS =
             ImmutableMap.<Integer, Integer>builder()
                     .put(0, 0)
@@ -40,17 +39,17 @@ public class Level {
     private final LocalDateTime deletedAt;
 
     public static int calculateLevel(final long reviewCnt) {
-        if (reviewCnt > LEVEL_MINIMUM_CONDITIONS.get(6)) {
+        if (reviewCnt >= LEVEL_MINIMUM_CONDITIONS.get(6)) {
             return 6;
-        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(5)) {
+        } else if (reviewCnt >= LEVEL_MINIMUM_CONDITIONS.get(5)) {
             return 5;
-        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(4)) {
+        } else if (reviewCnt >= LEVEL_MINIMUM_CONDITIONS.get(4)) {
             return 4;
-        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(3)) {
+        } else if (reviewCnt >= LEVEL_MINIMUM_CONDITIONS.get(3)) {
             return 3;
-        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(2)) {
+        } else if (reviewCnt >= LEVEL_MINIMUM_CONDITIONS.get(2)) {
             return 2;
-        } else if (reviewCnt > LEVEL_MAXIMUM_CONDITIONS.get(1)) {
+        } else if (reviewCnt >= LEVEL_MINIMUM_CONDITIONS.get(1)) {
             return 1;
         }
         return 0;
