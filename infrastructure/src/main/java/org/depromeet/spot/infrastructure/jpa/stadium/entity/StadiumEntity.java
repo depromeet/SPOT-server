@@ -19,13 +19,13 @@ public class StadiumEntity extends BaseEntity {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "main_image", length = 255)
+    @Column(name = "main_image", length = 300)
     private String mainImage;
 
-    @Column(name = "seating_chart_image", length = 255)
+    @Column(name = "seating_chart_image", length = 300)
     private String seatingChartImage;
 
-    @Column(name = "labeled_seating_chart_image", length = 255)
+    @Column(name = "labeled_seating_chart_image", length = 300)
     private String labeledSeatingChartImage;
 
     @Column(name = "is_active", nullable = false)
