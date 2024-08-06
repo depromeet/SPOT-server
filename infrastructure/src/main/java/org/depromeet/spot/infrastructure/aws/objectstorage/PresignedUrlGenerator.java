@@ -32,6 +32,7 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     @Override
     public String forImage(final Long memberId, PresignedUrlRequest request) {
+        log.info("presigned url generator: forImage");
         isValidImageExtension(request.getFileExtension());
 
         final ImageExtension fileExtension = ImageExtension.from(request.getFileExtension());
@@ -50,16 +51,19 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     }
 
     private URL createPresignedUrl(final String fileName) {
+        log.info("presigned url generator: createPresignedUrl");
         return amazonS3.generatePresignedUrl(createGeneratePreSignedUrlRequest(fileName));
     }
 
     private GeneratePresignedUrlRequest createGeneratePreSignedUrlRequest(final String fileName) {
+        log.info("presigned url generator: createGeneratePreSignedUrlRequest");
         final String bucketName = ObjectStorageConfig.BUCKET_NAME;
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
                 new GeneratePresignedUrlRequest(bucketName, fileName)
                         .withMethod(HttpMethod.PUT)
                         .withExpiration(createPreSignedUrlExpiration());
 
+        log.info("presigned url generator: addRequestParameter");
         generatePresignedUrlRequest.addRequestParameter(
                 Headers.S3_CANNED_ACL, CannedAccessControlList.PublicRead.toString());
 
