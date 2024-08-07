@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="5 seconds">
     <include resource="appenders/console-appender.xml"/>
-
+    <property resource="application-monitoring.yml" />
     <springProfile name="local">
         <root level="INFO">
             <appender-ref ref="CONSOLE_APPENDER"/>
@@ -18,7 +18,23 @@
         <root level="ERROR">
             <appender-ref ref="CONSOLE_APPENDER"/>
             <appender-ref ref="SENTRY_APPENDER"/>
-            <appender-ref ref="LOKI_APPENDER"/>
+<!--            <appender-ref ref="LOKI_APPENDER"/>-->
+
+            <appender name="LOKI_APPENDER" class="com.github.loki4j.logback.Loki4jAppender">
+                <http>
+                    <url>http://${loki.url}:3100/loki/api/v1/push</url>
+                </http>
+                <format>
+                    <label>
+                        <pattern>app=${name},host=${HOSTNAME},level=%level</pattern>
+                        <readMarkers>true</readMarkers>
+                    </label>
+                    <message>
+                        <pattern>%highlight([%-5level]) %d{yy-MM-dd HH:mm:ss.SSS} %green([%thread]) %yellow([traceId=%X{traceId}]) %cyan([%logger{0}:%line])-%message%n</pattern>
+                    </message>
+                    <sortByTime>true</sortByTime>
+                </format>
+            </appender>
         </root>
     </springProfile>
 </configuration>
