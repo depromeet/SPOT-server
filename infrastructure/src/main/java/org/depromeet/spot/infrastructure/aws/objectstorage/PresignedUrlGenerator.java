@@ -5,7 +5,7 @@ import java.util.Date;
 
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
-import org.depromeet.spot.infrastructure.aws.config.ObjectStorageConfig;
+import org.depromeet.spot.infrastructure.aws.property.ObjectStorageProperties;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +27,7 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     private final AmazonS3 amazonS3;
     private final FileNameGenerator fileNameGenerator;
+    private final ObjectStorageProperties objectStorageProperties;
 
     private static final long EXPIRE_MS = 1000 * 60 * 5L;
 
@@ -57,7 +58,7 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     private GeneratePresignedUrlRequest createGeneratePreSignedUrlRequest(final String fileName) {
         log.info("presigned url generator: createGeneratePreSignedUrlRequest");
-        final String bucketName = ObjectStorageConfig.BUCKET_NAME;
+        final String bucketName = objectStorageProperties.bucketName();
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
                 new GeneratePresignedUrlRequest(bucketName, fileName)
                         .withMethod(HttpMethod.PUT)
