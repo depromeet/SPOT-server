@@ -2,6 +2,8 @@ package org.depromeet.spot.application.common.jwt;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,11 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api-docs",
         "/swagger-ui.html",
         "/favicon.ico",
-        "/api/v1/members",
         "/actuator",
         "/api/v1/levels/info",
-        "/api/v1/baseball-teams",
     };
+
+    private static final Map<String, Set<String>> AUTH_METHOD_WHITELIST =
+            Map.of(
+                    "/api/v1/members", Set.of("GET", "POST"),
+                    "/api/v1/baseball-teams", Set.of("GET"));
 
     @Override
     protected void doFilterInternal(
@@ -47,7 +52,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String requestURI = request.getRequestURI();
+
         if (Arrays.stream(AUTH_WHITELIST).anyMatch(requestURI::startsWith)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        final String requestMethod = request.getMethod();
+        if (checkMethodWhitelist(requestURI, requestMethod)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -67,5 +79,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             // 토큰 검증 실패 -> Exception
         } else throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+    }
+
+    private boolean checkMethodWhitelist(String requestURI, String requestMethod) {
+
+        return true;
     }
 }
