@@ -14,7 +14,7 @@
     <appender name="LOKI_APPENDER" class="com.github.loki4j.logback.Loki4jAppender">
         <http>
             <!-- TODO: Loki 인스턴스 세팅 후 URL 변경 필요 -->
-            <url>http://localhost:3100/loki/api/v1/push</url>
+<!--            <url>http://localhost:3100/loki/api/v1/push</url>-->
         </http>
         <format>
             <label>
