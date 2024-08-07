@@ -42,4 +42,6 @@ bin/
 .DS_Store
 
 *.application-jwt.yml
-*.application-monitoring.yml
+
+### loki ###
+**/application-monitoring.yml
