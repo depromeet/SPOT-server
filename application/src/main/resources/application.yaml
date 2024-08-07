@@ -5,23 +5,23 @@ server:
 spring:
     # 서브모듈 profile
     profiles:
-        active: local
+        active: dev
         group:
             local:
                 - jpa
-                - ncp
+                - aws
                 - jwt
                 - kakao
                 - monitoring
             dev:
                 - jpa
-                - ncp
+                - aws
                 - jwt
                 - kakao
                 - monitoring
             prod:
                 - jpa
-                - ncp
+                - aws
                 - jwt
                 - kakao
                 - sentry

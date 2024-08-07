@@ -5,7 +5,7 @@ import java.util.Date;
 
 import org.depromeet.spot.common.exception.media.MediaException.InvalidExtensionException;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
-import org.depromeet.spot.infrastructure.aws.config.ObjectStorageConfig;
+import org.depromeet.spot.infrastructure.aws.property.ObjectStorageProperties;
 import org.depromeet.spot.usecase.port.out.media.CreatePresignedUrlPort;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +27,13 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     private final AmazonS3 amazonS3;
     private final FileNameGenerator fileNameGenerator;
+    private final ObjectStorageProperties objectStorageProperties;
 
     private static final long EXPIRE_MS = 1000 * 60 * 5L;
 
     @Override
     public String forImage(final Long memberId, PresignedUrlRequest request) {
+        log.info("presigned url generator: forImage");
         isValidImageExtension(request.getFileExtension());
 
         final ImageExtension fileExtension = ImageExtension.from(request.getFileExtension());
@@ -50,16 +52,19 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
     }
 
     private URL createPresignedUrl(final String fileName) {
+        log.info("presigned url generator: createPresignedUrl");
         return amazonS3.generatePresignedUrl(createGeneratePreSignedUrlRequest(fileName));
     }
 
     private GeneratePresignedUrlRequest createGeneratePreSignedUrlRequest(final String fileName) {
-        final String bucketName = ObjectStorageConfig.BUCKET_NAME;
+        log.info("presigned url generator: createGeneratePreSignedUrlRequest");
+        final String bucketName = objectStorageProperties.bucketName();
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
                 new GeneratePresignedUrlRequest(bucketName, fileName)
                         .withMethod(HttpMethod.PUT)
                         .withExpiration(createPreSignedUrlExpiration());
 
+        log.info("presigned url generator: addRequestParameter");
         generatePresignedUrlRequest.addRequestParameter(
                 Headers.S3_CANNED_ACL, CannedAccessControlList.PublicRead.toString());
 

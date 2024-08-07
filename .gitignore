@@ -389,3 +389,4 @@ gradle-app.setting
 application-jwt.yml
 application-kakao.yml
 application-sentry.yml
+application-aws.yaml

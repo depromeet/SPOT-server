@@ -8,7 +8,7 @@ import org.depromeet.spot.common.exception.media.MediaException.UploadFailExcept
 import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.media.extension.ImageExtension;
 import org.depromeet.spot.domain.media.extension.StadiumSeatMediaExtension;
-import org.depromeet.spot.infrastructure.aws.config.ObjectStorageConfig;
+import org.depromeet.spot.infrastructure.aws.property.ObjectStorageProperties;
 import org.depromeet.spot.usecase.port.out.media.ImageUploadPort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ImageUploader implements ImageUploadPort {
 
     private final AmazonS3 amazonS3;
+    private final ObjectStorageProperties objectStorageProperties;
 
     @Override
     public String upload(String targetName, MultipartFile file, MediaProperty property) {
@@ -36,7 +37,7 @@ public class ImageUploader implements ImageUploadPort {
         final String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         checkValidExtension(fileExtension, property);
 
-        final String bucketName = ObjectStorageConfig.BUCKET_NAME;
+        final String bucketName = objectStorageProperties.bucketName();
         final String fileName = createFileName(targetName, property.getFolderName(), fileExtension);
         ObjectMetadata objectMetadata = createObjectMetadata(file);
 
