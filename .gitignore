@@ -385,6 +385,7 @@ gradle-app.setting
 .env
 
 *.application-jwt.yml
+*.application-monitoring.yml
 application-jwt.yml
 application-kakao.yml
 application-sentry.yml
