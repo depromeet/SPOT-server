@@ -12,17 +12,20 @@ spring:
                 - ncp
                 - jwt
                 - kakao
+                - monitoring
             dev:
                 - jpa
                 - ncp
                 - jwt
                 - kakao
+                - monitoring
             prod:
                 - jpa
                 - ncp
                 - jwt
                 - kakao
                 - sentry
+                - monitoring
     servlet:
         multipart:
             max-file-size: 10MB
