@@ -28,6 +28,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (CustomJwtException e) {
+            // logging 안 하면 콘솔에 로그 출력 안 됨.
+            logger.error("CustomJwtException : {}", e);
             setErrorResponse(response, e.getJwtErrorCode());
         }
     }
