@@ -82,7 +82,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkMethodWhitelist(String requestURI, String requestMethod) {
-
-        return true;
+        String matchUrl =
+                AUTH_METHOD_WHITELIST.keySet().stream()
+                        .filter(requestURI::startsWith)
+                        .findFirst()
+                        .orElse(null);
+        if (matchUrl != null
+                && AUTH_METHOD_WHITELIST.getOrDefault(matchUrl, Set.of()).contains(requestMethod)) {
+            log.warn("화이트리스트입니당! : {}, {}", requestURI, requestMethod);
+            return true;
+        }
+        return false;
     }
 }
