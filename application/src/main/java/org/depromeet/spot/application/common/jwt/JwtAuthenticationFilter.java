@@ -3,6 +3,7 @@ package org.depromeet.spot.application.common.jwt;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import jakarta.servlet.FilterChain;
@@ -82,13 +83,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkMethodWhitelist(String requestURI, String requestMethod) {
-        String matchUrl =
-                AUTH_METHOD_WHITELIST.keySet().stream()
-                        .filter(requestURI::startsWith)
-                        .findFirst()
-                        .orElse(null);
-        if (matchUrl != null
-                && AUTH_METHOD_WHITELIST.getOrDefault(matchUrl, Set.of()).contains(requestMethod)) {
+        Optional<String> matchUrl =
+                AUTH_METHOD_WHITELIST.keySet().stream().filter(requestURI::startsWith).findFirst();
+        if (AUTH_METHOD_WHITELIST.getOrDefault(matchUrl.get(), Set.of()).contains(requestMethod)) {
             log.warn("화이트리스트입니당! : {}, {}", requestURI, requestMethod);
             return true;
         }
