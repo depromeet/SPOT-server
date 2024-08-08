@@ -11,13 +11,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.depromeet.spot.application.common.exception.CustomJwtException;
+import org.depromeet.spot.application.common.exception.JwtErrorCode;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,20 +61,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // header가 null이거나 빈 문자열이면 안됨.
-        if (header != null && !header.equalsIgnoreCase("")) {
-            if (header.startsWith(JwtTokenEnums.BEARER.getValue())) {
-                String accessToken = header.split(" ")[1];
-                if (jwtTokenUtil.isValidateToken(accessToken)) {
-                    Long memberId = jwtTokenUtil.getIdFromJWT(accessToken);
-                    MemberRole role = MemberRole.valueOf(jwtTokenUtil.getRoleFromJWT(accessToken));
-                    JwtToken jwtToken = new JwtToken(memberId, role);
-                    SecurityContextHolder.getContext().setAuthentication(jwtToken);
-                    filterChain.doFilter(request, response);
-                    return;
-                }
+        if (header == null || header.equalsIgnoreCase("")) {
+            throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);
+        }
+
+        if (header.startsWith(JwtTokenEnums.BEARER.getValue())) {
+            String accessToken = header.split(" ")[1];
+            if (jwtTokenUtil.isValidateToken(accessToken)) {
+                Long memberId = jwtTokenUtil.getIdFromJWT(accessToken);
+                MemberRole role = MemberRole.valueOf(jwtTokenUtil.getRoleFromJWT(accessToken));
+                JwtToken jwtToken = new JwtToken(memberId, role);
+                SecurityContextHolder.getContext().setAuthentication(jwtToken);
+                filterChain.doFilter(request, response);
             }
-            // 토큰 검증 실패 -> Exception
-        } else throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        // 토큰 검증 실패 -> Exception
+        else throw new CustomJwtException(JwtErrorCode.INVALID_TOKEN);
     }
 
     private boolean checkMethodWhitelist(String requestURI, String requestMethod) {
