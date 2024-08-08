@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
         inputs:
             tag:
-                description: 'Tag to deploy  (v1.0.0)'
+                description: 'Tag to deploy  (v0.33.8)'
                 required: true
 
 jobs:
@@ -16,22 +16,50 @@ jobs:
               with:
                   ref: ${{ github.event.inputs.tag }}
 
-            - name: Deploy to Prod NCP Server
-              uses: appleboy/ssh-action@master
-              with:
-                  host: ${{ secrets.PROD_NCP_SERVER_HOST }}
-                  username: ${{ secrets.PROD_NCP_SERVER_USERNAME }}
-                  password: ${{ secrets.PROD_NCP_SERVER_PASSWORD }}
-                  port: ${{ secrets.PROD_NCP_SERVER_PORT }}
-                  script: |
-                      docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:${{ github.event.inputs.tag }}
-                      docker stop spot-server-prod || true
-                      docker rm spot-server-prod || true
-                      docker run -d --name spot-server-prod \
-                        -p 8080:8080 \
-                        -e SPRING_DATASOURCE_URL=${{ secrets.PROD_DB_URL }} \
-                        -e SPRING_DATASOURCE_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
-                        -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
-                        -e TZ=Asia/Seoul \
-                        ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:${{ github.event.inputs.tag }}
-                      docker system prune -af
+            -   name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v2
+
+            -   name: Login to DockerHub
+                uses: docker/login-action@v2
+                with:
+                    username: ${{ secrets.DOCKERHUB_USERNAME }}
+                    password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            -   name: Build and push Docker image
+                uses: docker/build-push-action@v4
+                with:
+                    context: .
+                    push: true
+                    tags: ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.event.inputs.tag }}
+
+            -   name: Deploy to PROD - AWS EC2
+                uses: appleboy/ssh-action@master
+                with:
+                    host: ${{ secrets.PROD_AWS_SERVER_HOST }}
+                    username: ${{ secrets.PROD_AWS_SERVER_USERNAME }}
+                    password: ${{ secrets.PROD_AWS_SERVER_PASSWORD }}
+                    port: ${{ secrets.PROD_AWS_SERVER_PORT }}
+                    script: |
+                        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.event.inputs.tag }}
+                        docker stop spot-server-prod || true
+                        docker rm spot-server-prod || true
+                        docker run -d --name spot-server-prod \
+                          -p 8080:8080 \
+                          -e SPRING_PROFILES_ACTIVE=prod \
+                          -e SPRING_DATASOURCE_URL=${{ secrets.PROD_DB_URL }} \
+                          -e SPRING_DATASOURCE_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
+                          -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
+                          -e SPRING_JWT_SECRET=${{ secrets.JWT_SECRET }} \
+                          -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
+                          -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
+                          -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
+                          -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
+                          -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
+                          -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \
+                          -e AWS_S3_BUCKET_NAME=${{ secrets.PROD_AWS_S3_BUCKET_NAME }} \
+                          -e TZ=Asia/Seoul \
+                          -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+                          -e SENTRY_ENABLE_TRACING=true \
+                          -e SENTRY_ENVIRONMENT=prod \
+                          ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.event.inputs.tag }}
+                        docker system prune -af
