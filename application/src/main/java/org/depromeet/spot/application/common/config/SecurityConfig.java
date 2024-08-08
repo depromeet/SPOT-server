@@ -1,5 +1,6 @@
 package org.depromeet.spot.application.common.config;
 
+import org.depromeet.spot.application.common.exception.ExceptionHandlerFilter;
 import org.depromeet.spot.application.common.jwt.JwtAuthenticationFilter;
 import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.springframework.context.annotation.Bean;
@@ -51,7 +52,8 @@ public class SecurityConfig {
                 // UsernamePasswordAuthenticationFilter 필터 전에 jwt 필터가 먼저 동작하도록함.
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenUtil),
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
         return http.build();
     }
 }
