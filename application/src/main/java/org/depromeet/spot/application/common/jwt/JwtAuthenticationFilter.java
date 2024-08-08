@@ -53,13 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String requestURI = request.getRequestURI();
-
-        if (Arrays.stream(AUTH_WHITELIST).anyMatch(requestURI::startsWith)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         final String requestMethod = request.getMethod();
+
         if (checkMethodWhitelist(requestURI, requestMethod)) {
             filterChain.doFilter(request, response);
             return;
@@ -83,9 +78,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkMethodWhitelist(String requestURI, String requestMethod) {
+        if (Arrays.stream(AUTH_WHITELIST).anyMatch(requestURI::startsWith)) {
+            return true;
+        }
+
         Optional<String> matchUrl =
                 AUTH_METHOD_WHITELIST.keySet().stream().filter(requestURI::startsWith).findFirst();
-        if (AUTH_METHOD_WHITELIST.getOrDefault(matchUrl.get(), Set.of()).contains(requestMethod)) {
+        if (matchUrl.isPresent()
+                && AUTH_METHOD_WHITELIST
+                        .getOrDefault(matchUrl.get(), Set.of())
+                        .contains(requestMethod)) {
             log.warn("화이트리스트입니당! : {}, {}", requestURI, requestMethod);
             return true;
         }
