@@ -90,7 +90,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 && AUTH_METHOD_WHITELIST
                         .getOrDefault(matchUrl.get(), Set.of())
                         .contains(requestMethod)) {
-            log.warn("화이트리스트입니당! : {}, {}", requestURI, requestMethod);
             return true;
         }
         return false;
