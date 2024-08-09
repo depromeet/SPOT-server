@@ -1,7 +1,7 @@
 package org.depromeet.spot.application.common.config;
 
+import org.depromeet.spot.application.common.exception.ExceptionHandlerFilter;
 import org.depromeet.spot.application.common.jwt.JwtAuthenticationFilter;
-import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     private static final String[] AUTH_WHITELIST = {
         "/api/**",
@@ -50,8 +52,8 @@ public class SecurityConfig {
                                         .authenticated())
                 // UsernamePasswordAuthenticationFilter 필터 전에 jwt 필터가 먼저 동작하도록함.
                 .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenUtil),
-                        UsernamePasswordAuthenticationFilter.class);
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, JwtAuthenticationFilter.class);
         return http.build();
     }
 }

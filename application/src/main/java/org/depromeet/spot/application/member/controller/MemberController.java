@@ -86,7 +86,7 @@ public class MemberController {
         return memberUsecase.getAccessToken(idCode);
     }
 
-    @DeleteMapping("/{accessToken}")
+    @DeleteMapping("/delete/{accessToken}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "(개발용) Member 삭제 API")
     public Boolean deleteMember(
