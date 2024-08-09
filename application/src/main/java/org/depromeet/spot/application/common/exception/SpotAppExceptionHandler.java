@@ -24,4 +24,16 @@ public class SpotAppExceptionHandler {
 
         return ResponseEntity.status(httpStatus).body(response);
     }
+
+    @ExceptionHandler(CustomJwtException.class)
+    protected ResponseEntity<ErrorResponse> handleCustomJwtException(CustomJwtException e) {
+        var code = e.getJwtErrorCode().getCode();
+        var message = e.getJwtErrorCode().getMessage();
+        var httpStatus = e.getJwtErrorCode().getStatus();
+
+        log.error(EXCEPTION_LOG_TEMPLATE, code, message, e);
+        var response = ErrorResponse.from(e);
+
+        return ResponseEntity.status(httpStatus).body(response);
+    }
 }
