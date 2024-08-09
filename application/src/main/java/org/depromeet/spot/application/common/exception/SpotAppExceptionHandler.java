@@ -1,7 +1,11 @@
 package org.depromeet.spot.application.common.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.depromeet.spot.common.exception.BusinessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -35,5 +39,18 @@ public class SpotAppExceptionHandler {
         var response = ErrorResponse.from(e);
 
         return ResponseEntity.status(httpStatus).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult()
+                .getFieldErrors()
+                .forEach(
+                        error -> {
+                            errors.put(error.getField(), error.getDefaultMessage());
+                        });
+        return ResponseEntity.status(e.getStatusCode()).body(errors);
     }
 }
