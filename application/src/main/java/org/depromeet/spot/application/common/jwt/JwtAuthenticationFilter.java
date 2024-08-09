@@ -44,8 +44,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Map<String, Set<String>> AUTH_METHOD_WHITELIST =
             Map.of(
-                    "/api/v1/members", Set.of("GET", "POST"),
-                    "/api/v1/baseball-teams", Set.of("GET"));
+                    "/api/v1/members",
+                    Set.of("GET", "POST"),
+                    "/api/v1/members/delete",
+                    Set.of("DELETE"),
+                    "/api/v1/baseball-teams",
+                    Set.of("GET"));
 
     @Override
     protected void doFilterInternal(
