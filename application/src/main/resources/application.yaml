@@ -12,7 +12,6 @@ spring:
                 - aws
                 - jwt
                 - kakao
-                - monitoring
             dev:
                 - jpa
                 - aws
