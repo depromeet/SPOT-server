@@ -9,10 +9,10 @@ VALUES (1, '잠실 야구 경기장', 'main_image_a.jpg', 'seating_chart_a.jpg',
         0);
 
 -- Baseball Teams
-INSERT INTO baseball_teams (id, name, alias, logo, label_background_color, label_font_color)
-VALUES (1, 'Team A', 'A', 'logo_a.png', '#1F1F52', '#FFFFFF'),
-       (2, 'Team B', 'B', 'logo_b.png', '#1E4D9C', '#FFFFFF'),
-       (3, 'Team C', 'C', 'logo_c.png', '#D72E34', '#FFFFFF');
+INSERT INTO baseball_teams (id, name, alias, logo, label_font_color)
+VALUES (1, 'Team A', 'A', 'logo_a.png', '#FFFFFF'),
+       (2, 'Team B', 'B', 'logo_b.png', '#FFFFFF'),
+       (3, 'Team C', 'C', 'logo_c.png', '#FFFFFF');
 
 -- Stadium Home Teams
 INSERT INTO stadium_home_teams (id, stadium_id, team_id)
