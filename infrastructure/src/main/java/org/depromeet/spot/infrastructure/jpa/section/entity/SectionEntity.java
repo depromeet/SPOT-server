@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-import org.depromeet.spot.domain.common.HexCode;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.infrastructure.jpa.common.entity.BaseEntity;
 
@@ -26,15 +25,8 @@ public class SectionEntity extends BaseEntity {
     @Column(name = "alias", length = 20)
     private String alias;
 
-    @Column(name = "label_color", nullable = false)
-    private String labelColor;
-
     public static SectionEntity from(Section section) {
-        return new SectionEntity(
-                section.getStadiumId(),
-                section.getName(),
-                section.getAlias(),
-                section.getLabelColor().getValue());
+        return new SectionEntity(section.getStadiumId(), section.getName(), section.getAlias());
     }
 
     public static SectionEntity withSection(Section section) {
@@ -46,11 +38,9 @@ public class SectionEntity extends BaseEntity {
         stadiumId = section.getStadiumId();
         name = section.getName();
         alias = section.getAlias();
-        labelColor = section.getLabelColor().getValue();
     }
 
     public Section toDomain() {
-        HexCode labelHexColor = new HexCode(labelColor);
-        return new Section(this.getId(), stadiumId, name, alias, labelHexColor);
+        return new Section(this.getId(), stadiumId, name, alias);
     }
 }

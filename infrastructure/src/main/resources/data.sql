@@ -22,10 +22,10 @@ VALUES (1, 1, 1),
        (4, 1, 2);
 
 -- Stadium Sections
-INSERT INTO sections (id, stadium_id, name, alias, label_color)
-VALUES (1, 1, '오렌지석', '응원석', '#FFFFFF'),
-       (2, 1, '네이비석', '프리미엄석', '#B3B248'),
-       (3, 1, '레드석', null, '#CA53A9');
+INSERT INTO sections (id, stadium_id, name, alias)
+VALUES (1, 1, '오렌지석', '응원석'),
+       (2, 1, '네이비석', '프리미엄석'),
+       (3, 1, '레드석', null);
 
 -- Block
 INSERT INTO blocks (id, stadium_id, section_id, code, max_rows)
