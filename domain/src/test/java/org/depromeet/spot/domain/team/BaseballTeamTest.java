@@ -17,7 +17,6 @@ class BaseballTeamTest {
     @NullAndEmptySource
     void name이_null_또는_blank일_때_BaseballTeam을_생성할_수_없다(String name) {
         // given
-        HexCode backgroundColor = new HexCode("#FFFFFF");
         HexCode fontColor = new HexCode("#FFFFFF");
 
         // when
@@ -27,12 +26,7 @@ class BaseballTeamTest {
                         assertThatThrownBy(
                                         () ->
                                                 new BaseballTeam(
-                                                        1L,
-                                                        name,
-                                                        "alias",
-                                                        "logo",
-                                                        backgroundColor,
-                                                        fontColor))
+                                                        1L, name, "alias", "logo", fontColor))
                                 .isInstanceOf(InvalidBaseballTeamNameException.class),
                 () ->
                         assertThatThrownBy(
@@ -48,16 +42,12 @@ class BaseballTeamTest {
     @Test
     void name_길이는_20글자를_초과할_수_없다() {
         // given
-        HexCode backgroundColor = new HexCode("#FFFFFF");
         HexCode fontColor = new HexCode("#FFFFFF");
         final String name = "012345678901234567890";
 
         // when
         // then
-        assertThatThrownBy(
-                        () ->
-                                new BaseballTeam(
-                                        1L, name, "alias", "logo", backgroundColor, fontColor))
+        assertThatThrownBy(() -> new BaseballTeam(1L, name, "alias", "logo", fontColor))
                 .isInstanceOf(InvalidBaseballTeamNameException.class);
     }
 
@@ -65,7 +55,6 @@ class BaseballTeamTest {
     @NullAndEmptySource
     void alias가_null_또는_blank일_때_BaseballTeam을_생성할_수_없다(String alias) {
         // given
-        HexCode backgroundColor = new HexCode("#FFFFFF");
         HexCode fontColor = new HexCode("#FFFFFF");
 
         // when
@@ -75,12 +64,7 @@ class BaseballTeamTest {
                         assertThatThrownBy(
                                         () ->
                                                 new BaseballTeam(
-                                                        1L,
-                                                        "name",
-                                                        alias,
-                                                        "logo",
-                                                        backgroundColor,
-                                                        fontColor))
+                                                        1L, "name", alias, "logo", fontColor))
                                 .isInstanceOf(InvalidBaseballAliasNameException.class),
                 () ->
                         assertThatThrownBy(
@@ -89,6 +73,7 @@ class BaseballTeamTest {
                                                         .name("name")
                                                         .alias(alias)
                                                         .logo("logo")
+                                                        .labelFontColor(fontColor)
                                                         .build())
                                 .isInstanceOf(InvalidBaseballAliasNameException.class));
     }
@@ -96,16 +81,12 @@ class BaseballTeamTest {
     @Test
     void alias_길이는_10글자를_초과할_수_없다() {
         // given
-        HexCode backgroundColor = new HexCode("#FFFFFF");
         HexCode fontColor = new HexCode("#FFFFFF");
         final String alias = "01234567890";
 
         // when
         // then
-        assertThatThrownBy(
-                        () ->
-                                new BaseballTeam(
-                                        1L, "name", alias, "logo", backgroundColor, fontColor))
+        assertThatThrownBy(() -> new BaseballTeam(1L, "name", alias, "logo", fontColor))
                 .isInstanceOf(InvalidBaseballAliasNameException.class);
     }
 
@@ -113,7 +94,6 @@ class BaseballTeamTest {
     @NullAndEmptySource
     void logo가_null_또는_blank일_때_BaseballTeam을_생성할_수_없다(String logo) {
         // given
-        HexCode backgroundColor = new HexCode("#FFFFFF");
         HexCode fontColor = new HexCode("#FFFFFF");
 
         // when
@@ -123,12 +103,7 @@ class BaseballTeamTest {
                         assertThatThrownBy(
                                         () ->
                                                 new BaseballTeam(
-                                                        1L,
-                                                        "name",
-                                                        "alias",
-                                                        logo,
-                                                        backgroundColor,
-                                                        fontColor))
+                                                        1L, "name", "alias", logo, fontColor))
                                 .isInstanceOf(EmptyTeamLogoException.class),
                 () ->
                         assertThatThrownBy(
@@ -137,6 +112,7 @@ class BaseballTeamTest {
                                                         .name("name")
                                                         .alias("alias")
                                                         .logo(logo)
+                                                        .labelFontColor(fontColor)
                                                         .build())
                                 .isInstanceOf(EmptyTeamLogoException.class));
     }
