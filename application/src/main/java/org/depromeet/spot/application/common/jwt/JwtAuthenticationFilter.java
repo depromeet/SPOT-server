@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // header가 null이거나 빈 문자열이면 안됨.
-        if (header == null || header.equalsIgnoreCase("")) {
+        if (header == null || header.isEmpty()) {
             throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);
         }
 
