@@ -61,5 +61,6 @@ jobs:
                           -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
                           -e SENTRY_ENABLE_TRACING=true \
                           -e SENTRY_ENVIRONMENT=prod \
+                          -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
                           ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.event.inputs.tag }}
                         docker system prune -af
