@@ -18,7 +18,6 @@
         <root level="ERROR">
             <appender-ref ref="CONSOLE_APPENDER"/>
             <appender-ref ref="SENTRY_APPENDER"/>
-<!--            <appender-ref ref="LOKI_APPENDER"/>-->
 
             <appender name="LOKI_APPENDER" class="com.github.loki4j.logback.Loki4jAppender">
                 <http>
