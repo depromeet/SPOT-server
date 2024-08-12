@@ -39,7 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/favicon.ico",
         "/actuator",
         "/api/v1/levels/info",
-        "/kakao"
+        "/kakao",
+        "/api/v1/jwts",
     };
 
     private static final Map<String, Set<String>> AUTH_METHOD_WHITELIST =

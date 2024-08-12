@@ -85,12 +85,12 @@ public class JwtTokenUtil {
         return Jwts.parserBuilder().setSigningKey(createSignature()).build().parseClaimsJws(token);
     }
 
-    public boolean isValidateToken(String token) {
-        if (token == null) {
+    public boolean isValidateToken(String accessToken) {
+        if (accessToken == null) {
             throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);
         }
         try {
-            Jws<Claims> claims = getClaims(token);
+            Jws<Claims> claims = getClaims(accessToken);
             return true;
         } catch (ExpiredJwtException exception) {
             log.error("Token Expired");
@@ -130,7 +130,11 @@ public class JwtTokenUtil {
 
     public String getAccessToken(HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization");
-        isValidateToken(jwtToken);
-        return jwtToken.split(" ")[1];
+        if (jwtToken == null || jwtToken.isEmpty()) {
+            throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);
+        }
+        String accessToken = jwtToken.split(" ")[1];
+        isValidateToken(accessToken);
+        return accessToken;
     }
 }
