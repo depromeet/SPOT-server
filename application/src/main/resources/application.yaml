@@ -17,12 +17,14 @@ spring:
                 - aws
                 - jwt
                 - kakao
+                - monitoring
             prod:
                 - jpa
                 - aws
                 - jwt
                 - kakao
                 - sentry
+                - monitoring
     servlet:
         multipart:
             max-file-size: 10MB
