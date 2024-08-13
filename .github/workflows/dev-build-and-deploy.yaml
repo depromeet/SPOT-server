@@ -109,6 +109,7 @@ jobs:
                     docker run -d --name spot-server-dev \
                       -p 8080:8080 \
                       -p 9292:9292 \
+                      -p 3100:3100 \
                       -e SPRING_PROFILES_ACTIVE=dev \
                       -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
                       -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
