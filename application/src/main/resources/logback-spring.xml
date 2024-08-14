@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="5 seconds">
-    <appender name="LOKI_APPENDER" class="com.github.loki4j.logback.Loki4jAppender">
-        <http>
-            <url>http://${LOKI_URL}:3100/loki/api/v1/push</url>
-        </http>
-        <format>
-            <label>
-                <pattern>app=${name},host=${HOSTNAME},level=%level</pattern>
-                <readMarkers>true</readMarkers>
-            </label>
-            <message>
-                <pattern>%highlight([%-5level]) %d{yy-MM-dd HH:mm:ss.SSS} %green([%thread]) %yellow([traceId=%X{traceId}]) %cyan([%logger{0}:%line])-%message%n</pattern>
-            </message>
-            <sortByTime>true</sortByTime>
-        </format>
-    </appender>
     <include resource="appenders/console-appender.xml"/>
     <springProfile name="local">
         <root level="INFO">
