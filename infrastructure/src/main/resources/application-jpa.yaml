@@ -2,7 +2,7 @@ spring:
     datasource:
         url: jdbc:mysql://localhost:3306/spot
         username: test1234
-        password: test1234
+        password: test1234!
         driver-class-name: com.mysql.cj.jdbc.Driver
 
     jpa:
@@ -13,6 +13,7 @@ spring:
         properties:
             hibernate:
                 use_sql_comments: true
+                default_batch_fetch_size: 1000
         defer-datasource-initialization: true
     sql:
         init:
