@@ -2,7 +2,10 @@ package org.depromeet.spot.infrastructure.jpa.review.repository;
 
 import static org.depromeet.spot.infrastructure.jpa.block.entity.QBlockEntity.blockEntity;
 import static org.depromeet.spot.infrastructure.jpa.block.entity.QBlockRowEntity.blockRowEntity;
+import static org.depromeet.spot.infrastructure.jpa.member.entity.QLevelEntity.levelEntity;
+import static org.depromeet.spot.infrastructure.jpa.member.entity.QMemberEntity.memberEntity;
 import static org.depromeet.spot.infrastructure.jpa.review.entity.QReviewEntity.reviewEntity;
+import static org.depromeet.spot.infrastructure.jpa.review.entity.keyword.QReviewKeywordEntity.reviewKeywordEntity;
 import static org.depromeet.spot.infrastructure.jpa.seat.entity.QSeatEntity.seatEntity;
 import static org.depromeet.spot.infrastructure.jpa.section.entity.QSectionEntity.sectionEntity;
 import static org.depromeet.spot.infrastructure.jpa.stadium.entity.QStadiumEntity.stadiumEntity;
@@ -49,6 +52,12 @@ public class ReviewCustomRepository {
                         .leftJoin(reviewEntity.row, blockRowEntity)
                         .fetchJoin()
                         .leftJoin(reviewEntity.seat, seatEntity)
+                        .fetchJoin()
+                        .leftJoin(reviewEntity.keywords, reviewKeywordEntity)
+                        .fetchJoin()
+                        .leftJoin(reviewEntity.member, memberEntity)
+                        .fetchJoin()
+                        .leftJoin(memberEntity.level, levelEntity)
                         .fetchJoin()
                         .where(builder)
                         .orderBy(reviewEntity.dateTime.desc())
