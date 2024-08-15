@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
@@ -17,7 +17,7 @@ public record CreateAdminReviewRequest(
         Integer seatNumber,
         List<String> good,
         List<String> bad,
-        @NotEmpty String content,
+        @NotBlank String content,
         @NotNull String dateTime) {
 
     public CreateAdminReviewCommand toCommand(List<MultipartFile> images) {
