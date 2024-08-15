@@ -12,6 +12,7 @@ import static org.depromeet.spot.infrastructure.jpa.stadium.entity.QStadiumEntit
 
 import java.util.List;
 
+import org.depromeet.spot.infrastructure.jpa.block.entity.QBlockRowEntity;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -40,6 +41,7 @@ public class ReviewCustomRepository {
             Pageable pageable) {
         BooleanBuilder builder =
                 buildConditions(stadiumId, blockCode, rowNumber, seatNumber, year, month);
+        QBlockRowEntity rowEntity = new QBlockRowEntity("br");
         List<ReviewEntity> results =
                 queryFactory
                         .selectFrom(reviewEntity)
@@ -52,6 +54,8 @@ public class ReviewCustomRepository {
                         .leftJoin(reviewEntity.row, blockRowEntity)
                         .fetchJoin()
                         .leftJoin(reviewEntity.seat, seatEntity)
+                        .fetchJoin()
+                        .leftJoin(seatEntity.row, rowEntity)
                         .fetchJoin()
                         .leftJoin(reviewEntity.keywords, reviewKeywordEntity)
                         .fetchJoin()
