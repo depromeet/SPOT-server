@@ -95,7 +95,6 @@ public class CreateReviewService implements CreateReviewUsecase {
         Stadium stadium = stadiumReadUsecase.findById(block.getStadiumId());
         Section section = sectionReadUsecase.findById(block.getSectionId());
         Seat seat = getSeat(block.getId(), command.seatNumber());
-        List<String> imageUrls = getImageUrl(command.images());
 
         Review review =
                 Review.builder()
@@ -110,6 +109,7 @@ public class CreateReviewService implements CreateReviewUsecase {
                         .build();
 
         Map<Long, Keyword> keywordMap = processKeywords(review, command.good(), command.bad());
+        List<String> imageUrls = getImageUrl(command.images());
         processImages(review, imageUrls);
 
         Review savedReview = reviewRepository.save(review);
