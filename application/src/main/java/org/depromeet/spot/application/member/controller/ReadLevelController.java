@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Positive;
 import org.depromeet.spot.application.member.dto.response.LevelUpDialogInfo;
 import org.depromeet.spot.application.member.dto.response.LevelUpTableResponse;
 import org.depromeet.spot.domain.member.Level;
-import org.depromeet.spot.usecase.port.in.member.LevelUsecase;
+import org.depromeet.spot.usecase.port.in.member.level.ReadLevelUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,20 +26,20 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/levels")
 public class ReadLevelController {
 
-    private final LevelUsecase levelUsecase;
+    private final ReadLevelUsecase readLevelUsecase;
 
     @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "레벨업 조건 테이블 조회 API")
     public List<LevelUpTableResponse> getLevelUpTable() {
-        return levelUsecase.findAllLevels().stream().map(LevelUpTableResponse::from).toList();
+        return readLevelUsecase.findAllLevels().stream().map(LevelUpTableResponse::from).toList();
     }
 
     @GetMapping("/up/info")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "레벨업 다이얼로그 조회 API")
     public LevelUpDialogInfo getLevelUpDialogInfo(@RequestParam @NotNull @Positive int nextLevel) {
-        Level level = levelUsecase.findLevelUpDialogInfo(nextLevel);
+        Level level = readLevelUsecase.findLevelUpDialogInfo(nextLevel);
         return LevelUpDialogInfo.from(level);
     }
 }

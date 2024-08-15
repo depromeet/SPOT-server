@@ -7,4 +7,6 @@ import org.depromeet.spot.domain.block.BlockRow;
 public interface ReadBlockRowUsecase {
 
     List<BlockRow> findAllByBlock(Long blockId);
+
+    BlockRow findBy(long stadiumId, String blockCode, int rowNumber);
 }

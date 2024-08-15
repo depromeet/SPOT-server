@@ -52,7 +52,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public Member findById(Long memberId) {
         MemberEntity entity =
-                memberJpaRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+                memberJpaRepository
+                        .findByIdWithLevel(memberId)
+                        .orElseThrow(MemberNotFoundException::new);
         return entity.toDomain();
     }
 

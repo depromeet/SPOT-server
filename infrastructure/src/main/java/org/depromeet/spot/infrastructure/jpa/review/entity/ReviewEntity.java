@@ -75,10 +75,7 @@ public class ReviewEntity extends BaseEntity {
     private BlockRowEntity row;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "seat_id",
-            nullable = false,
-            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "seat_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private SeatEntity seat;
 
     @Column(name = "date_time", nullable = false)
@@ -96,6 +93,12 @@ public class ReviewEntity extends BaseEntity {
     private List<ReviewKeywordEntity> keywords;
 
     public static ReviewEntity from(Review review) {
+        SeatEntity seatEntity;
+        if (review.getSeat() == null) {
+            seatEntity = null;
+        } else {
+            seatEntity = SeatEntity.withSeat(review.getSeat());
+        }
         ReviewEntity entity =
                 new ReviewEntity(
                         MemberEntity.withMember(review.getMember()),
@@ -103,7 +106,7 @@ public class ReviewEntity extends BaseEntity {
                         SectionEntity.withSection(review.getSection()),
                         BlockEntity.withBlock(review.getBlock()),
                         BlockRowEntity.withBlockRow(review.getRow()),
-                        SeatEntity.withSeat(review.getSeat()),
+                        seatEntity,
                         review.getDateTime(),
                         review.getContent(),
                         new ArrayList<>(),
@@ -114,12 +117,12 @@ public class ReviewEntity extends BaseEntity {
         entity.images =
                 review.getImages().stream()
                         .map(image -> ReviewImageEntity.from(image, entity))
-                        .collect(Collectors.toList());
+                        .toList();
 
         entity.keywords =
                 review.getKeywords().stream()
                         .map(keyword -> ReviewKeywordEntity.from(keyword, entity))
-                        .collect(Collectors.toList());
+                        .toList();
 
         return entity;
     }
@@ -133,7 +136,7 @@ public class ReviewEntity extends BaseEntity {
                         .section(this.section.toDomain())
                         .block(this.block.toDomain())
                         .row(this.row.toDomain())
-                        .seat(this.seat.toDomain())
+                        .seat((this.seat == null) ? null : this.seat.toDomain())
                         .dateTime(this.dateTime)
                         .content(this.content)
                         .build();

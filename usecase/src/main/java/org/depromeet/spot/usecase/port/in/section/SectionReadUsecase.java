@@ -16,6 +16,8 @@ public interface SectionReadUsecase {
 
     void checkIsExistsInStadium(Long stadiumId, Long sectionId);
 
+    Section findById(Long id);
+
     @Getter
     @AllArgsConstructor
     class StadiumSections {

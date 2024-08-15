@@ -13,6 +13,16 @@ public interface BlockRowJpaRepository extends JpaRepository<BlockRowEntity, Lon
 
     @Query(
             "select r from BlockRowEntity r "
+                    + "join fetch r.block b "
+                    + "where b.stadiumId = :stadiumId and b.code = :blockCode and r.number = :rowNumber")
+    BlockRowEntity findByBlockAndNumber(
+            @Param("stadiumId") Long stadiumId,
+            @Param("blockCode") String blockCode,
+            @Param("rowNumber") int rowNumber);
+
+    @Query(
+            "select r from BlockRowEntity r "
+                    + "join BlockEntity b on b.id = r.block.id "
                     + "where r.block.stadiumId = :stadiumId "
                     + "and r.block.code = :code "
                     + "order by r.number asc")

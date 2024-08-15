@@ -4,9 +4,9 @@ import java.util.Set;
 
 import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.usecase.port.in.member.ReadLevelUsecase;
 import org.depromeet.spot.usecase.port.in.member.ReadMemberUsecase;
 import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
+import org.depromeet.spot.usecase.port.in.member.level.ReadLevelUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.springframework.stereotype.Service;
