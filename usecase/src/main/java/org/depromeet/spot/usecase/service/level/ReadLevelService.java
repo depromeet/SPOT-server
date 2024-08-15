@@ -37,6 +37,9 @@ public class ReadLevelService implements ReadLevelUsecase {
     }
 
     @Override
+    @Cacheable(
+            cacheNames = {"levelValuesCache"},
+            key = "#value")
     public Level findByValue(final int value) {
         return levelRepository.findByValue(value);
     }
