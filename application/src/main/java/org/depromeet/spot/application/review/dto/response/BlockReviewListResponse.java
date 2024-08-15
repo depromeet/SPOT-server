@@ -1,7 +1,6 @@
 package org.depromeet.spot.application.review.dto.response;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockKeywordInfo;
@@ -29,19 +28,13 @@ public record BlockReviewListResponse(
             Integer month) {
 
         List<BaseReviewResponse> reviewResponses =
-                result.reviews().stream()
-                        .map(BaseReviewResponse::from)
-                        .collect(Collectors.toList());
+                result.reviews().stream().map(BaseReviewResponse::from).toList();
 
         List<KeywordCountResponse> keywordResponses =
-                result.topKeywords().stream()
-                        .map(KeywordCountResponse::from)
-                        .collect(Collectors.toList());
+                result.topKeywords().stream().map(KeywordCountResponse::from).toList();
 
         List<TopReviewImageResponse> topReviewImageResponses =
-                result.topReviewImages().stream()
-                        .map(TopReviewImageResponse::from)
-                        .collect(Collectors.toList());
+                result.topReviewImages().stream().map(TopReviewImageResponse::from).toList();
 
         FilterInfo filter = new FilterInfo(rowNumber, seatNumber, year, month);
 
@@ -63,6 +56,7 @@ public record BlockReviewListResponse(
     }
 
     public record KeywordCountResponse(String content, Long count, Boolean isPositive) {
+
         public static KeywordCountResponse from(BlockKeywordInfo info) {
             return new KeywordCountResponse(info.content(), info.count(), info.isPositive());
         }
@@ -70,6 +64,7 @@ public record BlockReviewListResponse(
 
     public record TopReviewImageResponse(
             String url, Long reviewId, String blockCode, Integer rowNumber, Integer seatNumber) {
+
         public static TopReviewImageResponse from(TopReviewImage image) {
             return new TopReviewImageResponse(
                     image.getUrl(),
