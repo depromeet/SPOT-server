@@ -9,20 +9,22 @@ spring:
         group:
             local:
                 - jpa
-                - ncp
+                - aws
                 - jwt
                 - kakao
             dev:
                 - jpa
-                - ncp
+                - aws
                 - jwt
                 - kakao
+                - monitoring
             prod:
                 - jpa
-                - ncp
+                - aws
                 - jwt
                 - kakao
                 - sentry
+                - monitoring
     servlet:
         multipart:
             max-file-size: 10MB

@@ -20,7 +20,7 @@ public class ObjectStorageConfig {
 
     private final ObjectStorageProperties objectStorageProperties;
     private final Regions clientRegion = Regions.AP_NORTHEAST_2;
-    public static final String BUCKET_NAME = "spot-image-bucket-v2";
+    private static final String REGION = "kr-standard";
 
     @Bean
     public AmazonS3 getAmazonS3() {

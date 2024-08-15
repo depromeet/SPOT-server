@@ -98,16 +98,18 @@ jobs:
           - name: Deploy to Dev NCP Server
             uses: appleboy/ssh-action@master
             with:
-                host: ${{ secrets.DEV_NCP_SERVER_HOST }}
-                username: ${{ secrets.DEV_NCP_SERVER_USERNAME }}
-                password: ${{ secrets.DEV_NCP_SERVER_PASSWORD }}
-                port: ${{ secrets.DEV_NCP_SERVER_PORT }}
+                host: ${{ secrets.DEV_SERVER_HOST }}
+                username: ${{ secrets.DEV_SERVER_USERNAME }}
+                password: ${{ secrets.DEV_SERVER_PASSWORD }}
+                port: ${{ secrets.DEV_SERVER_PORT }}
                 script: |
                     docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                     docker stop spot-server-dev || true
                     docker rm spot-server-dev || true
                     docker run -d --name spot-server-dev \
                       -p 8080:8080 \
+                      -p 9292:9292 \
+                      -p 3100:3100 \
                       -e SPRING_PROFILES_ACTIVE=dev \
                       -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
                       -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
@@ -117,12 +119,14 @@ jobs:
                       -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
                       -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
                       -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
-                      -e NCP_OBJECT_STORAGE_ACCESS_KEY=${{ secrets.NCP_OBJECT_STORAGE_ACCESS_KEY }} \
-                      -e NCP_OBJECT_STORAGE_SECRET_KEY=${{ secrets.NCP_OBJECT_STORAGE_SECRET_KEY }} \
+                      -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
+                      -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \
+                      -e AWS_S3_BUCKET_NAME=${{ secrets.DEV_AWS_S3_BUCKET_NAME }} \
                       -e TZ=Asia/Seoul \
                       -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
                       -e SENTRY_ENABLE_TRACING=true \
                       -e SENTRY_ENVIRONMENT=prod \
+                      -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
                       ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                     docker system prune -af
 

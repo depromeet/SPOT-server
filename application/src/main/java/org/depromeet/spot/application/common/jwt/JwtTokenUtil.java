@@ -12,6 +12,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.depromeet.spot.application.common.exception.CustomJwtException;
+import org.depromeet.spot.application.common.exception.JwtErrorCode;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,18 +85,22 @@ public class JwtTokenUtil {
         return Jwts.parserBuilder().setSigningKey(createSignature()).build().parseClaimsJws(token);
     }
 
-    public boolean isValidateToken(String token) {
+    public boolean isValidateToken(String accessToken) {
+        if (accessToken == null) {
+            throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);
+        }
         try {
-            Jws<Claims> claims = getClaims(token);
+            Jws<Claims> claims = getClaims(accessToken);
             return true;
         } catch (ExpiredJwtException exception) {
             log.error("Token Expired");
-            throw new ExpiredJwtException(exception.getHeader(), exception.getClaims(), token);
-        } catch (UnsupportedJwtException | WeakKeyException exception) {
+            throw new CustomJwtException(JwtErrorCode.EXPIRED_TOKEN);
+        } catch (UnsupportedJwtException
+                | WeakKeyException
+                | MalformedJwtException
+                | IllegalArgumentException exception) {
             log.error("Unsupported Token");
-            throw new UnsupportedJwtException("지원되지 않는 토큰입니다.");
-        } catch (MalformedJwtException | IllegalArgumentException exception) {
-            throw new MalformedJwtException("잘못된 형식의 토큰입니다.");
+            throw new CustomJwtException(JwtErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -124,6 +130,11 @@ public class JwtTokenUtil {
 
     public String getAccessToken(HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization");
-        return jwtToken.split(" ")[1];
+        if (jwtToken == null || jwtToken.isEmpty()) {
+            throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);
+        }
+        String accessToken = jwtToken.split(" ")[1];
+        isValidateToken(accessToken);
+        return accessToken;
     }
 }

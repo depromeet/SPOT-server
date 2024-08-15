@@ -1,5 +1,7 @@
 package org.depromeet.spot.infrastructure.jpa.oauth;
 
+import org.depromeet.spot.common.exception.oauth.OauthException.InternalOauthServerException;
+import org.depromeet.spot.common.exception.oauth.OauthException.InvalidAcessTokenException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.KakaoTokenEntity;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.KakaoUserInfoEntity;
@@ -103,12 +105,10 @@ public class OauthRepositoryImpl implements OauthRepository {
                         // TODO : Custom Exception
                         .onStatus(
                                 HttpStatusCode::is4xxClientError,
-                                clientResponse ->
-                                        Mono.error(new RuntimeException("Invalid Parameter")))
+                                clientResponse -> Mono.error(new InvalidAcessTokenException()))
                         .onStatus(
                                 HttpStatusCode::is5xxServerError,
-                                clientResponse ->
-                                        Mono.error(new RuntimeException("Internal Server Error")))
+                                clientResponse -> Mono.error(new InternalOauthServerException()))
                         .bodyToMono(KakaoUserInfoEntity.class)
                         .block();
 

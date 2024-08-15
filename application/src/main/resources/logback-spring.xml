@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="5 seconds">
     <include resource="appenders/console-appender.xml"/>
-
     <springProfile name="local">
         <root level="INFO">
             <appender-ref ref="CONSOLE_APPENDER"/>
+            <appender-ref ref="LOKI_APPENDER"/>
         </root>
     </springProfile>
 
     <springProfile name="dev">
         <root level="INFO">
             <appender-ref ref="CONSOLE_APPENDER"/>
+            <appender-ref ref="LOKI_APPENDER"/>
         </root>
     </springProfile>
 
