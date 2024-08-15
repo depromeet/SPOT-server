@@ -14,7 +14,12 @@ public interface CreateReviewUsecase {
     CreateReviewResult create(
             Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command);
 
-    void createAdmin(long blockId, int rowNumber, Long memberId, CreateAdminReviewCommand command);
+    void createAdmin(
+            long stadiumId,
+            String blockCode,
+            int rowNumber,
+            Long memberId,
+            CreateAdminReviewCommand command);
 
     @Builder
     record CreateReviewCommand(

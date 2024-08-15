@@ -27,4 +27,11 @@ public class BlockRowRepositoryImpl implements BlockRowRepository {
                 blockRowJpaRepository.findAllByBlockIdOrderByNumberAsc(blockId);
         return entities.stream().map(BlockRowEntity::toDomain).toList();
     }
+
+    @Override
+    public BlockRow findBy(long stadiumId, String blockCode, int rowNumber) {
+        BlockRowEntity entity =
+                blockRowJpaRepository.findByBlockAndNumber(stadiumId, blockCode, rowNumber);
+        return entity.toDomain();
+    }
 }

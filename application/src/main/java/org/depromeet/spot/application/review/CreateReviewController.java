@@ -55,13 +55,15 @@ public class CreateReviewController {
     @CurrentMember
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "[어드민] 특정 열에 신규 리뷰를 추가한다.")
-    @PostMapping(value = "/blocks/{blockId}/rows/{rowNumber}/reviews")
+    @PostMapping(value = "/stadiums/{stadiumId}/blocks/{blockCode}/rows/{rowNumber}/reviews")
     public void createAll(
-            @PathVariable @Positive @NotNull final long blockId,
+            @PathVariable @Positive @NotNull final long stadiumId,
+            @PathVariable @Positive @NotNull final String blockCode,
             @PathVariable @Positive @NotNull final int rowNumber,
             @Parameter(hidden = true) Long memberId,
             @RequestPart @Valid CreateAdminReviewRequest data,
             @RequestPart @Size(min = 1, max = 3) List<MultipartFile> images) {
-        createReviewUsecase.createAdmin(blockId, rowNumber, memberId, data.toCommand(images));
+        createReviewUsecase.createAdmin(
+                stadiumId, blockCode, rowNumber, memberId, data.toCommand(images));
     }
 }

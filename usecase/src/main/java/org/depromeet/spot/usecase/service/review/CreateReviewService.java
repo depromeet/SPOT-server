@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.depromeet.spot.domain.block.Block;
+import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.media.MediaProperty;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
@@ -13,10 +14,14 @@ import org.depromeet.spot.domain.review.image.ReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.seat.Seat;
-import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase;
+import org.depromeet.spot.domain.section.Section;
+import org.depromeet.spot.domain.stadium.Stadium;
+import org.depromeet.spot.usecase.port.in.block.ReadBlockRowUsecase;
 import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
+import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase;
+import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.out.media.ImageUploadPort;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
@@ -43,13 +48,14 @@ public class CreateReviewService implements CreateReviewUsecase {
     private final UpdateMemberUsecase updateMemberUsecase;
     private final ReadReviewUsecase readReviewUsecase;
     private final ImageUploadPort imageUploadPort;
-    private final BlockReadUsecase blockReadUsecase;
+    private final StadiumReadUsecase stadiumReadUsecase;
+    private final SectionReadUsecase sectionReadUsecase;
+    private final ReadBlockRowUsecase readBlockRowUsecase;
 
     @Override
     @Transactional
     public CreateReviewResult create(
             Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command) {
-        // ToDo: orElseThrow not found exception 처리하기
         Member member = memberRepository.findById(memberId);
         Seat seat = seatRepository.findByIdWith(blockId, seatNumber);
 
@@ -77,20 +83,27 @@ public class CreateReviewService implements CreateReviewUsecase {
     @Override
     @Transactional
     public void createAdmin(
-            long blockId, int rowNumber, Long memberId, CreateAdminReviewCommand command) {
+            long stadiumId,
+            String blockCode,
+            int rowNumber,
+            Long memberId,
+            CreateAdminReviewCommand command) {
 
         Member member = memberRepository.findById(memberId);
-        Block block = blockReadUsecase.findById(blockId);
-        Seat seat = getSeat(blockId, command.seatNumber());
+        BlockRow blockRow = readBlockRowUsecase.findBy(stadiumId, blockCode, rowNumber);
+        Block block = blockRow.getBlock();
+        Stadium stadium = stadiumReadUsecase.findById(block.getStadiumId());
+        Section section = sectionReadUsecase.findById(block.getSectionId());
+        Seat seat = getSeat(block.getId(), command.seatNumber());
         List<String> imageUrls = getImageUrl(command.images());
 
         Review review =
                 Review.builder()
                         .member(member)
-                        .stadium(block.getStadium())
-                        .section(block.getSection())
+                        .stadium(stadium)
+                        .section(section)
                         .block(block)
-                        .row(seat.getRow())
+                        .row(blockRow)
                         .seat(seat)
                         .dateTime(command.dateTime())
                         .content(command.content())

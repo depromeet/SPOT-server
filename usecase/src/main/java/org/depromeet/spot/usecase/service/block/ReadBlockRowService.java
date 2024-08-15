@@ -21,4 +21,9 @@ public class ReadBlockRowService implements ReadBlockRowUsecase {
     public List<BlockRow> findAllByBlock(Long blockId) {
         return blockRowRepository.findAllByBlock(blockId);
     }
+
+    @Override
+    public BlockRow findBy(long stadiumId, String blockCode, int rowNumber) {
+        return blockRowRepository.findBy(stadiumId, blockCode, rowNumber);
+    }
 }

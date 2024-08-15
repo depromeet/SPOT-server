@@ -2,6 +2,7 @@ package org.depromeet.spot.infrastructure.jpa.section.repository;
 
 import java.util.List;
 
+import org.depromeet.spot.common.exception.section.SectionException.SectionNotFoundException;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.infrastructure.jpa.section.entity.SectionEntity;
 import org.depromeet.spot.usecase.port.out.section.SectionRepository;
@@ -36,5 +37,12 @@ public class SectionRepositoryImpl implements SectionRepository {
     @Override
     public boolean existsInStadium(Long stadiumId, Long sectionId) {
         return sectionJpaRepository.existsByStadiumIdAndId(stadiumId, sectionId);
+    }
+
+    @Override
+    public Section findById(Long id) {
+        SectionEntity entity =
+                sectionJpaRepository.findById(id).orElseThrow(SectionNotFoundException::new);
+        return entity.toDomain();
     }
 }
