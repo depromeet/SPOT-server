@@ -14,7 +14,6 @@ import org.depromeet.spot.application.review.dto.response.BaseReviewResponse;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewResult;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,16 +54,14 @@ public class CreateReviewController {
 
     @CurrentMember
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "[어드민] 특정 블럭에 신규 리뷰들을 추가한다.")
-    @PostMapping(
-            value = "/blocks/{blockId}/reviews",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "[어드민] 특정 열에 신규 리뷰를 추가한다.")
+    @PostMapping(value = "/blocks/{blockId}/rows/{rowNumber}/reviews")
     public void createAll(
-            @PathVariable @Positive @NotNull final Long blockId,
+            @PathVariable @Positive @NotNull final long blockId,
+            @PathVariable @Positive @NotNull final int rowNumber,
             @Parameter(hidden = true) Long memberId,
-            @RequestPart("requests") @Valid List<CreateAdminReviewRequest> request,
-            @RequestPart("images") @Size(min = 1, max = 3) List<MultipartFile> images) {
-        // TODO
-        log.info("확인 = {}", request.toString());
+            @RequestPart @Valid CreateAdminReviewRequest data,
+            @RequestPart @Size(min = 1, max = 3) List<MultipartFile> images) {
+        createReviewUsecase.createAdmin(blockId, rowNumber, memberId, data.toCommand(images));
     }
 }

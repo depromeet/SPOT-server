@@ -10,17 +10,30 @@ import jakarta.validation.constraints.NotNull;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewKeywordsException;
+import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateAdminReviewCommand;
+import org.springframework.web.multipart.MultipartFile;
 
 public record CreateAdminReviewRequest(
-        @NotNull int rowNumber,
         Integer seatNumber,
         List<String> good,
         List<String> bad,
         @NotEmpty String content,
         @NotNull String dateTime) {
 
+    public CreateAdminReviewCommand toCommand(List<MultipartFile> images) {
+        checkHasKeyword();
+        return CreateAdminReviewCommand.builder()
+                .bad(bad)
+                .good(good)
+                .images(images)
+                .content(content)
+                .seatNumber(seatNumber)
+                .dateTime(toLocalDateTime(dateTime))
+                .build();
+    }
+
     private void checkHasKeyword() {
-        if ((good == null || good.isEmpty()) && (bad == null || bad.isEmpty())) {
+        if ((this.good == null || good.isEmpty()) && (bad == null || bad.isEmpty())) {
             throw new InvalidReviewKeywordsException();
         }
     }
