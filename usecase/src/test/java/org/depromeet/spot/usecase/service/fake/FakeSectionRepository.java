@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.depromeet.spot.common.exception.section.SectionException.SectionNotFoundException;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.usecase.port.out.section.SectionRepository;
 
@@ -49,5 +51,14 @@ public class FakeSectionRepository implements SectionRepository {
         return data.stream()
                 .filter(section -> section.getStadiumId().equals(sectionId))
                 .anyMatch(section -> section.getId().equals(sectionId));
+    }
+
+    @Override
+    public Section findById(Long id) {
+        return getById(id).orElseThrow(SectionNotFoundException::new);
+    }
+
+    private Optional<Section> getById(Long id) {
+        return data.stream().filter(section -> section.getId().equals(id)).findAny();
     }
 }

@@ -67,6 +67,7 @@ public class SeatEntity extends BaseEntity {
     }
 
     public static SeatEntity withSeat(Seat seat) {
+        if (seat == null) return null;
         return new SeatEntity(seat);
     }
 

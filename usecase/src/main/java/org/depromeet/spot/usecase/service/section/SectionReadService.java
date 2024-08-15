@@ -39,6 +39,11 @@ public class SectionReadService implements SectionReadUsecase {
     }
 
     @Override
+    public Section findById(final Long id) {
+        return sectionRepository.findById(id);
+    }
+
+    @Override
     public boolean existsInStadium(final Long stadiumId, final Long sectionId) {
         return sectionRepository.existsInStadium(stadiumId, sectionId);
     }
