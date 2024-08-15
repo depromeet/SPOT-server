@@ -133,7 +133,7 @@ public class ReviewEntity extends BaseEntity {
                         .section(this.section.toDomain())
                         .block(this.block.toDomain())
                         .row(this.row.toDomain())
-                        .seat(this.seat.toDomain())
+                        .seat((this.seat == null) ? null : this.seat.toDomain())
                         .dateTime(this.dateTime)
                         .content(this.content)
                         .build();

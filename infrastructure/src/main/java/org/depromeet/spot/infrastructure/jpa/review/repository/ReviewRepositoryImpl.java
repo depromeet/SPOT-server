@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewRepositoryImpl implements ReviewRepository {
 
     private final ReviewJpaRepository reviewJpaRepository;
+    private final ReviewCustomRepository reviewCustomRepository;
 
     @Override
     public Review save(Review review) {
@@ -50,7 +51,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
             Integer month,
             Pageable pageable) {
         Page<ReviewEntity> reviewEntities =
-                reviewJpaRepository.findByStadiumIdAndBlockCode(
+                reviewCustomRepository.findByStadiumIdAndBlockCode(
                         stadiumId, blockCode, rowNumber, seatNumber, year, month, pageable);
         return reviewEntities.map(ReviewEntity::toDomain);
     }
