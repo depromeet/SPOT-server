@@ -4,7 +4,6 @@
     <springProfile name="local">
         <root level="INFO">
             <appender-ref ref="CONSOLE_APPENDER"/>
-            <appender-ref ref="LOKI_APPENDER"/>
         </root>
     </springProfile>
 
