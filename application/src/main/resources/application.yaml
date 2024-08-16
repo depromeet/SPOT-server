@@ -11,20 +11,18 @@ spring:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
             dev:
                 - jpa
                 - aws
                 - jwt
-                - kakao
-                - monitoring
+                - oauth
             prod:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
                 - sentry
-                - monitoring
     servlet:
         multipart:
             max-file-size: 10MB
