@@ -15,10 +15,10 @@
     </springProfile>
 
     <springProfile name="prod">
-        <root level="ERROR">
+        <root level="INFO">
             <appender-ref ref="CONSOLE_APPENDER"/>
             <appender-ref ref="SENTRY_APPENDER"/>
-            <appender-ref ref="LOKI_APPENDER"/>
+<!--            <appender-ref ref="LOKI_APPENDER"/>-->
         </root>
     </springProfile>
 </configuration>
