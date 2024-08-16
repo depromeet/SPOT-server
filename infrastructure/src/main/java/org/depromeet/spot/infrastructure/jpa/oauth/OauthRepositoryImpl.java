@@ -23,7 +23,7 @@ public class OauthRepositoryImpl implements OauthRepository {
     private final String BEARER = "Bearer";
 
     // kakao에서 발급 받은 clientID
-    @Value("${oauth.clientId}")
+    @Value("${oauth.kakaoClientId}")
     private String CLIENT_ID;
 
     @Value("${oauth.kauthTokenUrlHost}")
