@@ -87,13 +87,12 @@ public class CreateReviewService implements CreateReviewUsecase {
         Seat seat = getSeat(block.getId(), command.seatNumber());
 
         Review review = convertToDomain(member, blockRow, seat, command);
-        Review savedReview = reviewRepository.save(review);
-
         List<String> imageUrls = reviewImageProcessor.getImageUrl(command.images());
-        reviewImageProcessor.processImages(review, imageUrls);
-
         Map<Long, Keyword> keywordMap =
                 reviewKeywordProcessor.processKeywords(review, command.good(), command.bad());
+        reviewImageProcessor.processImages(review, imageUrls);
+
+        Review savedReview = reviewRepository.save(review);
         reviewKeywordProcessor.updateBlockTopKeywords(savedReview);
         savedReview.setKeywordMap(keywordMap);
 
