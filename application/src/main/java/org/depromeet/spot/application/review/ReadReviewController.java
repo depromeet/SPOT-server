@@ -20,10 +20,6 @@ import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockReviewLi
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyRecentReviewResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyReviewListResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.ReadReviewResult;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,14 +48,7 @@ public class ReadReviewController {
                     Long stadiumId,
             @PathVariable("blockCode") @NotNull @Parameter(description = "블록 코드", required = true)
                     String blockCode,
-            @ModelAttribute @Valid BlockReviewRequest request,
-            @ParameterObject
-                    @PageableDefault(
-                            size = 20,
-                            page = 0,
-                            sort = "dateTime",
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable) {
+            @ModelAttribute @Valid BlockReviewRequest request) {
 
         BlockReviewListResult result =
                 readReviewUsecase.findReviewsByStadiumIdAndBlockCode(
@@ -69,7 +58,8 @@ public class ReadReviewController {
                         request.seatNumber(),
                         request.year(),
                         request.month(),
-                        pageable);
+                        request.cursor(),
+                        request.size());
         return BlockReviewListResponse.from(
                 result, request.rowNumber(), request.seatNumber(), request.year(), request.month());
     }
@@ -92,18 +82,15 @@ public class ReadReviewController {
             description = "연도와 월로 필터링할 수 있다. 필터링 없이 전체를 조회하려면 year와 month를 null로 입력한다.")
     public MyReviewListResponse findMyReviews(
             @Parameter(hidden = true) Long memberId,
-            @ModelAttribute @Valid MyReviewRequest request,
-            @ParameterObject
-                    @PageableDefault(
-                            size = 20,
-                            page = 0,
-                            sort = "dateTime",
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable) {
+            @ModelAttribute @Valid MyReviewRequest request) {
 
         MyReviewListResult result =
                 readReviewUsecase.findMyReviewsByUserId(
-                        memberId, request.year(), request.month(), pageable);
+                        memberId,
+                        request.year(),
+                        request.month(),
+                        request.cursor(),
+                        request.size());
         return MyReviewListResponse.from(result, request.year(), request.month());
     }
 
