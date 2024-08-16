@@ -387,6 +387,6 @@ gradle-app.setting
 *.application-jwt.yml
 *.application-monitoring.yml
 application-jwt.yml
-application-kakao.yml
+application-oauth.yml
 application-sentry.yml
 application-aws.yaml
