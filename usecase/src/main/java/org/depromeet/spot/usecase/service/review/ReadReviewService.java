@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
@@ -123,13 +122,7 @@ public class ReadReviewService implements ReadReviewUsecase {
 
     @Override
     public ReadReviewResult findReviewById(Long reviewId) {
-        Review review =
-                reviewRepository
-                        .findById(reviewId)
-                        .orElseThrow(
-                                () ->
-                                        new ReviewNotFoundException(
-                                                "Review not found with id: " + reviewId));
+        Review review = reviewRepository.findById(reviewId);
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
 
         return ReadReviewResult.builder().review(reviewWithKeywords).build();
@@ -146,8 +139,8 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     @Override
-    public boolean existById(long reviewId) {
-        return reviewRepository.existById(reviewId);
+    public Review findById(long reviewId) {
+        return reviewRepository.findById(reviewId);
     }
 
     @Override

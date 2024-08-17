@@ -34,7 +34,7 @@ public interface ReadReviewUsecase {
 
     long countByMember(Long memberId);
 
-    boolean existById(long reviewId);
+    Review findById(long reviewId);
 
     @Builder
     record BlockReviewListResult(

@@ -1,6 +1,6 @@
 package org.depromeet.spot.usecase.service.review.like;
 
-import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
+import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.like.ReviewLike;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.like.ReviewLikeUsecase;
@@ -21,30 +21,24 @@ public class ReviewLikeService implements ReviewLikeUsecase {
     // TODO: 분산락 적용 예정
     @Override
     public void toggleLike(final long memberId, final long reviewId) {
-        checkValidLike(reviewId);
+        Review review = readReviewUsecase.findById(reviewId);
 
         if (reviewLikeRepository.existsBy(memberId, reviewId)) {
-            cancelLike(memberId, reviewId);
+            cancelLike(memberId, reviewId, review);
             return;
         }
 
-        addLike(memberId, reviewId);
+        addLike(memberId, reviewId, review);
     }
 
-    private void checkValidLike(final long reviewId) {
-        if (!readReviewUsecase.existById(reviewId)) {
-            throw new ReviewNotFoundException();
-        }
-    }
-
-    private void cancelLike(final long memberId, final long reviewId) {
+    private void cancelLike(final long memberId, final long reviewId, Review review) {
         reviewLikeRepository.deleteBy(memberId, reviewId);
-        // review의 likeCnt 감소
+        review.cancelLike();
     }
 
-    private void addLike(final long memberId, final long reviewId) {
+    private void addLike(final long memberId, final long reviewId, Review review) {
         ReviewLike like = ReviewLike.builder().memberId(memberId).reviewId(reviewId).build();
         reviewLikeRepository.save(like);
-        // review의 likeCnt 증가
+        review.addLike();
     }
 }

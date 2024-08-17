@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.common.exception.review.ReviewException.UnauthorizedReviewModificationException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
@@ -38,11 +37,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
 
     public UpdateReviewResult updateReview(
             Long memberId, Long reviewId, UpdateReviewCommand command) {
-        Review existingReview =
-                reviewRepository
-                        .findById(reviewId)
-                        .orElseThrow(
-                                () -> new ReviewNotFoundException("요청한 리뷰를 찾을 수 없습니다." + reviewId));
+        Review existingReview = reviewRepository.findById(reviewId);
 
         if (!existingReview.getMember().getId().equals(memberId)) {
             throw new UnauthorizedReviewModificationException();

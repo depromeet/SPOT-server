@@ -1,7 +1,6 @@
 package org.depromeet.spot.usecase.port.out.review;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
@@ -12,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 public interface ReviewRepository {
     Review save(Review review);
 
-    Optional<Review> findById(Long id);
+    Review findById(Long id);
 
     long countByUserId(Long userId);
 
@@ -36,6 +35,4 @@ public interface ReviewRepository {
     Review findLastReviewByMemberId(Long memberId);
 
     long countByIdByMemberId(Long memberId);
-
-    boolean existById(long reviewId);
 }

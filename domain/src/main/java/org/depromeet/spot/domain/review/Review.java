@@ -35,7 +35,7 @@ public class Review {
     private List<ReviewImage> images;
     private List<ReviewKeyword> keywords;
     private transient Map<Long, Keyword> keywordMap;
-    private int likesCount;
+    private int likesCount = DEFAULT_LIKE_CNT;
 
     private static final int DEFAULT_LIKE_CNT = 0;
 
@@ -53,9 +53,8 @@ public class Review {
             LocalDateTime deletedAt,
             List<ReviewImage> images,
             List<ReviewKeyword> keywords,
-            Integer likesCount) {
-        if (likesCount == null) likesCount = DEFAULT_LIKE_CNT;
-        else if (likesCount < 0) {
+            int likesCount) {
+        if (likesCount < 0) {
             throw new InvalidReviewLikesException();
         }
 
