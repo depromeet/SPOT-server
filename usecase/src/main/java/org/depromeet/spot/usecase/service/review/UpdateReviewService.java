@@ -52,7 +52,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         Seat seat = seatRepository.findByIdWith(command.blockId(), command.seatNumber());
 
         // 새로운 Review 객체 생성
-        Review updatedReview = createUpdatedReview(reviewId, member, seat, command);
+        Review updatedReview = createUpdatedReview(reviewId, member, seat, command, existingReview);
 
         // keyword와 image 처리
         Map<Long, Keyword> keywordMap =
@@ -69,7 +69,11 @@ public class UpdateReviewService implements UpdateReviewUsecase {
     }
 
     private Review createUpdatedReview(
-            Long reviewId, Member member, Seat seat, UpdateReviewCommand command) {
+            Long reviewId,
+            Member member,
+            Seat seat,
+            UpdateReviewCommand command,
+            Review savedReview) {
         return Review.builder()
                 .id(reviewId)
                 .member(member)
@@ -80,6 +84,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
                 .seat(seat)
                 .dateTime(command.dateTime())
                 .content(command.content())
+                .likesCount(savedReview.getLikesCount())
                 .build();
     }
 

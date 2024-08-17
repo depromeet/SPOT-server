@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReadReviewService implements ReadReviewUsecase {
+
     private final ReviewRepository reviewRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
@@ -196,6 +197,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .deletedAt(review.getDeletedAt())
                         .images(review.getImages())
                         .keywords(mappedKeywords)
+                        .likesCount(review.getLikesCount())
                         .build();
 
         mappedReview.setKeywordMap(keywordMap);
@@ -240,6 +242,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .deletedAt(review.getDeletedAt())
                         .images(review.getImages())
                         .keywords(mappedKeywords) // 리뷰 키워드 담당
+                        .likesCount(review.getLikesCount())
                         .build();
 
         // Keyword 정보를 Review 객체에 추가
