@@ -19,8 +19,6 @@ import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,16 +46,23 @@ public class ReadReviewService implements ReadReviewUsecase {
             Integer seatNumber,
             Integer year,
             Integer month,
-            Pageable pageable) {
+            Long cursor,
+            Integer size) {
 
         // LocationInfo 조회
         LocationInfo locationInfo =
                 reviewRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
 
         // stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 reviews를 조회
-        Page<Review> reviewPage =
+        List<Review> reviews =
                 reviewRepository.findByStadiumIdAndBlockCode(
-                        stadiumId, blockCode, rowNumber, seatNumber, year, month, pageable);
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month, cursor, size + 1);
+        boolean hasNext = reviews.size() > size;
+        if (hasNext) {
+            reviews = reviews.subList(0, size);
+        }
+
+        Long nextCursor = hasNext ? reviews.get(reviews.size() - 1).getId() : null;
 
         //  stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 topKeywords를 조회
         List<BlockKeywordInfo> topKeywords =
@@ -69,49 +74,53 @@ public class ReadReviewService implements ReadReviewUsecase {
                 reviewImageRepository.findTopReviewImagesByStadiumIdAndBlockCode(
                         stadiumId, blockCode, TOP_IMAGES_LIMIT);
 
-        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviewPage.getContent());
+        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
         return BlockReviewListResult.builder()
                 .location(locationInfo)
                 .reviews(reviewsWithKeywords)
                 .topKeywords(topKeywords)
                 .topReviewImages(topReviewImages)
-                .totalElements(reviewPage.getTotalElements())
-                .totalPages(reviewPage.getTotalPages())
-                .number(reviewPage.getNumber())
-                .size(reviewPage.getSize())
+                .nextCursor(nextCursor)
+                .hasNext(hasNext)
                 .build();
     }
 
     @Override
     public MyReviewListResult findMyReviewsByUserId(
-            Long userId, Integer year, Integer month, Pageable pageable) {
+            Long userId, Integer year, Integer month, Long cursor, Integer size) {
 
-        Page<Review> reviewPage = reviewRepository.findByUserId(userId, year, month, pageable);
+        List<Review> reviews = reviewRepository.findByUserId(userId, year, month, cursor, size + 1);
 
-        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviewPage.getContent());
+        boolean hasNext = reviews.size() > size;
+        if (hasNext) {
+            reviews = reviews.subList(0, size);
+        }
+
+        Long nextCursor = hasNext ? reviews.get(reviews.size() - 1).getId() : null;
+
+        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
         Member member = memberRepository.findById(userId);
 
         MemberInfoOnMyReviewResult memberInfo;
         if (member.getTeamId() == null) {
-            memberInfo = MemberInfoOnMyReviewResult.of(member, reviewPage.getTotalElements());
+            memberInfo =
+                    MemberInfoOnMyReviewResult.of(member, reviewRepository.countByUserId(userId));
 
         } else {
             BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
 
             memberInfo =
                     MemberInfoOnMyReviewResult.of(
-                            member, reviewPage.getTotalElements(), baseballTeam.getName());
+                            member, reviewRepository.countByUserId(userId), baseballTeam.getName());
         }
 
         return MyReviewListResult.builder()
                 .memberInfoOnMyReviewResult(memberInfo)
                 .reviews(reviewsWithKeywords)
-                .totalElements(reviewPage.getTotalElements())
-                .totalPages(reviewPage.getTotalPages())
-                .number(reviewPage.getNumber())
-                .size(reviewPage.getSize())
+                .nextCursor(nextCursor)
+                .hasNext(hasNext)
                 .build();
     }
 
