@@ -13,7 +13,6 @@ public record BlockReviewListResponse(
         List<KeywordCountResponse> keywords,
         List<BaseReviewResponse> reviews,
         List<TopReviewImageResponse> topReviewImages,
-        long totalElements,
         Long nextCursor,
         boolean hasNext,
         FilterInfo filter) {
@@ -47,7 +46,6 @@ public record BlockReviewListResponse(
                 keywordResponses,
                 reviewResponses,
                 topReviewImageResponses,
-                result.totalElements(),
                 result.nextCursor(),
                 result.hasNext(),
                 filter);

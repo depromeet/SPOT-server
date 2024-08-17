@@ -40,7 +40,6 @@ public interface ReadReviewUsecase {
             List<Review> reviews,
             List<BlockKeywordInfo> topKeywords,
             List<TopReviewImage> topReviewImages,
-            long totalElements,
             Long nextCursor,
             boolean hasNext) {}
 
@@ -54,7 +53,6 @@ public interface ReadReviewUsecase {
     record MyReviewListResult(
             MemberInfoOnMyReviewResult memberInfoOnMyReviewResult,
             List<Review> reviews,
-            long totalElements,
             Long nextCursor,
             boolean hasNext) {}
 
