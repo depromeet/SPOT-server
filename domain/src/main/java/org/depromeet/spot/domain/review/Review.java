@@ -35,9 +35,7 @@ public class Review {
     private List<ReviewImage> images;
     private List<ReviewKeyword> keywords;
     private transient Map<Long, Keyword> keywordMap;
-    private int likesCount = DEFAULT_LIKE_CNT;
-
-    private static final int DEFAULT_LIKE_CNT = 0;
+    private int likesCount;
 
     @Builder
     public Review(
