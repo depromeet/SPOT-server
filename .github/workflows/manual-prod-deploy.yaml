@@ -48,6 +48,8 @@ jobs:
                           -p 9292:9292 \
                           -p 3100:3100 \
                           -e SPRING_PROFILES_ACTIVE=prod \
+                          -e AWS_REDIS_HOST=${{ secrets.PROD_REDIS_HOST }} \
+                          -e AWS_REDIS_PORT=${{ secrets.PROD_REDIS_PORT }}  \
                           -e SPRING_DATASOURCE_URL=${{ secrets.PROD_DB_URL }} \
                           -e SPRING_DATASOURCE_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
                           -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
