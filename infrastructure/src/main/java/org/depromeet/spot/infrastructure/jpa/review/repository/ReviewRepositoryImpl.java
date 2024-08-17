@@ -9,8 +9,6 @@ import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewRepositoryImpl implements ReviewRepository {
 
     private final ReviewJpaRepository reviewJpaRepository;
+    private final ReviewCustomRepository reviewCustomRepository;
 
     @Override
     public Review save(Review review) {
@@ -41,25 +40,27 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public Page<Review> findByStadiumIdAndBlockCode(
+    public List<Review> findByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,
             Integer rowNumber,
             Integer seatNumber,
             Integer year,
             Integer month,
-            Pageable pageable) {
-        Page<ReviewEntity> reviewEntities =
-                reviewJpaRepository.findByStadiumIdAndBlockCode(
-                        stadiumId, blockCode, rowNumber, seatNumber, year, month, pageable);
-        return reviewEntities.map(ReviewEntity::toDomain);
+            Long cursor,
+            Integer size) {
+        List<ReviewEntity> reviewEntities =
+                reviewCustomRepository.findByStadiumIdAndBlockCode(
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month, cursor, size);
+        return reviewEntities.stream().map(ReviewEntity::toDomain).toList();
     }
 
     @Override
-    public Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable) {
-        Page<ReviewEntity> reviewEntities =
-                reviewJpaRepository.findByUserId(userId, year, month, pageable);
-        return reviewEntities.map(ReviewEntity::toDomain);
+    public List<Review> findAllByUserId(
+            Long userId, Integer year, Integer month, Long cursor, Integer size) {
+        List<ReviewEntity> reviewEntities =
+                reviewCustomRepository.findAllByUserId(userId, year, month, cursor, size);
+        return reviewEntities.stream().map(ReviewEntity::toDomain).toList();
     }
 
     @Override
@@ -80,7 +81,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode) {
-        return reviewJpaRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
+        return reviewCustomRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
     }
 
     @Override

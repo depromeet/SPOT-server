@@ -90,7 +90,8 @@ public class ReadReviewService implements ReadReviewUsecase {
     public MyReviewListResult findMyReviewsByUserId(
             Long userId, Integer year, Integer month, Long cursor, Integer size) {
 
-        List<Review> reviews = reviewRepository.findByUserId(userId, year, month, cursor, size + 1);
+        List<Review> reviews =
+                reviewRepository.findAllByUserId(userId, year, month, cursor, size + 1);
 
         boolean hasNext = reviews.size() > size;
         if (hasNext) {
