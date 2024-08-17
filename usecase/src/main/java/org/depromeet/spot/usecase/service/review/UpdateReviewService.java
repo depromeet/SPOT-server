@@ -63,6 +63,11 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         return new UpdateReviewResult(savedReview);
     }
 
+    @Override
+    public void updateLikesCount(Review review) {
+        reviewRepository.updateLikesCount(review.getId(), review.getLikesCount());
+    }
+
     private Review createUpdatedReview(
             Long reviewId,
             Member member,

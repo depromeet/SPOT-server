@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ReviewRepository {
+    void updateLikesCount(Long reviewId, int likesCount);
+
     Review save(Review review);
 
     Review findById(Long id);

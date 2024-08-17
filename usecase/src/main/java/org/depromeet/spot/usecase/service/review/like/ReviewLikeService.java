@@ -3,6 +3,7 @@ package org.depromeet.spot.usecase.service.review.like;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.like.ReviewLike;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
+import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.like.ReviewLikeUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class ReviewLikeService implements ReviewLikeUsecase {
 
     private final ReadReviewUsecase readReviewUsecase;
+    private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewLikeRepository reviewLikeRepository;
 
     // TODO: 분산락 적용 예정
@@ -31,14 +33,16 @@ public class ReviewLikeService implements ReviewLikeUsecase {
         addLike(memberId, reviewId, review);
     }
 
-    private void cancelLike(final long memberId, final long reviewId, Review review) {
+    public void cancelLike(final long memberId, final long reviewId, Review review) {
         reviewLikeRepository.deleteBy(memberId, reviewId);
         review.cancelLike();
+        updateReviewUsecase.updateLikesCount(review);
     }
 
-    private void addLike(final long memberId, final long reviewId, Review review) {
+    public void addLike(final long memberId, final long reviewId, Review review) {
         ReviewLike like = ReviewLike.builder().memberId(memberId).reviewId(reviewId).build();
         reviewLikeRepository.save(like);
         review.addLike();
+        updateReviewUsecase.updateLikesCount(review);
     }
 }

@@ -25,6 +25,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     private final ReviewCustomRepository reviewCustomRepository;
 
     @Override
+    public void updateLikesCount(Long reviewId, int likesCount) {
+        reviewJpaRepository.updateLikesCount(reviewId, likesCount);
+    }
+
+    @Override
     public Review save(Review review) {
         ReviewEntity entity = ReviewEntity.from(review);
         ReviewEntity savedEntity = reviewJpaRepository.save(entity);
