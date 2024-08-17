@@ -18,6 +18,7 @@ public class ReviewLikeService implements ReviewLikeUsecase {
     private final ReadReviewUsecase readReviewUsecase;
     private final ReviewLikeRepository reviewLikeRepository;
 
+    // TODO: 분산락 적용 예정
     @Override
     public void toggleLike(final long memberId, final long reviewId) {
         checkValidLike(reviewId);
