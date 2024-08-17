@@ -1,5 +1,6 @@
 package org.depromeet.spot.infrastructure.jpa.review.entity.like;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -15,8 +16,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "review_likes")
 public class ReviewLikeEntity extends BaseEntity {
 
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
+    @Column(name = "review_id", nullable = false)
     private Long reviewId;
 
     public static ReviewLikeEntity from(ReviewLike like) {
