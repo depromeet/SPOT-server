@@ -17,22 +17,6 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
     long countByMemberIdAndDeletedAtIsNull(Long memberId);
 
     @Query(
-            "SELECT r FROM ReviewEntity r WHERE r.stadium.id = :stadiumId AND r.block.code = :blockCode "
-                    + "AND (:rowNumber IS NULL OR r.row.number = :rowNumber) "
-                    + "AND (:seatNumber IS NULL OR r.seat.seatNumber = :seatNumber) "
-                    + "AND (:year IS NULL OR YEAR(r.dateTime) = :year) "
-                    + "AND (:month IS NULL OR MONTH(r.dateTime) = :month) "
-                    + "AND r.deletedAt IS NULL")
-    Page<ReviewEntity> findByStadiumIdAndBlockCode(
-            @Param("stadiumId") Long stadiumId,
-            @Param("blockCode") String blockCode,
-            @Param("rowNumber") Integer rowNumber,
-            @Param("seatNumber") Integer seatNumber,
-            @Param("year") Integer year,
-            @Param("month") Integer month,
-            Pageable pageable);
-
-    @Query(
             "SELECT r FROM ReviewEntity r WHERE r.member.id = :userId "
                     + "AND (:year IS NULL OR YEAR(r.dateTime) = :year) "
                     + "AND (:month IS NULL OR MONTH(r.dateTime) = :month) "
