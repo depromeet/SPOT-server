@@ -145,6 +145,11 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     @Override
+    public boolean existById(long reviewId) {
+        return reviewRepository.existById(reviewId);
+    }
+
+    @Override
     public MyRecentReviewResult findLastReviewByMemberId(Long memberId) {
         Review review = reviewRepository.findLastReviewByMemberId(memberId);
 
