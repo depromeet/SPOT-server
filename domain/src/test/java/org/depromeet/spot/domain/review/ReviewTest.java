@@ -30,6 +30,30 @@ class ReviewTest {
     }
 
     @Test
+    void review_공감수를_증가할_수_있다() {
+        // given
+        Review review = Review.builder().likesCount(0).build();
+
+        // when
+        review.addLike();
+
+        // then
+        assertEquals(review.getLikesCount(), 1);
+    }
+
+    @Test
+    void review_공감수를_감소할_수_있다() {
+        // given
+        Review review = Review.builder().likesCount(10).build();
+
+        // when
+        review.cancelLike();
+
+        // then
+        assertEquals(review.getLikesCount(), 9);
+    }
+
+    @Test
     void review_공감수가_0이라면_공감수를_감소하지_않는다() {
         // given
         Review review = Review.builder().likesCount(0).build();
