@@ -37,6 +37,8 @@ public class Review {
     private transient Map<Long, Keyword> keywordMap;
     private int likesCount;
 
+    public static final int DEFAULT_LIKE_COUNT = 0;
+
     @Builder
     public Review(
             Long id,
