@@ -23,6 +23,7 @@ dependencies {
 
     // aws
     implementation("org.springframework.cloud:spring-cloud-starter-aws:_")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:_")
 
     // webflux (HTTP 요청에 사용)
     implementation("org.springframework.boot:spring-boot-starter-webflux")
