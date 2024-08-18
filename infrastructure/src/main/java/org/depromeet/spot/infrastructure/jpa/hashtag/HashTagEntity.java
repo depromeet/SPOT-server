@@ -8,9 +8,11 @@ import org.depromeet.spot.domain.hashtag.HashTag;
 import org.depromeet.spot.infrastructure.jpa.common.entity.BaseEntity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hashtags")
