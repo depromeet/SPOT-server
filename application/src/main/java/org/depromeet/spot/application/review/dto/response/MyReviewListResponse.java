@@ -11,7 +11,7 @@ import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyReviewListR
 public record MyReviewListResponse(
         MemberInfoOnMyReviewResult memberInfoOnMyReview,
         List<MyReviewResponse> reviews,
-        Long nextCursor,
+        String nextCursor,
         boolean hasNext,
         FilterInfo filter) {
     public static MyReviewListResponse from(

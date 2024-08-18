@@ -12,7 +12,7 @@ public record BlockReviewListResponse(
         List<KeywordCountResponse> keywords,
         List<BaseReviewResponse> reviews,
         List<TopReviewImageResponse> topReviewImages,
-        Long nextCursor,
+        String nextCursor,
         boolean hasNext,
         FilterInfo filter) {
 
