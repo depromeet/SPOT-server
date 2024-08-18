@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.block.BlockTag;
 import org.depromeet.spot.infrastructure.jpa.common.entity.BaseEntity;
-import org.depromeet.spot.infrastructure.jpa.hashtag.HashTagEntity;
+import org.depromeet.spot.infrastructure.jpa.hashtag.entity.HashTagEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

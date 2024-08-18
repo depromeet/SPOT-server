@@ -1,4 +1,4 @@
-package org.depromeet.spot.infrastructure.jpa.hashtag;
+package org.depromeet.spot.infrastructure.jpa.hashtag.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

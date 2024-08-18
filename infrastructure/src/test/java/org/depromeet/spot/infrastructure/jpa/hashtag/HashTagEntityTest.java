@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.depromeet.spot.domain.hashtag.HashTag;
+import org.depromeet.spot.infrastructure.jpa.hashtag.entity.HashTagEntity;
 import org.junit.jupiter.api.Test;
 
 class HashTagEntityTest {
