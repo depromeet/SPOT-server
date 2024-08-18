@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 
@@ -21,11 +22,17 @@ public interface ReviewRepository {
             Integer seatNumber,
             Integer year,
             Integer month,
-            Long cursor,
+            String cursor,
+            SortCriteria sortBy,
             Integer size);
 
     List<Review> findAllByUserId(
-            Long userId, Integer year, Integer month, Long cursor, Integer size);
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size);
 
     List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
 

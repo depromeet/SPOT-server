@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
@@ -47,19 +48,33 @@ public class ReviewRepositoryImpl implements ReviewRepository {
             Integer seatNumber,
             Integer year,
             Integer month,
-            Long cursor,
+            String cursor,
+            SortCriteria sortBy,
             Integer size) {
         List<ReviewEntity> reviewEntities =
                 reviewCustomRepository.findByStadiumIdAndBlockCode(
-                        stadiumId, blockCode, rowNumber, seatNumber, year, month, cursor, size);
+                        stadiumId,
+                        blockCode,
+                        rowNumber,
+                        seatNumber,
+                        year,
+                        month,
+                        cursor,
+                        sortBy,
+                        size);
         return reviewEntities.stream().map(ReviewEntity::toDomain).toList();
     }
 
     @Override
     public List<Review> findAllByUserId(
-            Long userId, Integer year, Integer month, Long cursor, Integer size) {
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size) {
         List<ReviewEntity> reviewEntities =
-                reviewCustomRepository.findAllByUserId(userId, year, month, cursor, size);
+                reviewCustomRepository.findAllByUserId(userId, year, month, cursor, sortBy, size);
         return reviewEntities.stream().map(ReviewEntity::toDomain).toList();
     }
 

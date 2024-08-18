@@ -59,6 +59,7 @@ public class ReadReviewController {
                         request.year(),
                         request.month(),
                         request.cursor(),
+                        request.sortBy(),
                         request.size());
         return BlockReviewListResponse.from(
                 result, request.rowNumber(), request.seatNumber(), request.year(), request.month());
@@ -90,6 +91,7 @@ public class ReadReviewController {
                         request.year(),
                         request.month(),
                         request.cursor(),
+                        request.sortBy(),
                         request.size());
         return MyReviewListResponse.from(result, request.year(), request.month());
     }

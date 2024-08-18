@@ -209,6 +209,7 @@ public class ReviewCustomRepository {
         String[] parts = cursor.split("_");
 
         switch (sortBy) {
+                // TODO: 좋아요 컬럼 반영 시 주석 해제
                 //            case LIKES_COUNT:
                 //                if (parts.length != 3) return null;
                 //                int likeCount = Integer.parseInt(parts[0]);

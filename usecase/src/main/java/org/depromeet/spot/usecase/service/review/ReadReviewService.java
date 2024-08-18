@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
@@ -46,7 +47,8 @@ public class ReadReviewService implements ReadReviewUsecase {
             Integer seatNumber,
             Integer year,
             Integer month,
-            Long cursor,
+            String cursor,
+            SortCriteria sortBy,
             Integer size) {
 
         // LocationInfo 조회
@@ -56,13 +58,21 @@ public class ReadReviewService implements ReadReviewUsecase {
         // stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 reviews를 조회
         List<Review> reviews =
                 reviewRepository.findByStadiumIdAndBlockCode(
-                        stadiumId, blockCode, rowNumber, seatNumber, year, month, cursor, size + 1);
+                        stadiumId,
+                        blockCode,
+                        rowNumber,
+                        seatNumber,
+                        year,
+                        month,
+                        cursor,
+                        sortBy,
+                        size + 1);
         boolean hasNext = reviews.size() > size;
         if (hasNext) {
             reviews = reviews.subList(0, size);
         }
 
-        Long nextCursor = hasNext ? reviews.get(reviews.size() - 1).getId() : null;
+        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
 
         //  stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 topKeywords를 조회
         List<BlockKeywordInfo> topKeywords =
@@ -88,17 +98,22 @@ public class ReadReviewService implements ReadReviewUsecase {
 
     @Override
     public MyReviewListResult findMyReviewsByUserId(
-            Long userId, Integer year, Integer month, Long cursor, Integer size) {
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size) {
 
         List<Review> reviews =
-                reviewRepository.findAllByUserId(userId, year, month, cursor, size + 1);
+                reviewRepository.findAllByUserId(userId, year, month, cursor, sortBy, size + 1);
 
         boolean hasNext = reviews.size() > size;
         if (hasNext) {
             reviews = reviews.subList(0, size);
         }
 
-        Long nextCursor = hasNext ? reviews.get(reviews.size() - 1).getId() : null;
+        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
@@ -123,6 +138,18 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
                 .build();
+    }
+
+    private String getCursor(Review review, SortCriteria sortBy) {
+        switch (sortBy) {
+                // TODO: 좋아요 컬럼 반영 시 주석 해제
+                //            case LIKES_COUNT:
+                //                return review.getLikesCount() + "_" +
+                // review.getDateTime().toString() + "_" + review.getId();
+            case DATE_TIME:
+            default:
+                return review.getDateTime().toString() + "_" + review.getId();
+        }
     }
 
     @Override

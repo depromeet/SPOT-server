@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
 
@@ -18,11 +19,17 @@ public interface ReadReviewUsecase {
             Integer seatNumber,
             Integer year,
             Integer month,
-            Long cursor,
+            String cursor,
+            SortCriteria sortBy,
             Integer size);
 
     MyReviewListResult findMyReviewsByUserId(
-            Long userId, Integer year, Integer month, Long cursor, Integer size);
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size);
 
     List<ReviewYearMonth> findReviewMonths(Long memberId);
 
@@ -40,7 +47,7 @@ public interface ReadReviewUsecase {
             List<Review> reviews,
             List<BlockKeywordInfo> topKeywords,
             List<TopReviewImage> topReviewImages,
-            Long nextCursor,
+            String nextCursor,
             boolean hasNext) {}
 
     @Builder
@@ -53,7 +60,7 @@ public interface ReadReviewUsecase {
     record MyReviewListResult(
             MemberInfoOnMyReviewResult memberInfoOnMyReviewResult,
             List<Review> reviews,
-            Long nextCursor,
+            String nextCursor,
             boolean hasNext) {}
 
     @Builder
