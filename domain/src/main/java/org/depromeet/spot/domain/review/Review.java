@@ -92,4 +92,9 @@ public class Review {
     public void setDeletedAt(LocalDateTime now) {
         this.deletedAt = now;
     }
+
+    public enum SortCriteria {
+        DATE_TIME,
+        LIKES_COUNT,
+    }
 }
