@@ -139,6 +139,26 @@ public class ReviewCustomRepository {
                 .fetchOne();
     }
 
+    public long countByStadiumIdAndBlockCode(
+            Long stadiumId,
+            String blockCode,
+            Integer rowNumber,
+            Integer seatNumber,
+            Integer year,
+            Integer month) {
+        BooleanBuilder builder =
+                buildConditions(stadiumId, blockCode, rowNumber, seatNumber, year, month);
+
+        Long count =
+                queryFactory
+                        .select(reviewEntity.count())
+                        .from(reviewEntity)
+                        .where(builder)
+                        .fetchOne();
+
+        return count != null ? count : 0L;
+    }
+
     private BooleanBuilder buildConditions(
             Long stadiumId,
             String blockCode,

@@ -113,6 +113,7 @@ public record BaseReviewResponse(
     public record SeatResponse(Long id, Integer seatNumber) {
 
         public static SeatResponse from(Seat seat) {
+            if (seat == null) return null;
             return new SeatResponse(seat.getId(), seat.getSeatNumber());
         }
     }
