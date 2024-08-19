@@ -10,16 +10,17 @@ import static org.depromeet.spot.infrastructure.jpa.seat.entity.QSeatEntity.seat
 import static org.depromeet.spot.infrastructure.jpa.section.entity.QSectionEntity.sectionEntity;
 import static org.depromeet.spot.infrastructure.jpa.stadium.entity.QStadiumEntity.stadiumEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.depromeet.spot.infrastructure.jpa.block.entity.QBlockRowEntity;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -31,47 +32,111 @@ public class ReviewCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public Page<ReviewEntity> findByStadiumIdAndBlockCode(
+    public List<ReviewEntity> findByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,
             Integer rowNumber,
             Integer seatNumber,
             Integer year,
             Integer month,
-            Pageable pageable) {
+            String cursor,
+            SortCriteria sortBy,
+            int size) {
+
         BooleanBuilder builder =
                 buildConditions(stadiumId, blockCode, rowNumber, seatNumber, year, month);
-        QBlockRowEntity rowEntity = new QBlockRowEntity("br");
-        List<ReviewEntity> results =
-                queryFactory
-                        .selectFrom(reviewEntity)
-                        .leftJoin(reviewEntity.stadium, stadiumEntity)
-                        .fetchJoin()
-                        .leftJoin(reviewEntity.section, sectionEntity)
-                        .fetchJoin()
-                        .leftJoin(reviewEntity.block, blockEntity)
-                        .fetchJoin()
-                        .leftJoin(reviewEntity.row, blockRowEntity)
-                        .fetchJoin()
-                        .leftJoin(reviewEntity.seat, seatEntity)
-                        .fetchJoin()
-                        .leftJoin(seatEntity.row, rowEntity)
-                        .fetchJoin()
-                        .leftJoin(reviewEntity.keywords, reviewKeywordEntity)
-                        .fetchJoin()
-                        .leftJoin(reviewEntity.member, memberEntity)
-                        .fetchJoin()
-                        .leftJoin(memberEntity.level, levelEntity)
-                        .fetchJoin()
-                        .where(builder)
-                        .orderBy(reviewEntity.dateTime.desc())
-                        .offset(pageable.getOffset())
-                        .limit(pageable.getPageSize())
-                        .fetch();
 
-        long total = queryFactory.selectFrom(reviewEntity).where(builder).fetch().size();
+        OrderSpecifier<?>[] orderBy = getOrderBy(sortBy);
+        BooleanExpression cursorCondition = getCursorCondition(sortBy, cursor);
 
-        return new PageImpl<>(results, pageable, total);
+        if (cursorCondition != null) {
+            builder.and(cursorCondition);
+        }
+
+        return queryFactory
+                .selectFrom(reviewEntity)
+                .leftJoin(reviewEntity.stadium, stadiumEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.section, sectionEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.block, blockEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.seat, seatEntity)
+                .fetchJoin()
+                .leftJoin(seatEntity.row, blockRowEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.keywords, reviewKeywordEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.member, memberEntity)
+                .fetchJoin()
+                .leftJoin(memberEntity.level, levelEntity)
+                .fetchJoin()
+                .where(builder)
+                .orderBy(orderBy)
+                .limit(size)
+                .fetch();
+    }
+
+    public List<ReviewEntity> findAllByUserId(
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            int size) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(reviewEntity.member.id.eq(userId));
+        builder.and(eqYear(year));
+        builder.and(eqMonth(month));
+        builder.and(reviewEntity.deletedAt.isNull());
+
+        OrderSpecifier<?>[] orderBy = getOrderBy(sortBy);
+        BooleanExpression cursorCondition = getCursorCondition(sortBy, cursor);
+
+        if (cursorCondition != null) {
+            builder.and(cursorCondition);
+        }
+
+        return queryFactory
+                .selectFrom(reviewEntity)
+                .leftJoin(reviewEntity.stadium, stadiumEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.section, sectionEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.block, blockEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.row, blockRowEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.seat, seatEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.keywords, reviewKeywordEntity)
+                .fetchJoin()
+                .leftJoin(reviewEntity.member, memberEntity)
+                .fetchJoin()
+                .leftJoin(memberEntity.level, levelEntity)
+                .fetchJoin()
+                .where(builder)
+                .orderBy(orderBy)
+                .limit(size)
+                .fetch();
+    }
+
+    public LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                LocationInfo.class,
+                                stadiumEntity.name,
+                                sectionEntity.name,
+                                blockEntity.code))
+                .from(stadiumEntity)
+                .join(blockEntity)
+                .on(blockEntity.stadiumId.eq(stadiumEntity.id))
+                .join(sectionEntity)
+                .on(sectionEntity.id.eq(blockEntity.sectionId))
+                .where(stadiumEntity.id.eq(stadiumId).and(blockEntity.code.eq(blockCode)))
+                .fetchOne();
     }
 
     private BooleanBuilder buildConditions(
@@ -120,5 +185,50 @@ public class ReviewCustomRepository {
             return reviewEntity.dateTime.month().eq(month);
         }
         return null;
+    }
+
+    private OrderSpecifier<?>[] getOrderBy(SortCriteria sortBy) {
+        switch (sortBy) {
+                // TODO: 좋아요 컬럼 반영 시 주석 해제
+                //            case LIKES_COUNT:
+                //                return new OrderSpecifier<?>[] {
+                //                    reviewEntity.likesCount.desc().nullsLast(),
+                //                    reviewEntity.dateTime.desc()
+                //                };
+            case DATE_TIME:
+            default:
+                return new OrderSpecifier<?>[] {reviewEntity.dateTime.desc()};
+        }
+    }
+
+    private BooleanExpression getCursorCondition(SortCriteria sortBy, String cursor) {
+        if (cursor == null) {
+            return null;
+        }
+
+        String[] parts = cursor.split("_");
+
+        switch (sortBy) {
+                // TODO: 좋아요 컬럼 반영 시 주석 해제
+                //            case LIKES_COUNT:
+                //                if (parts.length != 3) return null;
+                //                int likeCount = Integer.parseInt(parts[0]);
+                //                LocalDateTime dateTime = LocalDateTime.parse(parts[1]);
+                //                Long id = Long.parseLong(parts[2]);
+                //                return reviewEntity.likesCount.lt(likeCount)
+                //                    .or(reviewEntity.likesCount.eq(likeCount)
+                //                        .and(reviewEntity.dateTime.lt(dateTime)
+                //                            .or(reviewEntity.dateTime.eq(dateTime)
+                //                                .and(reviewEntity.id.lt(id)))));
+            case DATE_TIME:
+            default:
+                if (parts.length != 2) return null;
+                LocalDateTime dateTime = LocalDateTime.parse(parts[0]);
+                Long id = Long.parseLong(parts[1]);
+                return reviewEntity
+                        .dateTime
+                        .lt(dateTime)
+                        .or(reviewEntity.dateTime.eq(dateTime).and(reviewEntity.id.lt(id)));
+        }
     }
 }

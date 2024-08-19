@@ -30,6 +30,7 @@ public record BaseReviewResponse(
     public static BaseReviewResponse from(CreateReviewResult result) {
         Review review = result.review();
         Member member = result.member();
+
         return new BaseReviewResponse(
                 review.getId(),
                 MemberInfo.from(member),
@@ -112,7 +113,6 @@ public record BaseReviewResponse(
     public record SeatResponse(Long id, Integer seatNumber) {
 
         public static SeatResponse from(Seat seat) {
-            if (seat == null) return null;
             return new SeatResponse(seat.getId(), seat.getSeatNumber());
         }
     }

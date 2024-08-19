@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
-import org.springframework.data.domain.Pageable;
 
 import lombok.Builder;
 
@@ -19,10 +19,17 @@ public interface ReadReviewUsecase {
             Integer seatNumber,
             Integer year,
             Integer month,
-            Pageable pageable);
+            String cursor,
+            SortCriteria sortBy,
+            Integer size);
 
     MyReviewListResult findMyReviewsByUserId(
-            Long userId, Integer year, Integer month, Pageable pageable);
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size);
 
     List<ReviewYearMonth> findReviewMonths(Long memberId);
 
@@ -40,10 +47,8 @@ public interface ReadReviewUsecase {
             List<Review> reviews,
             List<BlockKeywordInfo> topKeywords,
             List<TopReviewImage> topReviewImages,
-            long totalElements,
-            int totalPages,
-            int number,
-            int size) {}
+            String nextCursor,
+            boolean hasNext) {}
 
     @Builder
     record BlockKeywordInfo(String content, Long count, Boolean isPositive) {}
@@ -55,10 +60,8 @@ public interface ReadReviewUsecase {
     record MyReviewListResult(
             MemberInfoOnMyReviewResult memberInfoOnMyReviewResult,
             List<Review> reviews,
-            long totalElements,
-            int totalPages,
-            int number,
-            int size) {}
+            String nextCursor,
+            boolean hasNext) {}
 
     @Builder
     record MemberInfoOnMyReviewResult(
