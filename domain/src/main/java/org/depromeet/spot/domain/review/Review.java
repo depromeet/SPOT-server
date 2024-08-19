@@ -31,7 +31,7 @@ public class Review {
     private final Seat seat;
     private final LocalDateTime dateTime;
     private final String content;
-    private final LocalDateTime deletedAt;
+    private LocalDateTime deletedAt;
     private List<ReviewImage> images;
     private List<ReviewKeyword> keywords;
     private transient Map<Long, Keyword> keywordMap;
@@ -108,5 +108,14 @@ public class Review {
         if (this.likesCount > 0) {
             this.likesCount--;
         }
+    }
+
+    public void setDeletedAt(LocalDateTime now) {
+        this.deletedAt = now;
+    }
+
+    public enum SortCriteria {
+        DATE_TIME,
+        LIKES_COUNT,
     }
 }

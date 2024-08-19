@@ -32,14 +32,12 @@ public interface SectionReadUsecase {
         private final Long id;
         private final String name;
         private final String alias;
-        private final String color;
 
         public static SectionInfo from(Section section) {
             return SectionInfo.builder()
                     .id(section.getId())
                     .name(section.getName())
                     .alias(section.getAlias())
-                    .color(section.getLabelColor().getValue())
                     .build();
         }
     }

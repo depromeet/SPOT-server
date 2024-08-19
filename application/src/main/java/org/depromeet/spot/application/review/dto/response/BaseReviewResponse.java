@@ -30,6 +30,7 @@ public record BaseReviewResponse(
     public static BaseReviewResponse from(CreateReviewResult result) {
         Review review = result.review();
         Member member = result.member();
+
         return new BaseReviewResponse(
                 review.getId(),
                 MemberInfo.from(member),

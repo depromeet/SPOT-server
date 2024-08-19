@@ -12,12 +12,9 @@ public record BlockReviewListResponse(
         List<KeywordCountResponse> keywords,
         List<BaseReviewResponse> reviews,
         List<TopReviewImageResponse> topReviewImages,
-        long totalElements,
-        int totalPages,
-        int number,
-        int size,
-        boolean first,
-        boolean last,
+        Long totalElements,
+        String nextCursor,
+        boolean hasNext,
         FilterInfo filter) {
 
     public static BlockReviewListResponse from(
@@ -38,20 +35,14 @@ public record BlockReviewListResponse(
 
         FilterInfo filter = new FilterInfo(rowNumber, seatNumber, year, month);
 
-        boolean first = result.number() == 0;
-        boolean last = result.number() == result.totalPages() - 1;
-
         return new BlockReviewListResponse(
                 result.location(),
                 keywordResponses,
                 reviewResponses,
                 topReviewImageResponses,
                 result.totalElements(),
-                result.totalPages(),
-                result.number(),
-                result.size(),
-                first,
-                last,
+                result.nextCursor(),
+                result.hasNext(),
                 filter);
     }
 

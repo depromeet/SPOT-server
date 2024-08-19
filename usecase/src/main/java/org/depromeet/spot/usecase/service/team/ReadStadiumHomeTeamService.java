@@ -26,10 +26,7 @@ public class ReadStadiumHomeTeamService implements ReadStadiumHomeTeamUsecase {
                 .map(
                         t ->
                                 new HomeTeamInfo(
-                                        t.getId(),
-                                        t.getAlias(),
-                                        t.getLabelBackgroundColor().getValue(),
-                                        t.getLabelFontColor().getValue()))
+                                        t.getId(), t.getAlias(), t.getLabelFontColor().getValue()))
                 .toList();
     }
 

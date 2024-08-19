@@ -14,10 +14,9 @@ public record CreateSectionRequest(
                 String name,
         @Parameter(description = "구역 별칭", example = "응원석")
                 @Length(max = 20, message = "별칭은 최대 20글자 까지만 입력할 수 있습니다.")
-                String alias,
-        @NotBlank String color) {
+                String alias) {
 
     public CreateSectionCommand toCommand() {
-        return CreateSectionCommand.builder().name(name).alias(alias).labelColor(color).build();
+        return CreateSectionCommand.builder().name(name).alias(alias).build();
     }
 }

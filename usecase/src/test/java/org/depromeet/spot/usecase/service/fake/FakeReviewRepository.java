@@ -1,15 +1,14 @@
 // package org.depromeet.spot.usecase.service.fake;
 //
+// import java.time.LocalDateTime;
 // import java.util.*;
 // import java.util.concurrent.atomic.AtomicLong;
 // import java.util.stream.Collectors;
 //
 // import org.depromeet.spot.domain.review.Review;
 // import org.depromeet.spot.domain.review.ReviewYearMonth;
+// import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 // import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
-// import org.springframework.data.domain.Page;
-// import org.springframework.data.domain.PageImpl;
-// import org.springframework.data.domain.Pageable;
 //
 // public class FakeReviewRepository implements ReviewRepository {
 //
@@ -17,62 +16,47 @@
 //    private final List<Review> data = new ArrayList<>();
 //
 //    @Override
-//    public Page<Review> findByStadiumIdAndBlockCode(
+//    public List<Review> findByStadiumIdAndBlockCode(
 //            Long stadiumId,
 //            String blockCode,
 //            Integer rowNumber,
 //            Integer seatNumber,
 //            Integer year,
 //            Integer month,
-//            Pageable pageable) {
-//        List<Review> filteredReviews =
-//                data.stream()
-//                        .filter(
-//                                review ->
-//                                        review.getStadium().getId().equals(stadiumId)
-//                                                && review.getBlock().getCode().equals(blockCode))
-//                        .filter(
-//                                review ->
-//                                        rowNumber == null
-//                                                || review.getRow().getNumber().equals(rowNumber))
-//                        .filter(
-//                                review ->
-//                                        seatNumber == null
-//                                                || review.getSeat()
-//                                                        .getSeatNumber()
-//                                                        .equals(seatNumber))
-//                        .filter(review -> year == null || review.getDateTime().getYear() == year)
-//                        .filter(
-//                                review ->
-//                                        month == null
-//                                                || review.getDateTime().getMonthValue() == month)
-//                        .collect(Collectors.toList());
-//
-//        int start = (int) pageable.getOffset();
-//        int end = Math.min((start + pageable.getPageSize()), filteredReviews.size());
-//
-//        List<Review> pageContent = filteredReviews.subList(start, end);
-//        return new PageImpl<>(pageContent, pageable, filteredReviews.size());
+//            Long cursor,
+//            Integer size) {
+//        return data.stream()
+//                .filter(
+//                        review ->
+//                                review.getStadium().getId().equals(stadiumId)
+//                                        && review.getBlock().getCode().equals(blockCode))
+//                .filter(
+//                        review ->
+//                                rowNumber == null ||
+// review.getRow().getNumber().equals(rowNumber))
+//                .filter(
+//                        review ->
+//                                seatNumber == null
+//                                        || review.getSeat().getSeatNumber().equals(seatNumber))
+//                .filter(review -> year == null || review.getDateTime().getYear() == year)
+//                .filter(review -> month == null || review.getDateTime().getMonthValue() == month)
+//                .filter(review -> review.getId() > cursor)
+//                .sorted(Comparator.comparing(Review::getId))
+//                .limit(size)
+//                .collect(Collectors.toList());
 //    }
 //
 //    @Override
-//    public Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable)
-// {
-//        List<Review> filteredReviews =
-//                data.stream()
-//                        .filter(review -> review.getMember().getId().equals(userId))
-//                        .filter(review -> year == null || review.getDateTime().getYear() == year)
-//                        .filter(
-//                                review ->
-//                                        month == null
-//                                                || review.getDateTime().getMonthValue() == month)
-//                        .collect(Collectors.toList());
-//
-//        int start = (int) pageable.getOffset();
-//        int end = Math.min((start + pageable.getPageSize()), filteredReviews.size());
-//
-//        List<Review> pageContent = filteredReviews.subList(start, end);
-//        return new PageImpl<>(pageContent, pageable, filteredReviews.size());
+//    public List<Review> findAllByUserId(
+//            Long userId, Integer year, Integer month, Long cursor, Integer size) {
+//        return data.stream()
+//                .filter(review -> review.getMember().getId().equals(userId))
+//                .filter(review -> year == null || review.getDateTime().getYear() == year)
+//                .filter(review -> month == null || review.getDateTime().getMonthValue() == month)
+//                .filter(review -> review.getId() > cursor)
+//                .sorted(Comparator.comparing(Review::getId))
+//                .limit(size)
+//                .collect(Collectors.toList());
 //    }
 //
 //    @Override
@@ -91,6 +75,22 @@
 //                                .thenComparing(ReviewYearMonth::month)
 //                                .reversed())
 //                .collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public Long softDeleteByIdAndMemberId(Long reviewId, Long memberId) {
+//        return data.stream()
+//                .filter(
+//                        review ->
+//                                review.getId().equals(reviewId)
+//                                        && review.getMember().getId().equals(memberId))
+//                .findFirst()
+//                .map(
+//                        review -> {
+//                            review.setDeletedAt(LocalDateTime.now());
+//                            return reviewId;
+//                        })
+//                .orElse(0L);
 //    }
 //
 //    @Override
@@ -121,7 +121,43 @@
 //    }
 //
 //    @Override
-//    public long countByMemberId(Long memberId) {
+//    public Optional<Review> findById(Long id) {
+//        return data.stream().filter(review -> review.getId().equals(id)).findFirst();
+//    }
+//
+//    @Override
+//    public long countByUserId(Long userId) {
+//        return data.stream().filter(review -> review.getMember().getId().equals(userId)).count();
+//    }
+//
+//    @Override
+//    public LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode)
+// {
+//        return data.stream()
+//                .filter(
+//                        review ->
+//                                review.getStadium().getId().equals(stadiumId)
+//                                        && review.getBlock().getCode().equals(blockCode))
+//                .findFirst()
+//                .map(
+//                        review ->
+//                                new LocationInfo(
+//                                        review.getStadium().getName(),
+//                                        review.getSection().getName(),
+//                                        review.getBlock().getCode()))
+//                .orElse(null);
+//    }
+//
+//    @Override
+//    public Review findLastReviewByMemberId(Long memberId) {
+//        return data.stream()
+//                .filter(review -> review.getMember().getId().equals(memberId))
+//                .max(Comparator.comparing(Review::getDateTime))
+//                .orElse(null);
+//    }
+//
+//    @Override
+//    public long countByIdByMemberId(Long memberId) {
 //        return data.stream().filter(review ->
 // review.getMember().getId().equals(memberId)).count();
 //    }

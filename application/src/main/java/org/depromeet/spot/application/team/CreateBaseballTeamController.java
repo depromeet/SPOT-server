@@ -38,13 +38,13 @@ public class CreateBaseballTeamController {
             @RequestParam("logo") MultipartFile logo,
             @RequestParam("name") String name,
             @RequestParam("alias") String alias,
-            @RequestParam("labelBackgroundColor") String labelBackgroundColor) {
+            @RequestParam("labelFontColor") String labelFontColor) {
         CreateBaseballTeamCommand command =
                 CreateBaseballTeamCommand.builder()
                         .logo(logo)
                         .name(name)
                         .alias(alias)
-                        .labelBackgroundColor(labelBackgroundColor)
+                        .fontColor(labelFontColor)
                         .build();
         createBaseballTeamUsecase.save(command);
     }
