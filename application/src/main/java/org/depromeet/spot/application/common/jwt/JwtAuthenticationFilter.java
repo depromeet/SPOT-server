@@ -64,8 +64,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String requestURI = request.getRequestURI();
         final String requestMethod = request.getMethod();
-        log.info("requestURI: {}", requestURI);
-        log.info("requestMethod: {}", requestMethod);
 
         if (checkMethodWhitelist(requestURI, requestMethod)) {
             filterChain.doFilter(request, response);
