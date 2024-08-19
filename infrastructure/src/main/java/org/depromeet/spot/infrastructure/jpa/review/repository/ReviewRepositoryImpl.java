@@ -109,4 +109,16 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public long countByIdByMemberId(Long memberId) {
         return reviewJpaRepository.countByIdByMemberId(memberId);
     }
+
+    @Override
+    public long countByStadiumIdAndBlockCode(
+            Long stadiumId,
+            String blockCode,
+            Integer rowNumber,
+            Integer seatNumber,
+            Integer year,
+            Integer month) {
+        return reviewCustomRepository.countByStadiumIdAndBlockCode(
+                stadiumId, blockCode, rowNumber, seatNumber, year, month);
+    }
 }

@@ -86,11 +86,16 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
+        long totalElements =
+                reviewRepository.countByStadiumIdAndBlockCode(
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month);
+
         return BlockReviewListResult.builder()
                 .location(locationInfo)
                 .reviews(reviewsWithKeywords)
                 .topKeywords(topKeywords)
                 .topReviewImages(topReviewImages)
+                .totalElements(totalElements)
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
                 .build();

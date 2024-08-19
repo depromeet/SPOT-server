@@ -43,4 +43,12 @@ public interface ReviewRepository {
     Review findLastReviewByMemberId(Long memberId);
 
     long countByIdByMemberId(Long memberId);
+
+    long countByStadiumIdAndBlockCode(
+            Long stadiumId,
+            String blockCode,
+            Integer rowNumber,
+            Integer seatNumber,
+            Integer year,
+            Integer month);
 }
