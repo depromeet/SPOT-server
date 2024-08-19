@@ -62,7 +62,7 @@ public abstract class BaseEntity {
         return this.deletedAt != null;
     }
 
-    public void setId(Long id) {
+    protected void setId(Long id) {
         this.id = id;
     }
 }
