@@ -30,13 +30,13 @@ public class CreateBaseballTeamService implements CreateBaseballTeamUsecase {
         checkExistsName(name);
         final String logoUrl =
                 imageUploadPort.upload(name, command.logo(), MediaProperty.TEAM_LOGO);
-        HexCode backgroundColor = new HexCode(command.labelBackgroundColor());
+        HexCode fontColor = new HexCode(command.fontColor());
         BaseballTeam team =
                 BaseballTeam.builder()
                         .name(name)
                         .alias(command.alias())
                         .logo(logoUrl)
-                        .labelBackgroundColor(backgroundColor)
+                        .labelFontColor(fontColor)
                         .build();
         baseballTeamRepository.saveAll(List.of(team));
     }

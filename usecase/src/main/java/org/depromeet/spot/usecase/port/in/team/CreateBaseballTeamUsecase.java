@@ -10,5 +10,5 @@ public interface CreateBaseballTeamUsecase {
 
     @Builder
     record CreateBaseballTeamCommand(
-            MultipartFile logo, String name, String alias, String labelBackgroundColor) {}
+            MultipartFile logo, String name, String alias, String fontColor) {}
 }

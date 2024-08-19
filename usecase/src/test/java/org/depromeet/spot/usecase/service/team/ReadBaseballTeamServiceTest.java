@@ -29,7 +29,7 @@ class ReadBaseballTeamServiceTest {
                         .name("두산 베어스")
                         .alias("두산")
                         .logo("logo1.png")
-                        .labelBackgroundColor(new HexCode("#FFFFFF"))
+                        .labelFontColor(new HexCode("#FFFFFF"))
                         .build();
         BaseballTeam team2 =
                 BaseballTeam.builder()
@@ -37,7 +37,7 @@ class ReadBaseballTeamServiceTest {
                         .name("SSG 랜더스")
                         .alias("SSG")
                         .logo("logo2.png")
-                        .labelBackgroundColor(new HexCode("#FFFFF1"))
+                        .labelFontColor(new HexCode("#FFFFF1"))
                         .build();
 
         fakeBaseballTeamRepository.save(team1);
