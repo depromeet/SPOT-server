@@ -20,7 +20,6 @@ public interface ReadStadiumHomeTeamUsecase {
     class HomeTeamInfo {
         private final Long id;
         private final String alias;
-        private final String labelBackgroundColor;
         private final String labelFontColor;
     }
 }

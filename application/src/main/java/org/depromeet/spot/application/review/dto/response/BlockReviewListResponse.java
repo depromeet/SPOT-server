@@ -1,7 +1,6 @@
 package org.depromeet.spot.application.review.dto.response;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockKeywordInfo;
@@ -13,12 +12,9 @@ public record BlockReviewListResponse(
         List<KeywordCountResponse> keywords,
         List<BaseReviewResponse> reviews,
         List<TopReviewImageResponse> topReviewImages,
-        long totalElements,
-        int totalPages,
-        int number,
-        int size,
-        boolean first,
-        boolean last,
+        Long totalElements,
+        String nextCursor,
+        boolean hasNext,
         FilterInfo filter) {
 
     public static BlockReviewListResponse from(
@@ -29,24 +25,15 @@ public record BlockReviewListResponse(
             Integer month) {
 
         List<BaseReviewResponse> reviewResponses =
-                result.reviews().stream()
-                        .map(BaseReviewResponse::from)
-                        .collect(Collectors.toList());
+                result.reviews().stream().map(BaseReviewResponse::from).toList();
 
         List<KeywordCountResponse> keywordResponses =
-                result.topKeywords().stream()
-                        .map(KeywordCountResponse::from)
-                        .collect(Collectors.toList());
+                result.topKeywords().stream().map(KeywordCountResponse::from).toList();
 
         List<TopReviewImageResponse> topReviewImageResponses =
-                result.topReviewImages().stream()
-                        .map(TopReviewImageResponse::from)
-                        .collect(Collectors.toList());
+                result.topReviewImages().stream().map(TopReviewImageResponse::from).toList();
 
         FilterInfo filter = new FilterInfo(rowNumber, seatNumber, year, month);
-
-        boolean first = result.number() == 0;
-        boolean last = result.number() == result.totalPages() - 1;
 
         return new BlockReviewListResponse(
                 result.location(),
@@ -54,15 +41,13 @@ public record BlockReviewListResponse(
                 reviewResponses,
                 topReviewImageResponses,
                 result.totalElements(),
-                result.totalPages(),
-                result.number(),
-                result.size(),
-                first,
-                last,
+                result.nextCursor(),
+                result.hasNext(),
                 filter);
     }
 
     public record KeywordCountResponse(String content, Long count, Boolean isPositive) {
+
         public static KeywordCountResponse from(BlockKeywordInfo info) {
             return new KeywordCountResponse(info.content(), info.count(), info.isPositive());
         }
@@ -70,6 +55,7 @@ public record BlockReviewListResponse(
 
     public record TopReviewImageResponse(
             String url, Long reviewId, String blockCode, Integer rowNumber, Integer seatNumber) {
+
         public static TopReviewImageResponse from(TopReviewImage image) {
             return new TopReviewImageResponse(
                     image.getUrl(),

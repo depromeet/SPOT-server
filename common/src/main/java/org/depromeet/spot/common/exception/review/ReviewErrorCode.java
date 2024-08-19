@@ -14,7 +14,8 @@ public enum ReviewErrorCode implements ErrorCode {
     INVALID_REVIEW_KEYWORDS(
             HttpStatus.BAD_REQUEST, "RV004", "리뷰의 'good' 또는 'bad' 중 적어도 하나는 제공되어야 합니다."),
     UNAUTHORIZED_REVIEW_MODIFICATION_EXCEPTION(
-            HttpStatus.BAD_REQUEST, "RV005", "이 리뷰를 수정할 권한이 없습니다.");
+            HttpStatus.BAD_REQUEST, "RV005", "이 리뷰를 수정할 권한이 없습니다."),
+    INVALID_REVIEW_LIKES(HttpStatus.INTERNAL_SERVER_ERROR, "RV006", "리뷰 공감 수는 음수일 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;

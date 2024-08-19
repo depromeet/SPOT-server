@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewLikesException;
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.member.Member;
@@ -20,6 +21,7 @@ import lombok.Getter;
 
 @Getter
 public class Review {
+
     private final Long id;
     private final Member member;
     private final Stadium stadium;
@@ -29,10 +31,13 @@ public class Review {
     private final Seat seat;
     private final LocalDateTime dateTime;
     private final String content;
-    private final LocalDateTime deletedAt;
+    private LocalDateTime deletedAt;
     private List<ReviewImage> images;
     private List<ReviewKeyword> keywords;
     private transient Map<Long, Keyword> keywordMap;
+    private int likesCount;
+
+    public static final int DEFAULT_LIKE_COUNT = 0;
 
     @Builder
     public Review(
@@ -47,7 +52,12 @@ public class Review {
             String content,
             LocalDateTime deletedAt,
             List<ReviewImage> images,
-            List<ReviewKeyword> keywords) {
+            List<ReviewKeyword> keywords,
+            int likesCount) {
+        if (likesCount < 0) {
+            throw new InvalidReviewLikesException();
+        }
+
         this.id = id;
         this.member = member;
         this.stadium = stadium;
@@ -60,6 +70,7 @@ public class Review {
         this.deletedAt = deletedAt;
         this.images = images != null ? images : new ArrayList<>();
         this.keywords = keywords != null ? keywords : new ArrayList<>();
+        this.likesCount = likesCount;
     }
 
     public void addKeyword(ReviewKeyword keyword) {
@@ -87,5 +98,24 @@ public class Review {
 
     public Keyword getKeywordById(Long keywordId) {
         return keywordMap != null ? keywordMap.get(keywordId) : null;
+    }
+
+    public void addLike() {
+        this.likesCount++;
+    }
+
+    public void cancelLike() {
+        if (this.likesCount > 0) {
+            this.likesCount--;
+        }
+    }
+
+    public void setDeletedAt(LocalDateTime now) {
+        this.deletedAt = now;
+    }
+
+    public enum SortCriteria {
+        DATE_TIME,
+        LIKES_COUNT,
     }
 }

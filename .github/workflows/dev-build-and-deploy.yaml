@@ -1,154 +1,157 @@
 name: Build And Test
 
 on:
-  push:
-    branches:
-      - main
-      - dev
-  pull_request:
-    branches:
-      - main
-      - dev
+    push:
+        branches:
+            - main
+            - dev
+    pull_request:
+        branches:
+            - main
+            - dev
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+    build-and-test:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: "corretto"
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v4
+                with:
+                    java-version: "17"
+                    distribution: "corretto"
 
-      - name: Cache Gradle
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+            -   name: Cache Gradle
+                uses: actions/cache@v3
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+            -   name: Grant execute permission for gradlew
+                run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build -x test --stacktrace --parallel
+            -   name: Build with Gradle
+                run: ./gradlew build -x test --stacktrace --parallel
 
-      - name: Run tests
-        run: ./gradlew test
+            -   name: Run tests
+                run: ./gradlew test
 
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: '**/build/test-results/test/TEST-*.xml'
+            -   name: Publish Unit Test Results
+                uses: EnricoMi/publish-unit-test-result-action@v2
+                if: always()
+                with:
+                    files: '**/build/test-results/test/TEST-*.xml'
 
-      - name: JUnit Report Action
-        uses: mikepenz/action-junit-report@v3
-        if: always()
-        with:
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+            -   name: JUnit Report Action
+                uses: mikepenz/action-junit-report@v3
+                if: always()
+                with:
+                    report_paths: '**/build/test-results/test/TEST-*.xml'
 
-      - name: Store test results
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: test-results
-          path: '**/build/test-results/test/TEST-*.xml'
+            -   name: Store test results
+                uses: actions/upload-artifact@v3
+                if: always()
+                with:
+                    name: test-results
+                    path: '**/build/test-results/test/TEST-*.xml'
 
-      - name: Test Report Summary
-        if: always()
-        run: |
-          echo '## Test Report Summary' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          ./gradlew test --console=plain || true
-          echo '```' >> $GITHUB_STEP_SUMMARY
+            -   name: Test Report Summary
+                if: always()
+                run: |
+                    echo '## Test Report Summary' >> $GITHUB_STEP_SUMMARY
+                    echo '```' >> $GITHUB_STEP_SUMMARY
+                    ./gradlew test --console=plain || true
+                    echo '```' >> $GITHUB_STEP_SUMMARY
 
-  deploy:
-      needs: build-and-test
-      if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push'
-      runs-on: ubuntu-latest
+    deploy:
+        needs: build-and-test
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push'
+        runs-on: ubuntu-latest
 
-      steps:
-          -   name: Checkout code
-              uses: actions/checkout@v4
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
 
-          -   name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v2
+            -   name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v2
 
-          -   name: Login to DockerHub
-              uses: docker/login-action@v2
-              with:
-                  username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+            -   name: Login to DockerHub
+                uses: docker/login-action@v2
+                with:
+                    username: ${{ secrets.DOCKERHUB_USERNAME }}
+                    password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-          -   name: Build and push Docker image
-              uses: docker/build-push-action@v4
-              with:
-                  context: .
-                  push: true
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+            -   name: Build and push Docker image
+                uses: docker/build-push-action@v4
+                with:
+                    context: .
+                    push: true
+                    tags: ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
 
-          - name: Deploy to Dev NCP Server
-            uses: appleboy/ssh-action@master
-            with:
-                host: ${{ secrets.DEV_SERVER_HOST }}
-                username: ${{ secrets.DEV_SERVER_USERNAME }}
-                password: ${{ secrets.DEV_SERVER_PASSWORD }}
-                port: ${{ secrets.DEV_SERVER_PORT }}
-                script: |
-                    docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
-                    docker stop spot-server-dev || true
-                    docker rm spot-server-dev || true
-                    docker run -d --name spot-server-dev \
-                      -p 8080:8080 \
-                      -p 9292:9292 \
-                      -e SPRING_PROFILES_ACTIVE=dev \
-                      -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
-                      -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
-                      -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
-                      -e SPRING_JWT_SECRET=${{ secrets.JWT_SECRET }} \
-                      -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
-                      -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
-                      -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
-                      -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
-                      -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
-                      -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \
-                      -e AWS_S3_BUCKET_NAME=${{ secrets.DEV_AWS_S3_BUCKET_NAME }} \
-                      -e TZ=Asia/Seoul \
-                      -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
-                      -e SENTRY_ENABLE_TRACING=true \
-                      -e SENTRY_ENVIRONMENT=prod \
-                      -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
-                      ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
-                    docker system prune -af
+            -   name: Deploy to Dev NCP Server
+                uses: appleboy/ssh-action@master
+                with:
+                    host: ${{ secrets.DEV_SERVER_HOST }}
+                    username: ${{ secrets.DEV_SERVER_USERNAME }}
+                    password: ${{ secrets.DEV_SERVER_PASSWORD }}
+                    port: ${{ secrets.DEV_SERVER_PORT }}
+                    script: |
+                        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                        docker stop spot-server-dev || true
+                        docker rm spot-server-dev || true
+                        docker run -d --name spot-server-dev \
+                          -p 8080:8080 \
+                          -p 9292:9292 \
+                          -p 3100:3100 \
+                          -e SPRING_PROFILES_ACTIVE=dev \
+                              -e AWS_REDIS_HOST=${{ secrets.DEV_REDIS_HOST }} \
+                              -e AWS_REDIS_PORT=${{ secrets.DEV_REDIS_PORT }}  \
+                          -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
+                          -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
+                          -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
+                          -e SPRING_JWT_SECRET=${{ secrets.JWT_SECRET }} \
+                          -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
+                          -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
+                          -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
+                          -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
+                          -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
+                          -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \
+                          -e AWS_S3_BUCKET_NAME=${{ secrets.DEV_AWS_S3_BUCKET_NAME }} \
+                          -e TZ=Asia/Seoul \
+                          -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+                          -e SENTRY_ENABLE_TRACING=true \
+                          -e SENTRY_ENVIRONMENT=prod \
+                          -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
+                          ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                        docker system prune -af
 
-  create-release:
-      needs: [ build-and-test, deploy ]  # deploy job이 성공적으로 완료된 후에만 실행
-#      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
-      runs-on: ubuntu-latest
-      permissions:
-          contents: write
-      steps:
-          - name: Checkout code
-            uses: actions/checkout@v4
-
-          - name: Bump version and push tag
-            id: tag_version
-            uses: mathieudutour/github-tag-action@v6.1
-            with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
-
-          - name: Create a GitHub release
-            uses: ncipollo/release-action@v1
-            with:
-                tag: ${{ steps.tag_version.outputs.new_tag }}
-                name: Release ${{ steps.tag_version.outputs.new_tag }}
-                body: ${{ steps.tag_version.outputs.changelog }}
+#  create-release:
+#      needs: [ build-and-test, deploy ]  # deploy job이 성공적으로 완료된 후에만 실행
+##      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
+#      runs-on: ubuntu-latest
+#      permissions:
+#          contents: write
+#      steps:
+#          - name: Checkout code
+#            uses: actions/checkout@v4
+#
+#          - name: Bump version and push tag
+#            id: tag_version
+#            uses: mathieudutour/github-tag-action@v6.1
+#            with:
+#                github_token: ${{ secrets.GITHUB_TOKEN }}
+#
+#          - name: Create a GitHub release
+#            uses: ncipollo/release-action@v1
+#            with:
+#                tag: ${{ steps.tag_version.outputs.new_tag }}
+#                name: Release ${{ steps.tag_version.outputs.new_tag }}
+#                body: ${{ steps.tag_version.outputs.changelog }}
 

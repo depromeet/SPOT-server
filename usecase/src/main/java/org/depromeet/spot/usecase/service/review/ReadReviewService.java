@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
@@ -19,8 +19,6 @@ import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReadReviewService implements ReadReviewUsecase {
+
     private final ReviewRepository reviewRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
@@ -48,16 +47,32 @@ public class ReadReviewService implements ReadReviewUsecase {
             Integer seatNumber,
             Integer year,
             Integer month,
-            Pageable pageable) {
+            String cursor,
+            SortCriteria sortBy,
+            Integer size) {
 
         // LocationInfo 조회
         LocationInfo locationInfo =
                 reviewRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
 
         // stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 reviews를 조회
-        Page<Review> reviewPage =
+        List<Review> reviews =
                 reviewRepository.findByStadiumIdAndBlockCode(
-                        stadiumId, blockCode, rowNumber, seatNumber, year, month, pageable);
+                        stadiumId,
+                        blockCode,
+                        rowNumber,
+                        seatNumber,
+                        year,
+                        month,
+                        cursor,
+                        sortBy,
+                        size + 1);
+        boolean hasNext = reviews.size() > size;
+        if (hasNext) {
+            reviews = reviews.subList(0, size);
+        }
+
+        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
 
         //  stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 topKeywords를 조회
         List<BlockKeywordInfo> topKeywords =
@@ -69,50 +84,77 @@ public class ReadReviewService implements ReadReviewUsecase {
                 reviewImageRepository.findTopReviewImagesByStadiumIdAndBlockCode(
                         stadiumId, blockCode, TOP_IMAGES_LIMIT);
 
-        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviewPage.getContent());
+        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
+
+        long totalElements =
+                reviewRepository.countByStadiumIdAndBlockCode(
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month);
 
         return BlockReviewListResult.builder()
                 .location(locationInfo)
                 .reviews(reviewsWithKeywords)
                 .topKeywords(topKeywords)
                 .topReviewImages(topReviewImages)
-                .totalElements(reviewPage.getTotalElements())
-                .totalPages(reviewPage.getTotalPages())
-                .number(reviewPage.getNumber())
-                .size(reviewPage.getSize())
+                .totalElements(totalElements)
+                .nextCursor(nextCursor)
+                .hasNext(hasNext)
                 .build();
     }
 
     @Override
     public MyReviewListResult findMyReviewsByUserId(
-            Long userId, Integer year, Integer month, Pageable pageable) {
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size) {
 
-        Page<Review> reviewPage = reviewRepository.findByUserId(userId, year, month, pageable);
+        List<Review> reviews =
+                reviewRepository.findAllByUserId(userId, year, month, cursor, sortBy, size + 1);
 
-        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviewPage.getContent());
+        boolean hasNext = reviews.size() > size;
+        if (hasNext) {
+            reviews = reviews.subList(0, size);
+        }
+
+        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
+
+        List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
         Member member = memberRepository.findById(userId);
 
         MemberInfoOnMyReviewResult memberInfo;
         if (member.getTeamId() == null) {
-            memberInfo = MemberInfoOnMyReviewResult.of(member, reviewPage.getTotalElements());
+            memberInfo =
+                    MemberInfoOnMyReviewResult.of(member, reviewRepository.countByUserId(userId));
 
         } else {
             BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
 
             memberInfo =
                     MemberInfoOnMyReviewResult.of(
-                            member, reviewPage.getTotalElements(), baseballTeam.getName());
+                            member, reviewRepository.countByUserId(userId), baseballTeam.getName());
         }
 
         return MyReviewListResult.builder()
                 .memberInfoOnMyReviewResult(memberInfo)
                 .reviews(reviewsWithKeywords)
-                .totalElements(reviewPage.getTotalElements())
-                .totalPages(reviewPage.getTotalPages())
-                .number(reviewPage.getNumber())
-                .size(reviewPage.getSize())
+                .nextCursor(nextCursor)
+                .hasNext(hasNext)
                 .build();
+    }
+
+    private String getCursor(Review review, SortCriteria sortBy) {
+        switch (sortBy) {
+                // TODO: 좋아요 컬럼 반영 시 주석 해제
+                //            case LIKES_COUNT:
+                //                return review.getLikesCount() + "_" +
+                // review.getDateTime().toString() + "_" + review.getId();
+            case DATE_TIME:
+            default:
+                return review.getDateTime().toString() + "_" + review.getId();
+        }
     }
 
     @Override
@@ -122,13 +164,7 @@ public class ReadReviewService implements ReadReviewUsecase {
 
     @Override
     public ReadReviewResult findReviewById(Long reviewId) {
-        Review review =
-                reviewRepository
-                        .findById(reviewId)
-                        .orElseThrow(
-                                () ->
-                                        new ReviewNotFoundException(
-                                                "Review not found with id: " + reviewId));
+        Review review = reviewRepository.findById(reviewId);
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
 
         return ReadReviewResult.builder().review(reviewWithKeywords).build();
@@ -142,6 +178,11 @@ public class ReadReviewService implements ReadReviewUsecase {
     @Override
     public long countByMember(Long memberId) {
         return reviewRepository.countByUserId(memberId);
+    }
+
+    @Override
+    public Review findById(long reviewId) {
+        return reviewRepository.findById(reviewId);
     }
 
     @Override
@@ -191,6 +232,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .deletedAt(review.getDeletedAt())
                         .images(review.getImages())
                         .keywords(mappedKeywords)
+                        .likesCount(review.getLikesCount())
                         .build();
 
         mappedReview.setKeywordMap(keywordMap);
@@ -235,6 +277,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .deletedAt(review.getDeletedAt())
                         .images(review.getImages())
                         .keywords(mappedKeywords) // 리뷰 키워드 담당
+                        .likesCount(review.getLikesCount())
                         .build();
 
         // Keyword 정보를 Review 객체에 추가

@@ -9,10 +9,10 @@ VALUES (1, '잠실 야구 경기장', 'main_image_a.jpg', 'seating_chart_a.jpg',
         0);
 
 -- Baseball Teams
-INSERT INTO baseball_teams (id, name, alias, logo, label_background_color, label_font_color)
-VALUES (1, 'Team A', 'A', 'logo_a.png', '#1F1F52', '#FFFFFF'),
-       (2, 'Team B', 'B', 'logo_b.png', '#1E4D9C', '#FFFFFF'),
-       (3, 'Team C', 'C', 'logo_c.png', '#D72E34', '#FFFFFF');
+INSERT INTO baseball_teams (id, name, alias, logo, label_font_color)
+VALUES (1, 'Team A', 'A', 'logo_a.png', '#FFFFFF'),
+       (2, 'Team B', 'B', 'logo_b.png', '#FFFFFF'),
+       (3, 'Team C', 'C', 'logo_c.png', '#FFFFFF');
 
 -- Stadium Home Teams
 INSERT INTO stadium_home_teams (id, stadium_id, team_id)
@@ -22,10 +22,10 @@ VALUES (1, 1, 1),
        (4, 1, 2);
 
 -- Stadium Sections
-INSERT INTO sections (id, stadium_id, name, alias, label_color)
-VALUES (1, 1, '오렌지석', '응원석', '#FFFFFF'),
-       (2, 1, '네이비석', '프리미엄석', '#B3B248'),
-       (3, 1, '레드석', null, '#CA53A9');
+INSERT INTO sections (id, stadium_id, name, alias)
+VALUES (1, 1, '오렌지석', '응원석'),
+       (2, 1, '네이비석', '프리미엄석'),
+       (3, 1, '레드석', null);
 
 -- Block
 INSERT INTO blocks (id, stadium_id, section_id, code, max_rows)
@@ -122,17 +122,17 @@ VALUES (1, '좋아요', true, '2023-06-01 22:00:00', '2023-06-01 22:00:00'),
 
 -- reviews
 INSERT INTO reviews (id, member_id, stadium_id, section_id, block_id, row_id, seat_id, date_time,
-                     content, deleted_at, created_at, updated_at)
+                     content, deleted_at, created_at, updated_at, likes_count)
 VALUES (1, 1, 1, 1, 1, 1, 1, '2023-06-01 19:00:00', '좋은 경기였습니다!', NULL, '2023-06-01 22:00:00',
-        '2023-06-01 22:00:00'),
+        '2023-06-01 22:00:00', 0),
        (2, 2, 1, 1, 1, 2, 2, '2023-06-02 19:00:00', '시야가 좋았어요', NULL, '2023-06-02 22:00:00',
-        '2023-06-02 22:00:00'),
+        '2023-06-02 22:00:00', 0),
        (3, 3, 1, 2, 2, 3, 3, '2023-06-03 19:00:00', '다음에 또 오고 싶어요', NULL, '2023-06-03 22:00:00',
-        '2023-06-03 22:00:00'),
+        '2023-06-03 22:00:00', 0),
        (4, 1, 2, 3, 3, 4, 4, '2023-06-04 19:00:00', '아쉬운 경기였습니다', NULL, '2023-06-04 22:00:00',
-        '2023-06-04 22:00:00'),
+        '2023-06-04 22:00:00', 0),
        (5, 2, 2, 3, 3, 5, 5, '2023-06-05 19:00:00', '멋진 경기였어요!', NULL, '2023-06-05 22:00:00',
-        '2023-06-05 22:00:00');
+        '2023-06-05 22:00:00', 0);
 
 -- review_images
 INSERT INTO review_images (id, review_id, url, created_at, updated_at)

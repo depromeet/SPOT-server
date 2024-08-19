@@ -30,7 +30,7 @@ public record BaseReviewResponse(
     public static BaseReviewResponse from(CreateReviewResult result) {
         Review review = result.review();
         Member member = result.member();
-        Seat seat = result.seat();
+
         return new BaseReviewResponse(
                 review.getId(),
                 MemberInfo.from(member),
@@ -38,7 +38,7 @@ public record BaseReviewResponse(
                 SectionResponse.from(review.getSection()),
                 BlockResponse.from(review.getBlock()),
                 RowResponse.from(review.getRow()),
-                SeatResponse.from(seat),
+                SeatResponse.from(result.seat()),
                 review.getDateTime(),
                 review.getContent(),
                 review.getImages().stream().map(ReviewImageResponse::from).toList(),
@@ -83,36 +83,43 @@ public record BaseReviewResponse(
     }
 
     public record StadiumResponse(Long id, String name) {
+
         public static StadiumResponse from(Stadium stadium) {
             return new StadiumResponse(stadium.getId(), stadium.getName());
         }
     }
 
     public record SectionResponse(Long id, String name, String alias) {
+
         public static SectionResponse from(Section section) {
             return new SectionResponse(section.getId(), section.getName(), section.getAlias());
         }
     }
 
     public record BlockResponse(Long id, String code) {
+
         public static BlockResponse from(Block block) {
             return new BlockResponse(block.getId(), block.getCode());
         }
     }
 
     public record RowResponse(Long id, Integer number) {
+
         public static RowResponse from(BlockRow row) {
             return new RowResponse(row.getId(), row.getNumber());
         }
     }
 
     public record SeatResponse(Long id, Integer seatNumber) {
+
         public static SeatResponse from(Seat seat) {
+            if (seat == null) return null;
             return new SeatResponse(seat.getId(), seat.getSeatNumber());
         }
     }
 
     public record MemberInfo(String profileImage, String nickname, Integer level) {
+
         public static MemberInfo from(Member member) {
             return new MemberInfo(
                     member.getProfileImage(), member.getNickname(), member.getLevel().getValue());

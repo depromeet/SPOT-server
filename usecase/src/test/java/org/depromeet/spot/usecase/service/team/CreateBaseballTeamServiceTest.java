@@ -30,7 +30,7 @@ class CreateBaseballTeamServiceTest {
                         .name("두산 베어스")
                         .alias("두산")
                         .logo("logo1.png")
-                        .labelBackgroundColor(new HexCode("#FFFFFF"))
+                        .labelFontColor(new HexCode("#FFFFFF"))
                         .build();
         fakeBaseballTeamRepository.save(team);
     }

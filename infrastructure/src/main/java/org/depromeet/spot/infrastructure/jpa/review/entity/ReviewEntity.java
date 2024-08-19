@@ -27,6 +27,7 @@ import org.depromeet.spot.infrastructure.jpa.seat.entity.SeatEntity;
 import org.depromeet.spot.infrastructure.jpa.section.entity.SectionEntity;
 import org.depromeet.spot.infrastructure.jpa.stadium.entity.StadiumEntity;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -75,10 +76,7 @@ public class ReviewEntity extends BaseEntity {
     private BlockRowEntity row;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "seat_id",
-            nullable = false,
-            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "seat_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private SeatEntity seat;
 
     @Column(name = "date_time", nullable = false)
@@ -95,7 +93,17 @@ public class ReviewEntity extends BaseEntity {
     @BatchSize(size = 30)
     private List<ReviewKeywordEntity> keywords;
 
+    @ColumnDefault("0")
+    @Column(name = "likes_count")
+    private Integer likesCount;
+
     public static ReviewEntity from(Review review) {
+        SeatEntity seatEntity;
+        if (review.getSeat() == null) {
+            seatEntity = null;
+        } else {
+            seatEntity = SeatEntity.withSeat(review.getSeat());
+        }
         ReviewEntity entity =
                 new ReviewEntity(
                         MemberEntity.withMember(review.getMember()),
@@ -103,23 +111,24 @@ public class ReviewEntity extends BaseEntity {
                         SectionEntity.withSection(review.getSection()),
                         BlockEntity.withBlock(review.getBlock()),
                         BlockRowEntity.withBlockRow(review.getRow()),
-                        SeatEntity.withSeat(review.getSeat()),
+                        seatEntity,
                         review.getDateTime(),
                         review.getContent(),
                         new ArrayList<>(),
-                        new ArrayList<>());
+                        new ArrayList<>(),
+                        review.getLikesCount());
 
         entity.setId(review.getId()); // ID 설정 추가
 
         entity.images =
                 review.getImages().stream()
                         .map(image -> ReviewImageEntity.from(image, entity))
-                        .collect(Collectors.toList());
+                        .toList();
 
         entity.keywords =
                 review.getKeywords().stream()
                         .map(keyword -> ReviewKeywordEntity.from(keyword, entity))
-                        .collect(Collectors.toList());
+                        .toList();
 
         return entity;
     }
@@ -133,9 +142,10 @@ public class ReviewEntity extends BaseEntity {
                         .section(this.section.toDomain())
                         .block(this.block.toDomain())
                         .row(this.row.toDomain())
-                        .seat(this.seat.toDomain())
+                        .seat((this.seat == null) ? null : this.seat.toDomain())
                         .dateTime(this.dateTime)
                         .content(this.content)
+                        .likesCount(likesCount)
                         .build();
 
         review.setImages(
@@ -163,5 +173,6 @@ public class ReviewEntity extends BaseEntity {
         seat = SeatEntity.withSeat(review.getSeat());
         dateTime = review.getDateTime();
         content = review.getContent();
+        likesCount = review.getLikesCount();
     }
 }

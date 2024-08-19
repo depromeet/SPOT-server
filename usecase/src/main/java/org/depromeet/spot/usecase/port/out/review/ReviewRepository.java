@@ -1,31 +1,39 @@
 package org.depromeet.spot.usecase.port.out.review;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface ReviewRepository {
+    void updateLikesCount(Long reviewId, int likesCount);
+
     Review save(Review review);
 
-    Optional<Review> findById(Long id);
+    Review findById(Long id);
 
     long countByUserId(Long userId);
 
-    Page<Review> findByStadiumIdAndBlockCode(
+    List<Review> findByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,
             Integer rowNumber,
             Integer seatNumber,
             Integer year,
             Integer month,
-            Pageable pageable);
+            String cursor,
+            SortCriteria sortBy,
+            Integer size);
 
-    Page<Review> findByUserId(Long userId, Integer year, Integer month, Pageable pageable);
+    List<Review> findAllByUserId(
+            Long userId,
+            Integer year,
+            Integer month,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size);
 
     List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
 
@@ -36,4 +44,12 @@ public interface ReviewRepository {
     Review findLastReviewByMemberId(Long memberId);
 
     long countByIdByMemberId(Long memberId);
+
+    long countByStadiumIdAndBlockCode(
+            Long stadiumId,
+            String blockCode,
+            Integer rowNumber,
+            Integer seatNumber,
+            Integer year,
+            Integer month);
 }

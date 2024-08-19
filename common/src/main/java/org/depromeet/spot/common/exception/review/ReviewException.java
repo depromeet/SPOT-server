@@ -56,4 +56,10 @@ public abstract class ReviewException extends BusinessException {
             super(ReviewErrorCode.INVALID_REVIEW_KEYWORDS.appended(str));
         }
     }
+
+    public static class InvalidReviewLikesException extends ReviewException {
+        public InvalidReviewLikesException() {
+            super(ReviewErrorCode.INVALID_REVIEW_LIKES);
+        }
+    }
 }
