@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.common.exception.review.ReviewException.UnauthorizedReviewModificationException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
@@ -38,11 +37,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
 
     public UpdateReviewResult updateReview(
             Long memberId, Long reviewId, UpdateReviewCommand command) {
-        Review existingReview =
-                reviewRepository
-                        .findById(reviewId)
-                        .orElseThrow(
-                                () -> new ReviewNotFoundException("요청한 리뷰를 찾을 수 없습니다." + reviewId));
+        Review existingReview = reviewRepository.findById(reviewId);
 
         if (!existingReview.getMember().getId().equals(memberId)) {
             throw new UnauthorizedReviewModificationException();
@@ -52,7 +47,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         Seat seat = seatRepository.findByIdWith(command.blockId(), command.seatNumber());
 
         // 새로운 Review 객체 생성
-        Review updatedReview = createUpdatedReview(reviewId, member, seat, command);
+        Review updatedReview = createUpdatedReview(reviewId, member, seat, command, existingReview);
 
         // keyword와 image 처리
         Map<Long, Keyword> keywordMap =
@@ -68,8 +63,17 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         return new UpdateReviewResult(savedReview);
     }
 
+    @Override
+    public void updateLikesCount(Review review) {
+        reviewRepository.updateLikesCount(review.getId(), review.getLikesCount());
+    }
+
     private Review createUpdatedReview(
-            Long reviewId, Member member, Seat seat, UpdateReviewCommand command) {
+            Long reviewId,
+            Member member,
+            Seat seat,
+            UpdateReviewCommand command,
+            Review savedReview) {
         return Review.builder()
                 .id(reviewId)
                 .member(member)
@@ -80,6 +84,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
                 .seat(seat)
                 .dateTime(command.dateTime())
                 .content(command.content())
+                .likesCount(savedReview.getLikesCount())
                 .build();
     }
 

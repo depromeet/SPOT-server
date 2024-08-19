@@ -10,6 +10,8 @@ import lombok.Builder;
 public interface UpdateReviewUsecase {
     UpdateReviewResult updateReview(Long memberId, Long reviewId, UpdateReviewCommand command);
 
+    void updateLikesCount(Review review);
+
     @Builder
     record UpdateReviewCommand(
             Long blockId,

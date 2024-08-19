@@ -2,8 +2,8 @@ package org.depromeet.spot.infrastructure.jpa.review.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
+import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
@@ -24,6 +24,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     private final ReviewCustomRepository reviewCustomRepository;
 
     @Override
+    public void updateLikesCount(Long reviewId, int likesCount) {
+        reviewJpaRepository.updateLikesCount(reviewId, likesCount);
+    }
+
+    @Override
     public Review save(Review review) {
         ReviewEntity entity = ReviewEntity.from(review);
         ReviewEntity savedEntity = reviewJpaRepository.save(entity);
@@ -31,8 +36,12 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public Optional<Review> findById(Long id) {
-        return reviewJpaRepository.findById(id).map(ReviewEntity::toDomain);
+    public Review findById(Long id) {
+        ReviewEntity entity =
+                reviewJpaRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ReviewNotFoundException("요청한 리뷰를 찾을 수 없습니다." + id));
+        return entity.toDomain();
     }
 
     @Override

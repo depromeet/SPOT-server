@@ -27,6 +27,7 @@ import org.depromeet.spot.infrastructure.jpa.seat.entity.SeatEntity;
 import org.depromeet.spot.infrastructure.jpa.section.entity.SectionEntity;
 import org.depromeet.spot.infrastructure.jpa.stadium.entity.StadiumEntity;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -92,6 +93,10 @@ public class ReviewEntity extends BaseEntity {
     @BatchSize(size = 30)
     private List<ReviewKeywordEntity> keywords;
 
+    @ColumnDefault("0")
+    @Column(name = "likes_count")
+    private Integer likesCount;
+
     public static ReviewEntity from(Review review) {
         SeatEntity seatEntity;
         if (review.getSeat() == null) {
@@ -110,7 +115,8 @@ public class ReviewEntity extends BaseEntity {
                         review.getDateTime(),
                         review.getContent(),
                         new ArrayList<>(),
-                        new ArrayList<>());
+                        new ArrayList<>(),
+                        review.getLikesCount());
 
         entity.setId(review.getId()); // ID 설정 추가
 
@@ -139,6 +145,7 @@ public class ReviewEntity extends BaseEntity {
                         .seat((this.seat == null) ? null : this.seat.toDomain())
                         .dateTime(this.dateTime)
                         .content(this.content)
+                        .likesCount(likesCount)
                         .build();
 
         review.setImages(
@@ -166,5 +173,6 @@ public class ReviewEntity extends BaseEntity {
         seat = SeatEntity.withSeat(review.getSeat());
         dateTime = review.getDateTime();
         content = review.getContent();
+        likesCount = review.getLikesCount();
     }
 }

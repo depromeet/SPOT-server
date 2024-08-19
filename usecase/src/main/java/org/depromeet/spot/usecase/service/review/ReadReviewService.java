@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
@@ -29,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReadReviewService implements ReadReviewUsecase {
+
     private final ReviewRepository reviewRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
@@ -164,13 +164,7 @@ public class ReadReviewService implements ReadReviewUsecase {
 
     @Override
     public ReadReviewResult findReviewById(Long reviewId) {
-        Review review =
-                reviewRepository
-                        .findById(reviewId)
-                        .orElseThrow(
-                                () ->
-                                        new ReviewNotFoundException(
-                                                "Review not found with id: " + reviewId));
+        Review review = reviewRepository.findById(reviewId);
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
 
         return ReadReviewResult.builder().review(reviewWithKeywords).build();
@@ -184,6 +178,11 @@ public class ReadReviewService implements ReadReviewUsecase {
     @Override
     public long countByMember(Long memberId) {
         return reviewRepository.countByUserId(memberId);
+    }
+
+    @Override
+    public Review findById(long reviewId) {
+        return reviewRepository.findById(reviewId);
     }
 
     @Override
@@ -233,6 +232,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .deletedAt(review.getDeletedAt())
                         .images(review.getImages())
                         .keywords(mappedKeywords)
+                        .likesCount(review.getLikesCount())
                         .build();
 
         mappedReview.setKeywordMap(keywordMap);
@@ -277,6 +277,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .deletedAt(review.getDeletedAt())
                         .images(review.getImages())
                         .keywords(mappedKeywords) // 리뷰 키워드 담당
+                        .likesCount(review.getLikesCount())
                         .build();
 
         // Keyword 정보를 Review 객체에 추가
