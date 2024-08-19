@@ -47,6 +47,7 @@ public interface ReadReviewUsecase {
             List<Review> reviews,
             List<BlockKeywordInfo> topKeywords,
             List<TopReviewImage> topReviewImages,
+            Long totalElements,
             String nextCursor,
             boolean hasNext) {}
 
