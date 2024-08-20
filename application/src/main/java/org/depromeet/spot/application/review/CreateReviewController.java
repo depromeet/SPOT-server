@@ -38,22 +38,6 @@ public class CreateReviewController {
 
     private final CreateReviewUsecase createReviewUsecase;
 
-    //    @CurrentMember
-    //    @ResponseStatus(HttpStatus.CREATED)
-    //    @Operation(summary = "특정 좌석에 신규 리뷰를 추가한다.")
-    //    @PostMapping("/blocks/{blockId}/seats/{seatNumber}/reviews")
-    //    public BaseReviewResponse create(
-    //            @PathVariable @Positive @NotNull final Long blockId,
-    //            @PathVariable @Positive @NotNull final Integer seatNumber,
-    //            @Parameter(hidden = true) Long memberId,
-    //            @RequestBody @Valid CreateReviewRequest request) {
-    //
-    //        CreateReviewResult result =
-    //                createReviewUsecase.create(blockId, seatNumber, memberId,
-    // request.toCommand());
-    //        return BaseReviewResponse.from(result);
-    //    }
-
     @CurrentMember
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "특정 좌석에 신규 리뷰를 추가한다. 열과 번은 nullable 하다.")
