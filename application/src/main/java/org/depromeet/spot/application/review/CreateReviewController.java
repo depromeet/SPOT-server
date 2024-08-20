@@ -42,7 +42,7 @@ public class CreateReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "특정 좌석에 신규 리뷰를 추가한다. 열과 번은 nullable 하다.")
     @PostMapping("/blocks/{blockId}/reviews")
-    public BaseReviewResponse create_v2(
+    public BaseReviewResponse create(
             @PathVariable @Positive @NotNull final Long blockId,
             @Parameter(hidden = true) Long memberId,
             @RequestBody @Valid CreateReviewRequest request) {
