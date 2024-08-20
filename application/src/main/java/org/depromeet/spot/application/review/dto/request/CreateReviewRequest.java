@@ -6,6 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
@@ -13,6 +14,8 @@ import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewK
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewCommand;
 
 public record CreateReviewRequest(
+        @Positive Integer rowNumber,
+        @Positive Integer seatNumber,
         @Size(min = 1, max = 3) List<String> images,
         List<String> good,
         List<String> bad,
@@ -22,6 +25,8 @@ public record CreateReviewRequest(
     public CreateReviewCommand toCommand() {
         validateGoodAndBad();
         return CreateReviewCommand.builder()
+                .rowNumber(rowNumber)
+                .seatNumber(seatNumber)
                 .images(images)
                 .good(good)
                 .bad(bad)

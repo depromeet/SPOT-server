@@ -11,6 +11,7 @@ import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
+import org.depromeet.spot.usecase.port.in.block.BlockReadUsecase;
 import org.depromeet.spot.usecase.port.in.block.ReadBlockRowUsecase;
 import org.depromeet.spot.usecase.port.in.member.UpdateMemberUsecase;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
@@ -41,18 +42,83 @@ public class CreateReviewService implements CreateReviewUsecase {
     private final StadiumReadUsecase stadiumReadUsecase;
     private final SectionReadUsecase sectionReadUsecase;
     private final ReadBlockRowUsecase readBlockRowUsecase;
+    private final BlockReadUsecase blockReadUsecase;
     private final ReviewImageProcessor reviewImageProcessor;
     private final ReviewKeywordProcessor reviewKeywordProcessor;
 
+    //    @Override
+    //    @Transactional
+    //    public CreateReviewResult create(
+    //            Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command) {
+    //        Member member = memberRepository.findById(memberId);
+    //        Seat seat = seatRepository.findByIdWith(blockId, seatNumber);
+    //
+    //        // image와 keyword를 제외한 review 도메인 생성
+    //        Review review = convertToDomain(seat, member, command);
+    //
+    //        // review 도메인에 keyword와 image를 추가
+    //        Map<Long, Keyword> keywordMap =
+    //                reviewKeywordProcessor.processKeywords(review, command.good(), command.bad());
+    //        reviewImageProcessor.processImages(review, command.images());
+    //
+    //        // 저장 및 blockTopKeyword에도 count 업데이트
+    //        Review savedReview = reviewRepository.save(review);
+    //
+    //        // BlockTopKeyword 업데이트 및 생성
+    //        reviewKeywordProcessor.updateBlockTopKeywords(savedReview);
+    //
+    //        savedReview.setKeywordMap(keywordMap);
+    //
+    //        // 회원 리뷰 경험치 업데이트
+    //        Member levelUpdateMember = calculateMemberLevel(member);
+    //
+    //        return new CreateReviewResult(savedReview, levelUpdateMember, seat);
+    //    }
+
     @Override
     @Transactional
-    public CreateReviewResult create(
-            Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command) {
+    public CreateReviewResult create(Long blockId, Long memberId, CreateReviewCommand command) {
         Member member = memberRepository.findById(memberId);
-        Seat seat = seatRepository.findByIdWith(blockId, seatNumber);
+        Stadium stadium;
+        Section section;
+        Block block;
+        BlockRow blockRow = null;
+        Seat seat = null;
 
-        // image와 keyword를 제외한 review 도메인 생성
-        Review review = convertToDomain(seat, member, command);
+        if (command.seatNumber() != null) {
+            // seatNumber로 조회
+            seat = getSeatWith(blockId, command.seatNumber());
+            stadium = seat.getStadium();
+            section = seat.getSection();
+            block = seat.getBlock();
+            blockRow = seat.getRow();
+        } else if (command.rowNumber() != null) {
+            // rowNumber로만 조회
+            block = blockReadUsecase.findById(blockId);
+            stadium = stadiumReadUsecase.findById(block.getStadiumId());
+            section = sectionReadUsecase.findById(block.getSectionId());
+            blockRow =
+                    readBlockRowUsecase.findBy(
+                            stadium.getId(), block.getCode(), command.rowNumber());
+        } else {
+            // blockId로만 조회
+            block = blockReadUsecase.findById(blockId);
+            stadium = stadiumReadUsecase.findById(block.getStadiumId());
+            section = sectionReadUsecase.findById(block.getSectionId());
+        }
+
+        // Review 도메인 생성
+        Review review =
+                Review.builder()
+                        .member(member)
+                        .stadium(stadium)
+                        .section(section)
+                        .block(block)
+                        .row(blockRow)
+                        .seat(seat)
+                        .dateTime(command.dateTime())
+                        .content(command.content())
+                        .build();
 
         // review 도메인에 keyword와 image를 추가
         Map<Long, Keyword> keywordMap =
@@ -84,7 +150,7 @@ public class CreateReviewService implements CreateReviewUsecase {
         Member member = memberRepository.findById(memberId);
         BlockRow blockRow = readBlockRowUsecase.findBy(stadiumId, blockCode, rowNumber);
         Block block = blockRow.getBlock();
-        Seat seat = getSeat(block.getId(), command.seatNumber());
+        Seat seat = getSeatWith(block.getId(), command.seatNumber());
 
         Review review = convertToDomain(member, blockRow, seat, command);
         List<String> imageUrls = reviewImageProcessor.getImageUrl(command.images());
@@ -99,7 +165,7 @@ public class CreateReviewService implements CreateReviewUsecase {
         calculateMemberLevel(member);
     }
 
-    private Seat getSeat(long blockId, Integer seatNumber) {
+    private Seat getSeatWith(long blockId, Integer seatNumber) {
         if (seatNumber == null) return null;
         else return seatRepository.findByIdWith(blockId, seatNumber);
     }
@@ -111,6 +177,23 @@ public class CreateReviewService implements CreateReviewUsecase {
                 .section(seat.getSection())
                 .block(seat.getBlock())
                 .row(seat.getRow())
+                .seat(seat)
+                .dateTime(command.dateTime())
+                .content(command.content())
+                .build();
+    }
+
+    private Review convertToDomain(
+            Block block, BlockRow blockRow, Seat seat, Member member, CreateReviewCommand command) {
+        Stadium stadium = stadiumReadUsecase.findById(block.getStadiumId());
+        Section section = sectionReadUsecase.findById(block.getSectionId());
+
+        return Review.builder()
+                .member(member)
+                .stadium(stadium)
+                .section(section)
+                .block(block)
+                .row(blockRow)
                 .seat(seat)
                 .dateTime(command.dateTime())
                 .content(command.content())

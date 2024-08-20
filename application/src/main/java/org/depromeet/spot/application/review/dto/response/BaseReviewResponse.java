@@ -106,6 +106,7 @@ public record BaseReviewResponse(
     public record RowResponse(Long id, Integer number) {
 
         public static RowResponse from(BlockRow row) {
+            if (row == null) return null;
             return new RowResponse(row.getId(), row.getNumber());
         }
     }
