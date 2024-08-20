@@ -29,7 +29,7 @@ public class ReviewImageEntity extends BaseEntity {
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ReviewEntity review;
 
-    @Column(name = "url", nullable = false, length = 255)
+    @Column(name = "url", nullable = false, length = 1000)
     private String url;
 
     public ReviewImage toDomain() {
