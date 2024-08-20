@@ -11,8 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.Builder;
 
 public interface CreateReviewUsecase {
-    CreateReviewResult create(
-            Long blockId, Integer seatNumber, Long memberId, CreateReviewCommand command);
+    CreateReviewResult create(Long blockId, Long memberId, CreateReviewCommand command);
 
     void createAdmin(
             long stadiumId,
@@ -23,6 +22,8 @@ public interface CreateReviewUsecase {
 
     @Builder
     record CreateReviewCommand(
+            Integer rowNumber,
+            Integer seatNumber,
             List<String> images,
             List<String> good,
             List<String> bad,

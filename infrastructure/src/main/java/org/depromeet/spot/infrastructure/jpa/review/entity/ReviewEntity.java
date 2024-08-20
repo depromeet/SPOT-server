@@ -98,19 +98,18 @@ public class ReviewEntity extends BaseEntity {
     private Integer likesCount;
 
     public static ReviewEntity from(Review review) {
-        SeatEntity seatEntity;
-        if (review.getSeat() == null) {
-            seatEntity = null;
-        } else {
-            seatEntity = SeatEntity.withSeat(review.getSeat());
-        }
+        SeatEntity seatEntity =
+                review.getSeat() != null ? SeatEntity.withSeat(review.getSeat()) : null;
+        BlockRowEntity blockRowEntity =
+                review.getRow() != null ? BlockRowEntity.withBlockRow(review.getRow()) : null;
+
         ReviewEntity entity =
                 new ReviewEntity(
                         MemberEntity.withMember(review.getMember()),
                         StadiumEntity.withStadium(review.getStadium()),
                         SectionEntity.withSection(review.getSection()),
                         BlockEntity.withBlock(review.getBlock()),
-                        BlockRowEntity.withBlockRow(review.getRow()),
+                        blockRowEntity,
                         seatEntity,
                         review.getDateTime(),
                         review.getContent(),
@@ -141,7 +140,7 @@ public class ReviewEntity extends BaseEntity {
                         .stadium(this.stadium.toDomain())
                         .section(this.section.toDomain())
                         .block(this.block.toDomain())
-                        .row(this.row.toDomain())
+                        .row((this.row == null) ? null : this.row.toDomain())
                         .seat((this.seat == null) ? null : this.seat.toDomain())
                         .dateTime(this.dateTime)
                         .content(this.content)
