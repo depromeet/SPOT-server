@@ -42,6 +42,8 @@ public interface StadiumReadUsecase {
         private final List<HomeTeamInfo> homeTeams;
         private final String seatChartWithLabel;
         private final String thumbnail;
+        private final List<StadiumSectionInfo> sections;
+        private final List<StadiumBlockTagInfo> blockTags;
     }
 
     @Getter
@@ -50,5 +52,22 @@ public interface StadiumReadUsecase {
         private final Long id;
         private final String name;
         private final boolean isActive;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    class StadiumSectionInfo {
+        private final long id;
+        private final String name;
+        private final String alias;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    class StadiumBlockTagInfo {
+        private final long id;
+        private final String name;
+        private final List<String> blockCodes;
+        private final String description;
     }
 }
