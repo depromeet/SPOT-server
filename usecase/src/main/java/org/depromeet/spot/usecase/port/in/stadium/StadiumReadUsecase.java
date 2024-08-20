@@ -2,6 +2,7 @@ package org.depromeet.spot.usecase.port.in.stadium;
 
 import java.util.List;
 
+import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
 
@@ -60,6 +61,10 @@ public interface StadiumReadUsecase {
         private final long id;
         private final String name;
         private final String alias;
+
+        public static StadiumSectionInfo from(Section section) {
+            return new StadiumSectionInfo(section.getId(), section.getName(), section.getAlias());
+        }
     }
 
     @Getter

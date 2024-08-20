@@ -24,6 +24,11 @@ public class SectionReadService implements SectionReadUsecase {
     private final SectionRepository sectionRepository;
 
     @Override
+    public List<Section> findAllBy(final Long stadiumId) {
+        return sectionRepository.findAllByStadium(stadiumId);
+    }
+
+    @Override
     public StadiumSections findAllByStadium(final Long stadiumId) {
         Stadium stadium = stadiumReadUsecase.findById(stadiumId);
         List<Section> sections = sectionRepository.findAllByStadium(stadiumId);

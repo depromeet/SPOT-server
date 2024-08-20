@@ -8,6 +8,7 @@ import java.util.Map;
 import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
+import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class StadiumReadService implements StadiumReadUsecase {
 
     private final ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
+    private final SectionReadUsecase sectionReadUsecase;
     private final StadiumRepository stadiumRepository;
 
     @Override
@@ -74,6 +76,8 @@ public class StadiumReadService implements StadiumReadUsecase {
     @Override
     public StadiumInfoWithSeatChart findWithSeatChartById(final Long id) {
         Stadium stadium = stadiumRepository.findById(id);
+        List<StadiumSectionInfo> sections =
+                sectionReadUsecase.findAllBy(id).stream().map(StadiumSectionInfo::from).toList();
         List<HomeTeamInfo> homeTeams = readStadiumHomeTeamUsecase.findByStadium(id);
         return StadiumInfoWithSeatChart.builder()
                 .id(stadium.getId())
@@ -81,6 +85,7 @@ public class StadiumReadService implements StadiumReadUsecase {
                 .homeTeams(homeTeams)
                 .thumbnail(stadium.getMainImage())
                 .seatChartWithLabel(stadium.getLabeledSeatingChartImage())
+                .sections(sections)
                 .build();
     }
 
