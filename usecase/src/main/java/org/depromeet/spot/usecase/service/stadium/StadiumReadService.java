@@ -11,10 +11,10 @@ import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.hashtag.HashTag;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
-import org.depromeet.spot.usecase.port.in.section.SectionReadUsecase;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
+import org.depromeet.spot.usecase.port.out.section.SectionRepository;
 import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
 import org.depromeet.spot.usecase.service.block.ReadBlockTagService;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class StadiumReadService implements StadiumReadUsecase {
 
     private final ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
     private final ReadBlockTagService readBlockTagService;
-    private final SectionReadUsecase sectionReadUsecase;
+    private final SectionRepository sectionRepository;
     private final StadiumRepository stadiumRepository;
 
     @Override
@@ -82,7 +82,9 @@ public class StadiumReadService implements StadiumReadUsecase {
     public StadiumInfoWithSeatChart findWithSeatChartById(final Long id) {
         Stadium stadium = stadiumRepository.findById(id);
         List<StadiumSectionInfo> sections =
-                sectionReadUsecase.findAllBy(id).stream().map(StadiumSectionInfo::from).toList();
+                sectionRepository.findAllByStadium(id).stream()
+                        .map(StadiumSectionInfo::from)
+                        .toList();
         List<HomeTeamInfo> homeTeams = readStadiumHomeTeamUsecase.findByStadium(id);
         List<StadiumBlockTagInfo> blockTags = makeBlockTagInfoByStadium(id);
         return StadiumInfoWithSeatChart.builder()
