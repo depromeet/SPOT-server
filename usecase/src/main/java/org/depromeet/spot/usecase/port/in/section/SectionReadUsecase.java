@@ -10,6 +10,8 @@ import lombok.Getter;
 
 public interface SectionReadUsecase {
 
+    List<Section> findAllBy(Long stadiumId);
+
     StadiumSections findAllByStadium(Long stadiumId);
 
     boolean existsInStadium(Long stadiumId, Long sectionId);

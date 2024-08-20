@@ -12,7 +12,9 @@ public record StadiumInfoWithSeatChartResponse(
         String name,
         String seatChartWithLabel,
         String thumbnail,
-        List<HomeTeamInfoResponse> homeTeams) {
+        List<HomeTeamInfoResponse> homeTeams,
+        List<StadiumSectionInfoResponse> sections,
+        List<StadiumBlockTagResponse> blockTags) {
 
     public static StadiumInfoWithSeatChartResponse from(
             StadiumInfoWithSeatChart stadiumInfoWithSeatChart) {
@@ -21,11 +23,23 @@ public record StadiumInfoWithSeatChartResponse(
                         .map(HomeTeamInfoResponse::from)
                         .toList();
 
+        List<StadiumSectionInfoResponse> sections =
+                stadiumInfoWithSeatChart.getSections().stream()
+                        .map(StadiumSectionInfoResponse::from)
+                        .toList();
+
+        List<StadiumBlockTagResponse> blockTags =
+                stadiumInfoWithSeatChart.getBlockTags().stream()
+                        .map(StadiumBlockTagResponse::from)
+                        .toList();
+
         return new StadiumInfoWithSeatChartResponse(
                 stadiumInfoWithSeatChart.getId(),
                 stadiumInfoWithSeatChart.getName(),
                 stadiumInfoWithSeatChart.getSeatChartWithLabel(),
                 stadiumInfoWithSeatChart.getThumbnail(),
-                homeTeams);
+                homeTeams,
+                sections,
+                blockTags);
     }
 }
