@@ -68,7 +68,7 @@ public interface StadiumReadUsecase {
     }
 
     @Getter
-    @AllArgsConstructor
+    @Builder
     class StadiumBlockTagInfo {
         private final long id;
         private final String name;

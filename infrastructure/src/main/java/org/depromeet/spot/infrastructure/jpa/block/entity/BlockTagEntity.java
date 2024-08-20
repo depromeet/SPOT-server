@@ -14,9 +14,11 @@ import org.depromeet.spot.infrastructure.jpa.common.entity.BaseEntity;
 import org.depromeet.spot.infrastructure.jpa.hashtag.entity.HashTagEntity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "block_tags")
