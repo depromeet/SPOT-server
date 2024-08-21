@@ -38,10 +38,11 @@ public class CreateReviewService implements CreateReviewUsecase {
 
         Review review = reviewCreationProcessor.createReview(blockId, member, command);
 
-        processReviewDetails(review, command);
+        Map<Long, Keyword> keywordMap = processReviewDetails(review, command);
 
         Review savedReview = reviewRepository.save(review);
         reviewKeywordProcessor.updateBlockTopKeywords(savedReview);
+        savedReview.setKeywordMap(keywordMap);
 
         Member levelUpdateMember = memberLevelProcessor.calculateAndUpdateMemberLevel(member);
 
@@ -62,26 +63,30 @@ public class CreateReviewService implements CreateReviewUsecase {
                 reviewCreationProcessor.createAdminReview(
                         stadiumId, blockCode, rowNumber, member, command);
 
-        processAdminReviewDetails(review, command);
+        Map<Long, Keyword> keywordMap = processAdminReviewDetails(review, command);
 
         Review savedReview = reviewRepository.save(review);
         reviewKeywordProcessor.updateBlockTopKeywords(savedReview);
+        savedReview.setKeywordMap(keywordMap);
 
         memberLevelProcessor.calculateAndUpdateMemberLevel(member);
     }
 
-    private void processReviewDetails(Review review, CreateReviewCommand command) {
+    private Map<Long, Keyword> processReviewDetails(Review review, CreateReviewCommand command) {
         Map<Long, Keyword> keywordMap =
                 reviewKeywordProcessor.processKeywords(review, command.good(), command.bad());
         review.setKeywordMap(keywordMap);
         reviewImageProcessor.processImages(review, command.images());
+        return keywordMap;
     }
 
-    private void processAdminReviewDetails(Review review, CreateAdminReviewCommand command) {
+    private Map<Long, Keyword> processAdminReviewDetails(
+            Review review, CreateAdminReviewCommand command) {
         Map<Long, Keyword> keywordMap =
                 reviewKeywordProcessor.processKeywords(review, command.good(), command.bad());
         review.setKeywordMap(keywordMap);
         List<String> imageUrls = reviewImageProcessor.getImageUrl(command.images());
         reviewImageProcessor.processImages(review, imageUrls);
+        return keywordMap;
     }
 }

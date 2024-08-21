@@ -147,10 +147,12 @@ public class ReadReviewService implements ReadReviewUsecase {
 
     private String getCursor(Review review, SortCriteria sortBy) {
         switch (sortBy) {
-                // TODO: 좋아요 컬럼 반영 시 주석 해제
-                //            case LIKES_COUNT:
-                //                return review.getLikesCount() + "_" +
-                // review.getDateTime().toString() + "_" + review.getId();
+            case LIKES_COUNT:
+                return review.getLikesCount()
+                        + "_"
+                        + review.getDateTime().toString()
+                        + "_"
+                        + review.getId();
             case DATE_TIME:
             default:
                 return review.getDateTime().toString() + "_" + review.getId();

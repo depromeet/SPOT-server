@@ -209,12 +209,10 @@ public class ReviewCustomRepository {
 
     private OrderSpecifier<?>[] getOrderBy(SortCriteria sortBy) {
         switch (sortBy) {
-                // TODO: 좋아요 컬럼 반영 시 주석 해제
-                //            case LIKES_COUNT:
-                //                return new OrderSpecifier<?>[] {
-                //                    reviewEntity.likesCount.desc().nullsLast(),
-                //                    reviewEntity.dateTime.desc()
-                //                };
+            case LIKES_COUNT:
+                return new OrderSpecifier<?>[] {
+                    reviewEntity.likesCount.desc().nullsLast(), reviewEntity.dateTime.desc()
+                };
             case DATE_TIME:
             default:
                 return new OrderSpecifier<?>[] {reviewEntity.dateTime.desc()};
@@ -228,23 +226,37 @@ public class ReviewCustomRepository {
 
         String[] parts = cursor.split("_");
 
+        LocalDateTime dateTime;
+        Long id;
         switch (sortBy) {
-                // TODO: 좋아요 컬럼 반영 시 주석 해제
-                //            case LIKES_COUNT:
-                //                if (parts.length != 3) return null;
-                //                int likeCount = Integer.parseInt(parts[0]);
-                //                LocalDateTime dateTime = LocalDateTime.parse(parts[1]);
-                //                Long id = Long.parseLong(parts[2]);
-                //                return reviewEntity.likesCount.lt(likeCount)
-                //                    .or(reviewEntity.likesCount.eq(likeCount)
-                //                        .and(reviewEntity.dateTime.lt(dateTime)
-                //                            .or(reviewEntity.dateTime.eq(dateTime)
-                //                                .and(reviewEntity.id.lt(id)))));
+            case LIKES_COUNT:
+                if (parts.length != 3) return null;
+                int likeCount = Integer.parseInt(parts[0]);
+                dateTime = LocalDateTime.parse(parts[1]);
+                id = Long.parseLong(parts[2]);
+                return reviewEntity
+                        .likesCount
+                        .lt(likeCount)
+                        .or(
+                                reviewEntity
+                                        .likesCount
+                                        .eq(likeCount)
+                                        .and(
+                                                reviewEntity
+                                                        .dateTime
+                                                        .lt(dateTime)
+                                                        .or(
+                                                                reviewEntity
+                                                                        .dateTime
+                                                                        .eq(dateTime)
+                                                                        .and(
+                                                                                reviewEntity.id.lt(
+                                                                                        id)))));
             case DATE_TIME:
             default:
                 if (parts.length != 2) return null;
-                LocalDateTime dateTime = LocalDateTime.parse(parts[0]);
-                Long id = Long.parseLong(parts[1]);
+                dateTime = LocalDateTime.parse(parts[0]);
+                id = Long.parseLong(parts[1]);
                 return reviewEntity
                         .dateTime
                         .lt(dateTime)
