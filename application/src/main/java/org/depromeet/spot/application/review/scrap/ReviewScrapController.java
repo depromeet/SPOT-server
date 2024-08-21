@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import org.depromeet.spot.application.common.annotation.CurrentMember;
+import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,9 @@ public class ReviewScrapController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "특정 리뷰를 스크랩한다. 만약 이전에 스크랩했던 리뷰라면, 스크랩을 취소한다.")
     @PostMapping("/{reviewId}/scrap")
-    public void toggleLike(
+    public boolean toggleScrap(
             @PathVariable @Positive @NotNull final Long reviewId,
             @Parameter(hidden = true) Long memberId) {
-        reviewScrapUsecase.toggleScrap(memberId, reviewId);
+        return reviewScrapUsecase.toggleScrap(memberId, reviewId);
     }
 }
