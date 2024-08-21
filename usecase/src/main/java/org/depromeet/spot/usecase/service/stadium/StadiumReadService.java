@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.depromeet.spot.common.exception.stadium.StadiumException.StadiumNotFoundException;
+import org.depromeet.spot.domain.block.Block;
+import org.depromeet.spot.domain.hashtag.HashTag;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.stadium.StadiumReadUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadStadiumHomeTeamUsecase.HomeTeamInfo;
+import org.depromeet.spot.usecase.port.out.section.SectionRepository;
 import org.depromeet.spot.usecase.port.out.stadium.StadiumRepository;
+import org.depromeet.spot.usecase.service.block.ReadBlockTagService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class StadiumReadService implements StadiumReadUsecase {
 
     private final ReadStadiumHomeTeamUsecase readStadiumHomeTeamUsecase;
+    private final ReadBlockTagService readBlockTagService;
+    private final SectionRepository sectionRepository;
     private final StadiumRepository stadiumRepository;
 
     @Override
@@ -74,14 +81,38 @@ public class StadiumReadService implements StadiumReadUsecase {
     @Override
     public StadiumInfoWithSeatChart findWithSeatChartById(final Long id) {
         Stadium stadium = stadiumRepository.findById(id);
+        List<StadiumSectionInfo> sections =
+                sectionRepository.findAllByStadium(id).stream()
+                        .map(StadiumSectionInfo::from)
+                        .toList();
         List<HomeTeamInfo> homeTeams = readStadiumHomeTeamUsecase.findByStadium(id);
+        List<StadiumBlockTagInfo> blockTags = makeBlockTagInfoByStadium(id);
         return StadiumInfoWithSeatChart.builder()
                 .id(stadium.getId())
                 .name(stadium.getName())
                 .homeTeams(homeTeams)
                 .thumbnail(stadium.getMainImage())
                 .seatChartWithLabel(stadium.getLabeledSeatingChartImage())
+                .sections(sections)
+                .blockTags(blockTags)
                 .build();
+    }
+
+    private List<StadiumBlockTagInfo> makeBlockTagInfoByStadium(final Long id) {
+        List<StadiumBlockTagInfo> result = new ArrayList<>();
+        Map<HashTag, List<Block>> blockTags = readBlockTagService.findAllByStadium(id);
+        for (Entry<HashTag, List<Block>> blockTag : blockTags.entrySet()) {
+            HashTag hashTag = blockTag.getKey();
+            List<Block> blocks = blockTag.getValue();
+            result.add(
+                    StadiumBlockTagInfo.builder()
+                            .id(hashTag.getId())
+                            .name(hashTag.getName())
+                            .description(hashTag.getDescription())
+                            .blockCodes(blocks.stream().map(Block::getCode).toList())
+                            .build());
+        }
+        return result;
     }
 
     @Override

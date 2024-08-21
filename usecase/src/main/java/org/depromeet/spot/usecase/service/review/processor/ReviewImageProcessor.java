@@ -21,7 +21,7 @@ public class ReviewImageProcessor {
     public List<String> getImageUrl(List<MultipartFile> images) {
         List<String> urls = new ArrayList<>();
         for (MultipartFile image : images) {
-            String name = image.getName();
+            String name = image.getOriginalFilename();
             urls.add(imageUploadPort.upload(name, image, MediaProperty.REVIEW));
         }
         return urls;
