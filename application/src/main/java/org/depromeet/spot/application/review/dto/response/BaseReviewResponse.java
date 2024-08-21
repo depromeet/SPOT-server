@@ -25,7 +25,8 @@ public record BaseReviewResponse(
         LocalDateTime dateTime,
         String content,
         List<ReviewImageResponse> images,
-        List<KeywordResponse> keywords) {
+        List<KeywordResponse> keywords,
+        int likesCount) {
 
     public static BaseReviewResponse from(CreateReviewResult result) {
         Review review = result.review();
@@ -52,7 +53,8 @@ public record BaseReviewResponse(
                                             keyword.getContent(),
                                             keyword.getIsPositive());
                                 })
-                        .toList());
+                        .toList(),
+                review.getLikesCount());
     }
 
     public static BaseReviewResponse from(Review review) {
@@ -79,7 +81,8 @@ public record BaseReviewResponse(
                                             keyword.getContent(),
                                             keyword.getIsPositive());
                                 })
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList()),
+                review.getLikesCount());
     }
 
     public record StadiumResponse(Long id, String name) {
