@@ -17,12 +17,14 @@ spring:
                 - aws
                 - jwt
                 - oauth
+                - monitoring
             prod:
                 - jpa
                 - aws
                 - jwt
                 - oauth
                 - sentry
+                - monitoring
     servlet:
         multipart:
             max-file-size: 10MB
