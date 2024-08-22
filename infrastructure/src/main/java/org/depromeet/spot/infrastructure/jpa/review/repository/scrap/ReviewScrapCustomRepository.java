@@ -52,7 +52,7 @@ public class ReviewScrapCustomRepository {
                                 keywordsIn(good, true),
                                 keywordsIn(bad, false),
                                 cursorCondition(cursor, sortBy))
-                        .orderBy(reviewEntity.dateTime.desc(), reviewEntity.id.desc())
+                        .orderBy(getOrderSpecifiers(sortBy))
                         .limit(size);
 
         return query.fetch();
@@ -158,17 +158,5 @@ public class ReviewScrapCustomRepository {
                     reviewEntity.dateTime.desc(), reviewEntity.id.desc()
                 };
         }
-    }
-
-    public String getNextCursor(List<ReviewEntity> reviews) {
-        if (reviews.isEmpty()) {
-            return null;
-        }
-        ReviewEntity lastReview = reviews.get(reviews.size() - 1);
-        return lastReview.getDateTime().toString()
-                + "_"
-                + lastReview.getLikesCount()
-                + "_"
-                + lastReview.getId();
     }
 }

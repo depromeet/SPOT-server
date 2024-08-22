@@ -22,7 +22,6 @@ public class ReviewScrapService implements ReviewScrapUsecase {
 
     private final ReadReviewUsecase readReviewUsecase;
     private final UpdateReviewUsecase updateReviewUsecase;
-    private final ReviewScrapRepository reviewScrapRepository;
     private final ReviewScrapRepository scrapRepository;
     private final ReadReviewService readReviewService;
 
@@ -39,7 +38,7 @@ public class ReviewScrapService implements ReviewScrapUsecase {
                         command.bad(),
                         pageCommand.cursor(),
                         pageCommand.sortBy(),
-                        pageCommand.size());
+                        pageCommand.size() + 1);
 
         boolean hasNext = reviews.size() > pageCommand.size();
         if (hasNext) {
@@ -85,18 +84,18 @@ public class ReviewScrapService implements ReviewScrapUsecase {
 
     @Transactional(readOnly = true)
     public boolean isScraped(final long memberId, final long reviewId) {
-        return reviewScrapRepository.existsBy(memberId, reviewId);
+        return scrapRepository.existsBy(memberId, reviewId);
     }
 
     public void cancelScrap(final long memberId, final long reviewId, Review review) {
-        reviewScrapRepository.deleteBy(memberId, reviewId);
+        scrapRepository.deleteBy(memberId, reviewId);
         review.cancelScrap();
         updateReviewUsecase.updateScrapsCount(review);
     }
 
     public void addScrap(final long memberId, final long reviewId, Review review) {
         ReviewScrap like = ReviewScrap.builder().memberId(memberId).reviewId(reviewId).build();
-        reviewScrapRepository.save(like);
+        scrapRepository.save(like);
         review.addScrap();
         updateReviewUsecase.updateScrapsCount(review);
     }
