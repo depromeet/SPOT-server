@@ -29,6 +29,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public void updateScrapsCount(Long reviewId, int scrapsCount) {
+        reviewJpaRepository.updateScrapsCount(reviewId, scrapsCount);
+    }
+
+    @Override
     public Review save(Review review) {
         ReviewEntity entity = ReviewEntity.from(review);
         ReviewEntity savedEntity = reviewJpaRepository.save(entity);
