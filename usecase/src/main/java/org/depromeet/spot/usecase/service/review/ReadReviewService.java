@@ -145,7 +145,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .build();
     }
 
-    private String getCursor(Review review, SortCriteria sortBy) {
+    public String getCursor(Review review, SortCriteria sortBy) {
         switch (sortBy) {
             case LIKES_COUNT:
                 return review.getLikesCount()
@@ -201,7 +201,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .build();
     }
 
-    private Review mapKeywordsToSingleReview(Review review) {
+    public Review mapKeywordsToSingleReview(Review review) {
         List<Long> keywordIds =
                 review.getKeywords().stream()
                         .map(ReviewKeyword::getKeywordId)
@@ -242,11 +242,11 @@ public class ReadReviewService implements ReadReviewUsecase {
         return mappedReview;
     }
 
-    private List<Review> mapKeywordsToReviews(List<Review> reviews) {
+    public List<Review> mapKeywordsToReviews(List<Review> reviews) {
         return reviews.stream().map(this::mapKeywordsToSingleReview).collect(Collectors.toList());
     }
 
-    private Review mapKeywordsToReview(Review review) {
+    public Review mapKeywordsToReview(Review review) {
         // TODO : (민성) 중복되는 Keywords 로직 처리 부분 메소드로 분리하기!
         List<Long> keywordIds =
                 review.getKeywords().stream()
