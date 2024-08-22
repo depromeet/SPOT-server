@@ -26,7 +26,8 @@ public record BaseReviewResponse(
         String content,
         List<ReviewImageResponse> images,
         List<KeywordResponse> keywords,
-        int likesCount) {
+        int likesCount,
+        int scrapsCount) {
 
     public static BaseReviewResponse from(CreateReviewResult result) {
         Review review = result.review();
@@ -54,7 +55,8 @@ public record BaseReviewResponse(
                                             keyword.getIsPositive());
                                 })
                         .toList(),
-                review.getLikesCount());
+                review.getLikesCount(),
+                review.getScrapsCount());
     }
 
     public static BaseReviewResponse from(Review review) {
@@ -82,7 +84,8 @@ public record BaseReviewResponse(
                                             keyword.getIsPositive());
                                 })
                         .collect(Collectors.toList()),
-                review.getLikesCount());
+                review.getLikesCount(),
+                review.getScrapsCount());
     }
 
     public record StadiumResponse(Long id, String name) {

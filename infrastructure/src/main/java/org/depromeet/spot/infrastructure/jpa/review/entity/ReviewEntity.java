@@ -97,6 +97,10 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "likes_count")
     private Integer likesCount;
 
+    @ColumnDefault("0")
+    @Column(name = "scraps_count")
+    private Integer scrapsCount;
+
     public static ReviewEntity from(Review review) {
         SeatEntity seatEntity =
                 review.getSeat() != null ? SeatEntity.withSeat(review.getSeat()) : null;
@@ -115,7 +119,8 @@ public class ReviewEntity extends BaseEntity {
                         review.getContent(),
                         new ArrayList<>(),
                         new ArrayList<>(),
-                        review.getLikesCount());
+                        review.getLikesCount(),
+                        review.getScrapsCount());
 
         entity.setId(review.getId()); // ID 설정 추가
 
@@ -145,6 +150,7 @@ public class ReviewEntity extends BaseEntity {
                         .dateTime(this.dateTime)
                         .content(this.content)
                         .likesCount(likesCount)
+                        .scrapsCount(scrapsCount)
                         .build();
 
         review.setImages(
@@ -173,5 +179,6 @@ public class ReviewEntity extends BaseEntity {
         dateTime = review.getDateTime();
         content = review.getContent();
         likesCount = review.getLikesCount();
+        scrapsCount = review.getScrapsCount();
     }
 }
