@@ -7,9 +7,9 @@ import jakarta.validation.constraints.Positive;
 import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.application.review.dto.request.PageRequest;
 import org.depromeet.spot.application.review.dto.request.scrap.MyScrapRequest;
-import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
-import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyReviewListResult;
+import org.depromeet.spot.application.review.dto.response.scrap.MyScrapListResponse;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
+import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase.MyScrapListResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,12 +49,14 @@ public class ReviewScrapController {
     @Operation(
             summary = "자신이 스크랩한 리뷰 목록을 조회한다.",
             description = "stadiumId,  months, good, bad로 필터링 가능하다.")
-    public MyReviewListResponse findMyReviews(
+    public MyScrapListResponse findMyReviews(
             @Parameter(hidden = true) Long memberId,
             @RequestBody @Valid MyScrapRequest request,
             @ModelAttribute @Valid PageRequest pageRequest) {
 
-        MyReviewListResult result = reviewScrapUsecase.findMyScraps(memberId, request.toCommand());
-        return MyReviewListResponse.from(result, request.toCommand());
+        MyScrapListResult result =
+                reviewScrapUsecase.findMyScrappedReviews(
+                        memberId, request.toCommand(), pageRequest.toCommand());
+        return MyScrapListResponse.from(result, request.toCommand());
     }
 }
