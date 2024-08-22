@@ -36,6 +36,7 @@ public class Review {
     private List<ReviewKeyword> keywords;
     private transient Map<Long, Keyword> keywordMap;
     private int likesCount;
+    private int scrapsCount;
 
     public static final int DEFAULT_LIKE_COUNT = 0;
 
@@ -53,7 +54,8 @@ public class Review {
             LocalDateTime deletedAt,
             List<ReviewImage> images,
             List<ReviewKeyword> keywords,
-            int likesCount) {
+            int likesCount,
+            int scrapsCount) {
         if (likesCount < 0) {
             throw new InvalidReviewLikesException();
         }
@@ -71,6 +73,7 @@ public class Review {
         this.images = images != null ? images : new ArrayList<>();
         this.keywords = keywords != null ? keywords : new ArrayList<>();
         this.likesCount = likesCount;
+        this.scrapsCount = scrapsCount;
     }
 
     public void addKeyword(ReviewKeyword keyword) {
@@ -107,6 +110,16 @@ public class Review {
     public void cancelLike() {
         if (this.likesCount > 0) {
             this.likesCount--;
+        }
+    }
+
+    public void addScrap() {
+        this.scrapsCount++;
+    }
+
+    public void cancelScrap() {
+        if (this.scrapsCount > 0) {
+            this.scrapsCount--;
         }
     }
 

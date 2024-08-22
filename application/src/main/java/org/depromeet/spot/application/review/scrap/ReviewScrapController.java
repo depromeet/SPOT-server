@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reviews")
 public class ReviewScrapController {
+
     private final ReviewScrapUsecase reviewScrapUsecase;
 
     @CurrentMember

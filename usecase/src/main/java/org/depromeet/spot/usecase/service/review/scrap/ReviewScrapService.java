@@ -1,6 +1,9 @@
 package org.depromeet.spot.usecase.service.review.scrap;
 
+import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.scrap.ReviewScrap;
+import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
+import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.springframework.stereotype.Service;
@@ -12,16 +15,21 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class ReviewScrapService implements ReviewScrapUsecase {
+
+    private final ReadReviewUsecase readReviewUsecase;
+    private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewScrapRepository reviewScrapRepository;
 
     @Override
     public boolean toggleScrap(final long memberId, final long reviewId) {
+        Review review = readReviewUsecase.findById(reviewId);
+
         if (isScraped(memberId, reviewId)) {
-            cancelScrap(memberId, reviewId);
+            cancelScrap(memberId, reviewId, review);
             return false;
         }
 
-        addScrap(memberId, reviewId);
+        addScrap(memberId, reviewId, review);
         return true;
     }
 
@@ -30,12 +38,16 @@ public class ReviewScrapService implements ReviewScrapUsecase {
         return reviewScrapRepository.existsBy(memberId, reviewId);
     }
 
-    public void cancelScrap(final long memberId, final long reviewId) {
+    public void cancelScrap(final long memberId, final long reviewId, Review review) {
         reviewScrapRepository.deleteBy(memberId, reviewId);
+        review.cancelScrap();
+        updateReviewUsecase.updateScrapsCount(review);
     }
 
-    public void addScrap(final long memberId, final long reviewId) {
+    public void addScrap(final long memberId, final long reviewId, Review review) {
         ReviewScrap like = ReviewScrap.builder().memberId(memberId).reviewId(reviewId).build();
         reviewScrapRepository.save(like);
+        review.addScrap();
+        updateReviewUsecase.updateScrapsCount(review);
     }
 }
