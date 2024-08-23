@@ -15,7 +15,7 @@ public record BlockReviewListResponse(
         Long totalElements,
         String nextCursor,
         boolean hasNext,
-        FilterInfo filter) {
+        BlockFilter filter) {
 
     public static BlockReviewListResponse from(
             BlockReviewListResult result,
@@ -33,7 +33,7 @@ public record BlockReviewListResponse(
         List<TopReviewImageResponse> topReviewImageResponses =
                 result.topReviewImages().stream().map(TopReviewImageResponse::from).toList();
 
-        FilterInfo filter = new FilterInfo(rowNumber, seatNumber, year, month);
+        BlockFilter filter = new BlockFilter(rowNumber, seatNumber, year, month);
 
         return new BlockReviewListResponse(
                 result.location(),
@@ -66,5 +66,5 @@ public record BlockReviewListResponse(
         }
     }
 
-    public record FilterInfo(Integer rowNumber, Integer seatNumber, Integer year, Integer month) {}
+    public record BlockFilter(Integer rowNumber, Integer seatNumber, Integer year, Integer month) {}
 }
