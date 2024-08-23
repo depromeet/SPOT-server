@@ -11,6 +11,7 @@ import static org.depromeet.spot.infrastructure.jpa.stadium.entity.QStadiumEntit
 
 import java.util.List;
 
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +26,7 @@ public class ReviewImageCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     public List<ReviewEntity> findTopReviewsWithImagesByStadiumIdAndBlockCode(
-            Long stadiumId, String blockCode, int limit) {
+            Long stadiumId, String blockCode, int limit, ReviewType reviewType) {
 
         return queryFactory
                 .selectFrom(reviewEntity)
@@ -50,7 +51,8 @@ public class ReviewImageCustomRepository {
                                 .eq(stadiumId)
                                 .and(reviewEntity.block.code.eq(blockCode))
                                 .and(reviewEntity.images.isNotEmpty())
-                                .and(reviewEntity.deletedAt.isNull()))
+                                .and(reviewEntity.deletedAt.isNull())
+                                .and(reviewEntity.reviewType.eq(reviewType)))
                 .orderBy(reviewEntity.likesCount.desc(), reviewEntity.dateTime.desc())
                 .limit(limit)
                 .fetch();
