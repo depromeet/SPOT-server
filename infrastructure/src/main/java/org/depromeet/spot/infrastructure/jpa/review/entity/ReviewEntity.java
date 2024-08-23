@@ -105,6 +105,7 @@ public class ReviewEntity extends BaseEntity {
     private Integer scrapsCount;
 
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("VIEW")
     @Column(name = "review_type", nullable = false)
     private ReviewType reviewType;
 
