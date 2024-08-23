@@ -8,7 +8,6 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
-import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.team.BaseballTeam;
@@ -80,9 +79,11 @@ public class ReadReviewService implements ReadReviewUsecase {
                         stadiumId, blockCode, TOP_KEYWORDS_LIMIT);
 
         // stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 topImages를 조회
-        List<TopReviewImage> topReviewImages =
+        List<Review> topReviewImages =
                 reviewImageRepository.findTopReviewImagesByStadiumIdAndBlockCode(
                         stadiumId, blockCode, TOP_IMAGES_LIMIT);
+
+        List<Review> topReviewImagesWithKeywords = mapKeywordsToReviews(topReviewImages);
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
@@ -94,7 +95,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .location(locationInfo)
                 .reviews(reviewsWithKeywords)
                 .topKeywords(topKeywords)
-                .topReviewImages(topReviewImages)
+                .topReviewImages(topReviewImagesWithKeywords)
                 .totalElements(totalElements)
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
