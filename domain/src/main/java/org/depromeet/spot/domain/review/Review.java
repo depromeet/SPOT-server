@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewLikesException;
 import org.depromeet.spot.domain.block.Block;
@@ -139,5 +140,26 @@ public class Review {
 
     public void setDeletedAt(LocalDateTime now) {
         this.deletedAt = now;
+    }
+
+    public Review withLimitedImages(int limit) {
+        List<ReviewImage> limitedImages =
+                this.images.stream().limit(limit).collect(Collectors.toList());
+        return new Review(
+                this.id,
+                this.member,
+                this.stadium,
+                this.section,
+                this.block,
+                this.row,
+                this.seat,
+                this.dateTime,
+                this.content,
+                this.deletedAt,
+                limitedImages,
+                this.keywords,
+                this.likesCount,
+                this.scrapsCount,
+                this.reviewType);
     }
 }

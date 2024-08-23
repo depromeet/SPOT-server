@@ -3,9 +3,10 @@ package org.depromeet.spot.infrastructure.jpa.review.repository.image;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.depromeet.spot.domain.review.image.TopReviewImage;
+import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
+import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -14,24 +15,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewImageRepositoryImpl implements ReviewImageRepository {
 
-    private final ReviewImageJpaRepository reviewImageJpaRepository;
+    private final ReviewImageCustomRepository reviewImageCustomRepository;
 
     @Override
-    public List<TopReviewImage> findTopReviewImagesByStadiumIdAndBlockCode(
+    public List<Review> findTopReviewImagesByStadiumIdAndBlockCode(
             Long stadiumId, String blockCode, int limit) {
-        return reviewImageJpaRepository
-                .findTopReviewImagesByStadiumIdAndBlockCode(
-                        stadiumId, blockCode, PageRequest.of(0, limit))
-                .stream()
-                .map(
-                        dto ->
-                                TopReviewImage.builder()
-                                        .url(dto.url())
-                                        .reviewId(dto.reviewId())
-                                        .blockCode(dto.blockCode())
-                                        .rowNumber(dto.rowNumber())
-                                        .seatNumber(dto.seatNumber())
-                                        .build())
+        List<ReviewEntity> topReviews =
+                reviewImageCustomRepository.findTopReviewsWithImagesByStadiumIdAndBlockCode(
+                        stadiumId, blockCode, limit, ReviewType.VIEW);
+
+        return topReviews.stream()
+                .map(ReviewEntity::toDomain)
+                .map(review -> review.withLimitedImages(1))
                 .collect(Collectors.toList());
     }
 }

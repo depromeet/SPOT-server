@@ -13,6 +13,7 @@ import static org.depromeet.spot.infrastructure.jpa.stadium.entity.QStadiumEntit
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
@@ -41,10 +42,12 @@ public class ReviewCustomRepository {
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            int size) {
+            int size,
+            ReviewType reviewType) {
 
         BooleanBuilder builder =
-                buildConditions(stadiumId, blockCode, rowNumber, seatNumber, year, month);
+                buildConditions(
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month, reviewType);
 
         OrderSpecifier<?>[] orderBy = getOrderBy(sortBy);
         BooleanExpression cursorCondition = getCursorCondition(sortBy, cursor);
@@ -147,7 +150,8 @@ public class ReviewCustomRepository {
             Integer year,
             Integer month) {
         BooleanBuilder builder =
-                buildConditions(stadiumId, blockCode, rowNumber, seatNumber, year, month);
+                buildConditions(
+                        stadiumId, blockCode, rowNumber, seatNumber, year, month, ReviewType.VIEW);
 
         Long count =
                 queryFactory
@@ -165,7 +169,8 @@ public class ReviewCustomRepository {
             Integer rowNumber,
             Integer seatNumber,
             Integer year,
-            Integer month) {
+            Integer month,
+            ReviewType reviewType) {
         BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(reviewEntity.stadium.id.eq(stadiumId));
@@ -175,6 +180,7 @@ public class ReviewCustomRepository {
         builder.and(eqYear(year));
         builder.and(eqMonth(month));
         builder.and(reviewEntity.deletedAt.isNull());
+        builder.and(reviewEntity.reviewType.eq(reviewType));
 
         return builder;
     }

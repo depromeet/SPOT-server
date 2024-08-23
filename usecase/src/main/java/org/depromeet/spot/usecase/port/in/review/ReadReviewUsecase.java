@@ -6,7 +6,6 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
-import org.depromeet.spot.domain.review.image.TopReviewImage;
 
 import lombok.Builder;
 
@@ -48,7 +47,7 @@ public interface ReadReviewUsecase {
             LocationInfo location,
             List<Review> reviews,
             List<BlockKeywordInfo> topKeywords,
-            List<TopReviewImage> topReviewImages,
+            List<Review> topReviewImages,
             Long totalElements,
             String nextCursor,
             boolean hasNext) {}
