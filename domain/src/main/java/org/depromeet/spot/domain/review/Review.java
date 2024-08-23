@@ -22,6 +22,16 @@ import lombok.Getter;
 @Getter
 public class Review {
 
+    public enum ReviewType {
+        VIEW, // 시야 후기
+        FEED, // 직관 후기
+    }
+
+    public enum SortCriteria {
+        DATE_TIME,
+        LIKES_COUNT,
+    }
+
     private final Long id;
     private final Member member;
     private final Stadium stadium;
@@ -37,8 +47,10 @@ public class Review {
     private transient Map<Long, Keyword> keywordMap;
     private int likesCount;
     private int scrapsCount;
+    private final ReviewType reviewType;
 
     public static final int DEFAULT_LIKE_COUNT = 0;
+    public static final int DEFAULT_SCRAPS_COUNT = 0;
 
     @Builder
     public Review(
@@ -55,7 +67,8 @@ public class Review {
             List<ReviewImage> images,
             List<ReviewKeyword> keywords,
             int likesCount,
-            int scrapsCount) {
+            int scrapsCount,
+            ReviewType reviewType) {
         if (likesCount < 0) {
             throw new InvalidReviewLikesException();
         }
@@ -74,6 +87,7 @@ public class Review {
         this.keywords = keywords != null ? keywords : new ArrayList<>();
         this.likesCount = likesCount;
         this.scrapsCount = scrapsCount;
+        this.reviewType = reviewType;
     }
 
     public void addKeyword(ReviewKeyword keyword) {
@@ -125,10 +139,5 @@ public class Review {
 
     public void setDeletedAt(LocalDateTime now) {
         this.deletedAt = now;
-    }
-
-    public enum SortCriteria {
-        DATE_TIME,
-        LIKES_COUNT,
     }
 }

@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Size;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewKeywordsException;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewCommand;
 
 public record CreateReviewRequest(
@@ -20,7 +21,8 @@ public record CreateReviewRequest(
         List<String> good,
         List<String> bad,
         String content,
-        @NotNull String dateTime) {
+        @NotNull String dateTime,
+        ReviewType reviewType) {
 
     public CreateReviewCommand toCommand() {
         validateGoodAndBad();
@@ -32,6 +34,7 @@ public record CreateReviewRequest(
                 .bad(bad)
                 .content(content)
                 .dateTime(toLocalDateTime(dateTime))
+                .reviewType(reviewType)
                 .build();
     }
 

@@ -4,6 +4,7 @@ import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
@@ -54,6 +55,7 @@ public class ReviewCreationProcessorImpl implements ReviewCreationProcessor {
                 .seat(seat)
                 .dateTime(command.dateTime())
                 .content(command.content())
+                .reviewType(command.reviewType() != null ? command.reviewType() : ReviewType.VIEW)
                 .build();
     }
 
