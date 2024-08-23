@@ -47,9 +47,10 @@ public class Review {
     private transient Map<Long, Keyword> keywordMap;
     private int likesCount;
     private int scrapsCount;
-    private ReviewType reviewType;
+    private final ReviewType reviewType;
 
     public static final int DEFAULT_LIKE_COUNT = 0;
+    public static final int DEFAULT_SCRAPS_COUNT = 0;
 
     @Builder
     public Review(
