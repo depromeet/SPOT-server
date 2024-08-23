@@ -1,8 +1,30 @@
 package org.depromeet.spot.usecase.port.out.review;
 
+import java.util.List;
+
+import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.scrap.ReviewScrap;
 
 public interface ReviewScrapRepository {
+
+    List<Review> findScrappedReviewsByMemberId(
+            Long memberId,
+            Long stadiumId,
+            List<Integer> months,
+            List<String> good,
+            List<String> bad,
+            String cursor,
+            SortCriteria sortBy,
+            Integer size);
+
+    Long getTotalCount(
+            Long memberId,
+            Long stadiumId,
+            List<Integer> months,
+            List<String> good,
+            List<String> bad);
+
     boolean existsBy(long memberId, long reviewId);
 
     long countByReview(long reviewId);

@@ -14,6 +14,7 @@ public record MyReviewListResponse(
         String nextCursor,
         boolean hasNext,
         FilterInfo filter) {
+
     public static MyReviewListResponse from(
             MyReviewListResult result, Integer year, Integer month) {
 
