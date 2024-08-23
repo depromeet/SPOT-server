@@ -8,6 +8,7 @@ import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
@@ -27,7 +28,8 @@ public record BaseReviewResponse(
         List<ReviewImageResponse> images,
         List<KeywordResponse> keywords,
         int likesCount,
-        int scrapsCount) {
+        int scrapsCount,
+        ReviewType reviewType) {
 
     public static BaseReviewResponse from(CreateReviewResult result) {
         Review review = result.review();
@@ -56,7 +58,8 @@ public record BaseReviewResponse(
                                 })
                         .toList(),
                 review.getLikesCount(),
-                review.getScrapsCount());
+                review.getScrapsCount(),
+                review.getReviewType());
     }
 
     public static BaseReviewResponse from(Review review) {
@@ -85,7 +88,8 @@ public record BaseReviewResponse(
                                 })
                         .collect(Collectors.toList()),
                 review.getLikesCount(),
-                review.getScrapsCount());
+                review.getScrapsCount(),
+                review.getReviewType());
     }
 
     public record StadiumResponse(Long id, String name) {
