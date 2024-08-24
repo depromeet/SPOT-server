@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api/v1/levels/info",
         "/kakao",
         "/api/v1/jwts",
+        "/trackEvent",
     };
 
     private static final Map<String, Set<String>> AUTH_METHOD_WHITELIST =
