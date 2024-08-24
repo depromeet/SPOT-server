@@ -12,6 +12,8 @@ public interface UpdateReviewUsecase {
 
     void updateLikesCount(Review review);
 
+    void updateScrapsCount(Review review);
+
     @Builder
     record UpdateReviewCommand(
             Long blockId,

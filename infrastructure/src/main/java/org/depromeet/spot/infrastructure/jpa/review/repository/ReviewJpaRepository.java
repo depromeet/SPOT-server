@@ -44,4 +44,8 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
     @Modifying
     @Query("update ReviewEntity r set r.likesCount = :likesCount where r.id = :id")
     void updateLikesCount(@Param("id") long reviewId, @Param("likesCount") int likesCount);
+
+    @Modifying
+    @Query("update ReviewEntity r set r.scrapsCount = :scrapsCount where r.id = :id")
+    void updateScrapsCount(@Param("id") long reviewId, @Param("scrapsCount") int scrapsCount);
 }

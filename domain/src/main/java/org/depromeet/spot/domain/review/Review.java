@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewLikesException;
 import org.depromeet.spot.domain.block.Block;
@@ -22,6 +23,16 @@ import lombok.Getter;
 @Getter
 public class Review {
 
+    public enum ReviewType {
+        VIEW, // 시야 후기
+        FEED, // 직관 후기
+    }
+
+    public enum SortCriteria {
+        DATE_TIME,
+        LIKES_COUNT,
+    }
+
     private final Long id;
     private final Member member;
     private final Stadium stadium;
@@ -36,8 +47,11 @@ public class Review {
     private List<ReviewKeyword> keywords;
     private transient Map<Long, Keyword> keywordMap;
     private int likesCount;
+    private int scrapsCount;
+    private final ReviewType reviewType;
 
     public static final int DEFAULT_LIKE_COUNT = 0;
+    public static final int DEFAULT_SCRAPS_COUNT = 0;
 
     @Builder
     public Review(
@@ -53,7 +67,9 @@ public class Review {
             LocalDateTime deletedAt,
             List<ReviewImage> images,
             List<ReviewKeyword> keywords,
-            int likesCount) {
+            int likesCount,
+            int scrapsCount,
+            ReviewType reviewType) {
         if (likesCount < 0) {
             throw new InvalidReviewLikesException();
         }
@@ -71,6 +87,8 @@ public class Review {
         this.images = images != null ? images : new ArrayList<>();
         this.keywords = keywords != null ? keywords : new ArrayList<>();
         this.likesCount = likesCount;
+        this.scrapsCount = scrapsCount;
+        this.reviewType = reviewType;
     }
 
     public void addKeyword(ReviewKeyword keyword) {
@@ -110,12 +128,38 @@ public class Review {
         }
     }
 
+    public void addScrap() {
+        this.scrapsCount++;
+    }
+
+    public void cancelScrap() {
+        if (this.scrapsCount > 0) {
+            this.scrapsCount--;
+        }
+    }
+
     public void setDeletedAt(LocalDateTime now) {
         this.deletedAt = now;
     }
 
-    public enum SortCriteria {
-        DATE_TIME,
-        LIKES_COUNT,
+    public Review withLimitedImages(int limit) {
+        List<ReviewImage> limitedImages =
+                this.images.stream().limit(limit).collect(Collectors.toList());
+        return new Review(
+                this.id,
+                this.member,
+                this.stadium,
+                this.section,
+                this.block,
+                this.row,
+                this.seat,
+                this.dateTime,
+                this.content,
+                this.deletedAt,
+                limitedImages,
+                this.keywords,
+                this.likesCount,
+                this.scrapsCount,
+                this.reviewType);
     }
 }

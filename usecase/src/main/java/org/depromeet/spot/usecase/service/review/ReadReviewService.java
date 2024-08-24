@@ -8,7 +8,6 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
-import org.depromeet.spot.domain.review.image.TopReviewImage;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.team.BaseballTeam;
@@ -80,9 +79,11 @@ public class ReadReviewService implements ReadReviewUsecase {
                         stadiumId, blockCode, TOP_KEYWORDS_LIMIT);
 
         // stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 topImages를 조회
-        List<TopReviewImage> topReviewImages =
+        List<Review> topReviewImages =
                 reviewImageRepository.findTopReviewImagesByStadiumIdAndBlockCode(
                         stadiumId, blockCode, TOP_IMAGES_LIMIT);
+
+        List<Review> topReviewImagesWithKeywords = mapKeywordsToReviews(topReviewImages);
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
@@ -94,7 +95,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .location(locationInfo)
                 .reviews(reviewsWithKeywords)
                 .topKeywords(topKeywords)
-                .topReviewImages(topReviewImages)
+                .topReviewImages(topReviewImagesWithKeywords)
                 .totalElements(totalElements)
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
@@ -145,7 +146,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .build();
     }
 
-    private String getCursor(Review review, SortCriteria sortBy) {
+    public String getCursor(Review review, SortCriteria sortBy) {
         switch (sortBy) {
             case LIKES_COUNT:
                 return review.getLikesCount()
@@ -201,7 +202,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .build();
     }
 
-    private Review mapKeywordsToSingleReview(Review review) {
+    public Review mapKeywordsToSingleReview(Review review) {
         List<Long> keywordIds =
                 review.getKeywords().stream()
                         .map(ReviewKeyword::getKeywordId)
@@ -242,11 +243,11 @@ public class ReadReviewService implements ReadReviewUsecase {
         return mappedReview;
     }
 
-    private List<Review> mapKeywordsToReviews(List<Review> reviews) {
+    public List<Review> mapKeywordsToReviews(List<Review> reviews) {
         return reviews.stream().map(this::mapKeywordsToSingleReview).collect(Collectors.toList());
     }
 
-    private Review mapKeywordsToReview(Review review) {
+    public Review mapKeywordsToReview(Review review) {
         // TODO : (민성) 중복되는 Keywords 로직 처리 부분 메소드로 분리하기!
         List<Long> keywordIds =
                 review.getKeywords().stream()

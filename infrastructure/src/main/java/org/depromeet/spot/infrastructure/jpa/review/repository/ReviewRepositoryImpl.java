@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
@@ -26,6 +27,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public void updateLikesCount(Long reviewId, int likesCount) {
         reviewJpaRepository.updateLikesCount(reviewId, likesCount);
+    }
+
+    @Override
+    public void updateScrapsCount(Long reviewId, int scrapsCount) {
+        reviewJpaRepository.updateScrapsCount(reviewId, scrapsCount);
     }
 
     @Override
@@ -70,7 +76,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                         month,
                         cursor,
                         sortBy,
-                        size);
+                        size,
+                        ReviewType.VIEW);
         return reviewEntities.stream().map(ReviewEntity::toDomain).toList();
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.seat.Seat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +29,8 @@ public interface CreateReviewUsecase {
             List<String> good,
             List<String> bad,
             String content,
-            LocalDateTime dateTime) {}
+            LocalDateTime dateTime,
+            ReviewType reviewType) {}
 
     @Builder
     record CreateAdminReviewCommand(

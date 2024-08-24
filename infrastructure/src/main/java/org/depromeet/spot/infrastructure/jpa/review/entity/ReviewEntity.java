@@ -9,6 +9,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
@@ -17,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.infrastructure.jpa.block.entity.BlockEntity;
 import org.depromeet.spot.infrastructure.jpa.block.entity.BlockRowEntity;
 import org.depromeet.spot.infrastructure.jpa.common.entity.BaseEntity;
@@ -97,6 +100,15 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "likes_count")
     private Integer likesCount;
 
+    @ColumnDefault("0")
+    @Column(name = "scraps_count")
+    private Integer scrapsCount;
+
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("VIEW")
+    @Column(name = "review_type", nullable = false)
+    private ReviewType reviewType;
+
     public static ReviewEntity from(Review review) {
         SeatEntity seatEntity =
                 review.getSeat() != null ? SeatEntity.withSeat(review.getSeat()) : null;
@@ -115,7 +127,9 @@ public class ReviewEntity extends BaseEntity {
                         review.getContent(),
                         new ArrayList<>(),
                         new ArrayList<>(),
-                        review.getLikesCount());
+                        review.getLikesCount(),
+                        review.getScrapsCount(),
+                        review.getReviewType());
 
         entity.setId(review.getId()); // ID 설정 추가
 
@@ -145,6 +159,8 @@ public class ReviewEntity extends BaseEntity {
                         .dateTime(this.dateTime)
                         .content(this.content)
                         .likesCount(likesCount)
+                        .scrapsCount(scrapsCount)
+                        .reviewType(reviewType)
                         .build();
 
         review.setImages(
@@ -173,5 +189,7 @@ public class ReviewEntity extends BaseEntity {
         dateTime = review.getDateTime();
         content = review.getContent();
         likesCount = review.getLikesCount();
+        scrapsCount = review.getScrapsCount();
+        reviewType = review.getReviewType();
     }
 }

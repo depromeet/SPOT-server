@@ -10,6 +10,8 @@ import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 public interface ReviewRepository {
     void updateLikesCount(Long reviewId, int likesCount);
 
+    void updateScrapsCount(Long reviewId, int likesCount);
+
     Review save(Review review);
 
     Review findById(Long id);
