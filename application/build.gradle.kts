@@ -32,6 +32,9 @@ dependencies {
     // aop
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    // Mixpanel
+    implementation("com.mixpanel:mixpanel-java:_")
+
 }
 
 // spring boot main application이므로 실행 가능한 jar를 생성한다.
