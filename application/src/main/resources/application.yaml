@@ -12,12 +12,14 @@ spring:
                 - aws
                 - jwt
                 - kakao
+                - mixpanel
             dev:
                 - jpa
                 - aws
                 - jwt
                 - kakao
                 - monitoring
+                - mixpanel
             prod:
                 - jpa
                 - aws
@@ -25,6 +27,7 @@ spring:
                 - kakao
                 - sentry
                 - monitoring
+                - mixpanel
     servlet:
         multipart:
             max-file-size: 10MB
