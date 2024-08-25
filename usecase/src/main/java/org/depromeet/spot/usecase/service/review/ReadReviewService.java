@@ -289,6 +289,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .images(review.getImages())
                         .keywords(mappedKeywords) // 리뷰 키워드 담당
                         .likesCount(review.getLikesCount())
+                        .scrapsCount(review.getScrapsCount())
                         .build();
 
         // Keyword 정보를 Review 객체에 추가
