@@ -86,13 +86,15 @@ public class ReviewCustomRepository {
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            int size) {
+            int size,
+            ReviewType reviewType) {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(reviewEntity.member.id.eq(userId));
         builder.and(eqYear(year));
         builder.and(eqMonth(month));
         builder.and(reviewEntity.deletedAt.isNull());
+        builder.and(reviewEntity.reviewType.eq(reviewType));
 
         OrderSpecifier<?>[] orderBy = getOrderBy(sortBy);
         BooleanExpression cursorCondition = getCursorCondition(sortBy, cursor);
