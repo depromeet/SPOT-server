@@ -21,7 +21,6 @@ public class ReviewLikeService implements ReviewLikeUsecase {
     private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewLikeRepository reviewLikeRepository;
 
-    // TODO: 분산락 적용 예정
     @Override
     @DistributedLock(key = "#reviewId")
     public void toggleLike(final long memberId, final long reviewId) {
