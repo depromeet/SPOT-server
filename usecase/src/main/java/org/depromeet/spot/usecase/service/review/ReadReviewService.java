@@ -150,7 +150,8 @@ public class ReadReviewService implements ReadReviewUsecase {
         MemberInfoOnMyReviewResult memberInfo;
         if (member.getTeamId() == null) {
             memberInfo =
-                    MemberInfoOnMyReviewResult.of(member, reviewRepository.countByUserId(memberId));
+                    MemberInfoOnMyReviewResult.of(
+                            member, reviewRepository.countAndSumLikesByUserId(memberId));
 
         } else {
             BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
@@ -158,7 +159,7 @@ public class ReadReviewService implements ReadReviewUsecase {
             memberInfo =
                     MemberInfoOnMyReviewResult.of(
                             member,
-                            reviewRepository.countByUserId(memberId),
+                            reviewRepository.countAndSumLikesByUserId(memberId),
                             baseballTeam.getName());
         }
 

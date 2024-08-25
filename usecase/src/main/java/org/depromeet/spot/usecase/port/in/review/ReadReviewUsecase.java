@@ -6,6 +6,7 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 
 import lombok.Builder;
@@ -76,30 +77,33 @@ public interface ReadReviewUsecase {
             String levelTitle,
             String nickname,
             Long reviewCount,
+            Long totalLikes,
             Long teamId,
             String teamName) {
-        public static MemberInfoOnMyReviewResult of(Member member, long totalReviewCount) {
+        public static MemberInfoOnMyReviewResult of(Member member, ReviewCount reviewCount) {
             return MemberInfoOnMyReviewResult.builder()
                     .userId(member.getId())
                     .profileImageUrl(member.getProfileImage())
                     .level(member.getLevel().getValue())
                     .levelTitle(member.getLevel().getTitle())
                     .nickname(member.getNickname())
-                    .reviewCount(totalReviewCount)
+                    .reviewCount(reviewCount.reviewCount())
+                    .totalLikes(reviewCount.totalLikes())
                     .teamId(null)
                     .teamName(null)
                     .build();
         }
 
         public static MemberInfoOnMyReviewResult of(
-                Member member, long totalReviewCount, String teamName) {
+                Member member, ReviewCount reviewCount, String teamName) {
             return MemberInfoOnMyReviewResult.builder()
                     .userId(member.getId())
                     .profileImageUrl(member.getProfileImage())
                     .level(member.getLevel().getValue())
                     .levelTitle(member.getLevel().getTitle())
                     .nickname(member.getNickname())
-                    .reviewCount(totalReviewCount)
+                    .reviewCount(reviewCount.reviewCount())
+                    .totalLikes(reviewCount.totalLikes())
                     .teamId(member.getTeamId())
                     .teamName(teamName)
                     .build();
