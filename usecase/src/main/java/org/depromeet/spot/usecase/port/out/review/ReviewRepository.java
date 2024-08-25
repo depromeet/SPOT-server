@@ -3,6 +3,7 @@ package org.depromeet.spot.usecase.port.out.review;
 import java.util.List;
 
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
@@ -35,9 +36,10 @@ public interface ReviewRepository {
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            Integer size);
+            Integer size,
+            ReviewType reviewType);
 
-    List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId);
+    List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId, ReviewType reviewType);
 
     Long softDeleteByIdAndMemberId(Long reviewId, Long memberId);
 

@@ -88,15 +88,17 @@ public class ReviewRepositoryImpl implements ReviewRepository {
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            Integer size) {
+            Integer size,
+            ReviewType reviewType) {
         List<ReviewEntity> reviewEntities =
-                reviewCustomRepository.findAllByUserId(userId, year, month, cursor, sortBy, size);
+                reviewCustomRepository.findAllByUserId(
+                        userId, year, month, cursor, sortBy, size, reviewType);
         return reviewEntities.stream().map(ReviewEntity::toDomain).toList();
     }
 
     @Override
-    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId) {
-        return reviewJpaRepository.findReviewMonthsByMemberId(memberId);
+    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId, ReviewType reviewType) {
+        return reviewJpaRepository.findReviewMonthsByMemberId(memberId, reviewType);
     }
 
     @Override
