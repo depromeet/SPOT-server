@@ -34,6 +34,8 @@ public interface ReadReviewUsecase {
             Integer size,
             ReviewType reviewType);
 
+    MemberInfoOnMyReviewResult findMemberInfoOnMyReview(Long memberId);
+
     List<ReviewYearMonth> findReviewMonths(Long memberId, ReviewType reviewType);
 
     MyRecentReviewResult findLastReviewByMemberId(Long memberId);

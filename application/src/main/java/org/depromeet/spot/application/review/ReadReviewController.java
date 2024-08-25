@@ -11,6 +11,7 @@ import org.depromeet.spot.application.review.dto.request.BlockReviewRequest;
 import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BaseReviewResponse;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
+import org.depromeet.spot.application.review.dto.response.MemberInfoOnMyReviewResponse;
 import org.depromeet.spot.application.review.dto.response.MyRecentReviewResponse;
 import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.ReviewMonthsResponse;
@@ -88,6 +89,16 @@ public class ReadReviewController {
 
         List<ReviewYearMonth> yearMonths = readReviewUsecase.findReviewMonths(memberId, reviewType);
         return ReviewMonthsResponse.from(yearMonths);
+    }
+
+    @CurrentMember
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/reviews/userInfo")
+    @Operation(summary = "사용자의 리뷰 관련 정보를 조회한다.")
+    public MemberInfoOnMyReviewResponse findMemberInfoOnMyReview(
+            @Parameter(hidden = true) Long memberId) {
+        return MemberInfoOnMyReviewResponse.from(
+                readReviewUsecase.findMemberInfoOnMyReview(memberId));
     }
 
     @CurrentMember

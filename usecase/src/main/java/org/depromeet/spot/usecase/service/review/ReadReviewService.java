@@ -8,6 +8,7 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
@@ -114,6 +115,19 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     @Override
+    public MemberInfoOnMyReviewResult findMemberInfoOnMyReview(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+        ReviewCount reviewCount = reviewRepository.countAndSumLikesByUserId(memberId);
+
+        if (member.getTeamId() == null) {
+            return MemberInfoOnMyReviewResult.of(member, reviewCount);
+        } else {
+            BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
+            return MemberInfoOnMyReviewResult.of(member, reviewCount, baseballTeam.getName());
+        }
+    }
+
+    @Override
     public MyReviewListResult findMyReviewsByUserId(
             Long memberId,
             Integer year,
@@ -145,26 +159,7 @@ public class ReadReviewService implements ReadReviewUsecase {
             readReviewProcessor.setLikedAndScrappedStatus(reviewsWithKeywords, memberId);
         }
 
-        Member member = memberRepository.findById(memberId);
-
-        MemberInfoOnMyReviewResult memberInfo;
-        if (member.getTeamId() == null) {
-            memberInfo =
-                    MemberInfoOnMyReviewResult.of(
-                            member, reviewRepository.countAndSumLikesByUserId(memberId));
-
-        } else {
-            BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
-
-            memberInfo =
-                    MemberInfoOnMyReviewResult.of(
-                            member,
-                            reviewRepository.countAndSumLikesByUserId(memberId),
-                            baseballTeam.getName());
-        }
-
         return MyReviewListResult.builder()
-                .memberInfoOnMyReviewResult(memberInfo)
                 .reviews(reviewsWithKeywords)
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
