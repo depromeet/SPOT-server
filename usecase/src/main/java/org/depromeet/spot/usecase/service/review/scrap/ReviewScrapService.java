@@ -10,6 +10,7 @@ import org.depromeet.spot.usecase.port.in.review.page.PageCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.service.review.ReadReviewService;
+import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class ReviewScrapService implements ReviewScrapUsecase {
     private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewScrapRepository scrapRepository;
     private final ReadReviewService readReviewService;
+    private final ReadReviewProcessor readReviewProcessor;
 
     @Override
     public MyScrapListResult findMyScrappedReviews(
@@ -52,6 +54,9 @@ public class ReviewScrapService implements ReviewScrapUsecase {
                         : null;
 
         List<Review> reviewsWithKeywords = readReviewService.mapKeywordsToReviews(reviews);
+
+        // 유저의 리뷰 좋아요, 스크랩 여부
+        readReviewProcessor.setLikedAndScrappedStatus(reviewsWithKeywords, memberId);
 
         Long totalScrapCount =
                 scrapRepository.getTotalCount(
