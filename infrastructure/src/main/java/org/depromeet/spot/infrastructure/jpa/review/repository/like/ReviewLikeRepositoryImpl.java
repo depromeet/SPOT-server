@@ -1,5 +1,9 @@
 package org.depromeet.spot.infrastructure.jpa.review.repository.like;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.depromeet.spot.domain.review.like.ReviewLike;
 import org.depromeet.spot.infrastructure.jpa.review.entity.like.ReviewLikeEntity;
 import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
@@ -32,5 +36,13 @@ public class ReviewLikeRepositoryImpl implements ReviewLikeRepository {
     public void save(ReviewLike like) {
         ReviewLikeEntity entity = ReviewLikeEntity.from(like);
         reviewLikeJpaRepository.save(entity);
+    }
+
+    @Override
+    public Map<Long, Boolean> existsByMemberIdAndReviewIds(Long memberId, List<Long> reviewIds) {
+        List<Long> likedReviewIds =
+                reviewLikeJpaRepository.findReviewIdsByMemberIdAndReviewIdIn(memberId, reviewIds);
+        return reviewIds.stream()
+                .collect(Collectors.toMap(reviewId -> reviewId, likedReviewIds::contains));
     }
 }
