@@ -1,8 +1,8 @@
 package org.depromeet.spot.infrastructure.redis;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -25,8 +25,8 @@ public class EmbeddedRedisConfig {
     private RedisServer redisServer;
 
     @PostConstruct
-    public void redisServer() throws IOException {
-        int port = isRedisPortUsed() ? findAvailablePort() : redisProperties.port();
+    public void redisServer() {
+        int port = isRedisPortAvailable() ? findAvailablePort() : redisProperties.port();
         log.info("embedded redis port = {}", port);
         redisServer = new RedisServer(port);
         redisServer.start();
@@ -39,34 +39,22 @@ public class EmbeddedRedisConfig {
         }
     }
 
-    private boolean isRedisPortUsed() throws IOException {
-        Process process = getProcessListeningOnPort(redisProperties.port());
-        return isRunningProcess(process);
+    private boolean isRedisPortAvailable() {
+        return isAvailablePort(redisProperties.port());
     }
 
-    private Process getProcessListeningOnPort(final int port) throws IOException {
-        String command = "lsof -i :" + port + " | grep LISTEN";
-        String[] shell = {"/bin/sh", "-c", command};
-        return Runtime.getRuntime().exec(shell);
-    }
-
-    private boolean isRunningProcess(Process process) {
-        try (BufferedReader input =
-                new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line = input.readLine();
-            if (line == null) {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private boolean isAvailablePort(final int port) {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("localhost", port), 200);
+            return true;
+        } catch (IOException e) {
+            return false;
         }
-        return true;
     }
 
-    private int findAvailablePort() throws IOException {
+    private int findAvailablePort() {
         for (int port = 10000; port <= 65535; port++) {
-            Process process = getProcessListeningOnPort(port);
-            if (!isRunningProcess(process)) {
+            if (!isAvailablePort(port)) {
                 return port;
             }
         }
