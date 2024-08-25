@@ -12,6 +12,7 @@ import lombok.Builder;
 public interface ReadReviewUsecase {
 
     BlockReviewListResult findReviewsByStadiumIdAndBlockCode(
+            Long memberId,
             Long stadiumId,
             String blockCode,
             Integer rowNumber,
