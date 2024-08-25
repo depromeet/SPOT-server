@@ -5,7 +5,7 @@ server:
 spring:
     # 서브모듈 profile
     profiles:
-        active: dev
+        active: local
         group:
             local:
                 - jpa
