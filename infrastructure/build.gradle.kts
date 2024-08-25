@@ -27,6 +27,10 @@ dependencies {
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis:_")
     implementation("org.redisson:redisson-spring-boot-starter:_")
+    implementation("it.ozimov:embedded-redis:_") {
+        exclude(group = "org.slf4j", module = "slf4j-simple")
+        because("테스트 환경에서 사용할 embedded-redis")
+    }
 
     // webflux (HTTP 요청에 사용)
     implementation("org.springframework.boot:spring-boot-starter-webflux")

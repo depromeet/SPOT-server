@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisConfig {
+public class RedissonConfig {
 
     private static final String REDISSON_HOST_PREFIX = "redis://";
     private final RedisProperties redisProperties;
