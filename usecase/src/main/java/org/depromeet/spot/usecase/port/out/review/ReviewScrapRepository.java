@@ -1,6 +1,7 @@
 package org.depromeet.spot.usecase.port.out.review;
 
 import java.util.List;
+import java.util.Map;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
@@ -32,4 +33,6 @@ public interface ReviewScrapRepository {
     void deleteBy(long memberId, long reviewId);
 
     void save(ReviewScrap like);
+
+    Map<Long, Boolean> existsByMemberIdAndReviewIds(Long memberId, List<Long> reviewIds);
 }

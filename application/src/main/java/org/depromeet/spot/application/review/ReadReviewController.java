@@ -41,6 +41,7 @@ public class ReadReviewController {
     @GetMapping("/stadiums/{stadiumId}/blocks/{blockCode}/reviews")
     @Operation(summary = "특정 야구장의 특정 블록에 대한 리뷰 목록을 조회한다.")
     public BlockReviewListResponse findReviewsByBlockId(
+            @Parameter(hidden = true) Long memberId,
             @PathVariable("stadiumId")
                     @NotNull
                     @Positive
@@ -52,6 +53,7 @@ public class ReadReviewController {
 
         BlockReviewListResult result =
                 readReviewUsecase.findReviewsByStadiumIdAndBlockCode(
+                        memberId,
                         stadiumId,
                         blockCode,
                         request.rowNumber(),

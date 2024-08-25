@@ -52,6 +52,8 @@ public class Review {
 
     public static final int DEFAULT_LIKE_COUNT = 0;
     public static final int DEFAULT_SCRAPS_COUNT = 0;
+    public boolean isLiked;
+    public boolean isScrapped;
 
     @Builder
     public Review(
@@ -140,6 +142,11 @@ public class Review {
 
     public void setDeletedAt(LocalDateTime now) {
         this.deletedAt = now;
+    }
+
+    public void setLikedAndScrapped(boolean liked, boolean scraped) {
+        this.isLiked = liked;
+        this.isScrapped = scraped;
     }
 
     public Review withLimitedImages(int limit) {

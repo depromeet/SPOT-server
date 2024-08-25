@@ -16,7 +16,9 @@ import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
+import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
+import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +36,15 @@ public class ReadReviewService implements ReadReviewUsecase {
     private final KeywordRepository keywordRepository;
     private final MemberRepository memberRepository;
     private final BaseballTeamRepository baseballTeamRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final ReviewScrapRepository reviewScrapRepository;
 
     private static final int TOP_KEYWORDS_LIMIT = 5;
     private static final int TOP_IMAGES_LIMIT = 5;
 
     @Override
     public BlockReviewListResult findReviewsByStadiumIdAndBlockCode(
+            Long memberId,
             Long stadiumId,
             String blockCode,
             Integer rowNumber,
@@ -86,6 +91,9 @@ public class ReadReviewService implements ReadReviewUsecase {
         List<Review> topReviewImagesWithKeywords = mapKeywordsToReviews(topReviewImages);
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
+
+        // 유저의 리뷰 좋아요, 스크랩 여부
+        setLikedAndScrappedStatus(reviewsWithKeywords, memberId);
 
         long totalElements =
                 reviewRepository.countByStadiumIdAndBlockCode(
@@ -288,5 +296,21 @@ public class ReadReviewService implements ReadReviewUsecase {
         mappedReview.setKeywordMap(keywordMap);
 
         return mappedReview;
+    }
+
+    private void setLikedAndScrappedStatus(List<Review> reviews, Long memberId) {
+        List<Long> reviewIds = reviews.stream().map(Review::getId).collect(Collectors.toList());
+
+        Map<Long, Boolean> likedMap =
+                reviewLikeRepository.existsByMemberIdAndReviewIds(memberId, reviewIds);
+        Map<Long, Boolean> scrappedMap =
+                reviewScrapRepository.existsByMemberIdAndReviewIds(memberId, reviewIds);
+
+        reviews.forEach(
+                review -> {
+                    boolean isLiked = likedMap.getOrDefault(review.getId(), false);
+                    boolean isScrapped = scrappedMap.getOrDefault(review.getId(), false);
+                    review.setLikedAndScrapped(isLiked, isScrapped);
+                });
     }
 }
