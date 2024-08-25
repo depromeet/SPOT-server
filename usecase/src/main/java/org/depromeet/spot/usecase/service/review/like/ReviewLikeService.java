@@ -1,5 +1,6 @@
 package org.depromeet.spot.usecase.service.review.like;
 
+import org.depromeet.spot.common.annotation.DistributedLock;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.like.ReviewLike;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
@@ -22,6 +23,7 @@ public class ReviewLikeService implements ReviewLikeUsecase {
 
     // TODO: 분산락 적용 예정
     @Override
+    @DistributedLock(key = "#reviewId")
     public void toggleLike(final long memberId, final long reviewId) {
         Review review = readReviewUsecase.findById(reviewId);
 
