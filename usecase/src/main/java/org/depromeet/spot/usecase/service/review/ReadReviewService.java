@@ -244,6 +244,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .images(review.getImages())
                         .keywords(mappedKeywords)
                         .likesCount(review.getLikesCount())
+                        .scrapsCount(review.getScrapsCount())
                         .build();
 
         mappedReview.setKeywordMap(keywordMap);
