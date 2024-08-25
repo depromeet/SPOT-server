@@ -12,18 +12,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConcurrencyTest {
 
-    private static final int NUMBER_OF_THREAD = 100;
-    private static final int NUMBER_OF_THREAD_POOL = 5;
+    private final int numberOfThread;
 
     private ExecutorService executorService;
     private CountDownLatch latch;
 
-    public AtomicLong execute(Executable executable, AtomicLong exceptionCount)
-            throws InterruptedException {
-        this.executorService = Executors.newFixedThreadPool(NUMBER_OF_THREAD_POOL);
-        this.latch = new CountDownLatch(NUMBER_OF_THREAD);
+    public ConcurrencyTest(final int numberOfThread) {
+        this.numberOfThread = numberOfThread;
+    }
 
-        for (int i = 0; i < NUMBER_OF_THREAD; i++) {
+    public AtomicLong execute(Executable executable) throws InterruptedException {
+        this.executorService = Executors.newFixedThreadPool(numberOfThread);
+        this.latch = new CountDownLatch(numberOfThread);
+
+        AtomicLong exceptionCount = new AtomicLong();
+        for (int i = 0; i < numberOfThread; i++) {
             executorService.execute(
                     () -> {
                         try {

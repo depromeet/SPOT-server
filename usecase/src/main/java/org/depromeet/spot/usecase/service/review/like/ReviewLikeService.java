@@ -25,7 +25,7 @@ public class ReviewLikeService implements ReviewLikeUsecase {
 
     @Override
     @DistributedLock(key = "#reviewId")
-    public void toggleLike(final long memberId, final long reviewId) {
+    public void toggleLike(final Long memberId, final long reviewId) {
         Review review = readReviewUsecase.findById(reviewId);
 
         if (reviewLikeRepository.existsBy(memberId, reviewId)) {
