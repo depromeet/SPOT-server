@@ -58,7 +58,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public ReviewCount countAndSumLikesByUserId(Long id) {
-        return reviewJpaRepository.countAndSumLikesByMemberId(id);
+        return reviewJpaRepository.countAndSumLikesByMemberId(id, ReviewType.VIEW);
     }
 
     @Override

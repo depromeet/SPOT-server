@@ -28,10 +28,11 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
     @Query(
             "SELECT new org.depromeet.spot.domain.review.ReviewCount("
                     + "COUNT(r), "
-                    + "COALESCE(SUM(CASE WHEN r.reviewType = org.depromeet.spot.domain.review.Review.ReviewType.VIEW THEN r.likesCount ELSE 0 END), 0)) "
+                    + "COALESCE(SUM(CASE WHEN r.reviewType = :viewType THEN r.likesCount ELSE 0 END), 0)) "
                     + "FROM ReviewEntity r "
                     + "WHERE r.member.id = :memberId AND r.deletedAt IS NULL")
-    ReviewCount countAndSumLikesByMemberId(@Param("memberId") Long memberId);
+    ReviewCount countAndSumLikesByMemberId(
+            @Param("memberId") Long memberId, @Param("viewType") ReviewType viewType);
 
     @Modifying
     @Query(
