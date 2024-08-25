@@ -123,6 +123,10 @@ public class ReadReviewService implements ReadReviewUsecase {
             Integer size,
             ReviewType reviewType) {
 
+        if (reviewType == null) {
+            reviewType = ReviewType.VIEW;
+        }
+
         List<Review> reviews =
                 reviewRepository.findAllByUserId(
                         memberId, year, month, cursor, sortBy, size + 1, reviewType);
@@ -182,6 +186,9 @@ public class ReadReviewService implements ReadReviewUsecase {
 
     @Override
     public List<ReviewYearMonth> findReviewMonths(Long memberId, ReviewType reviewType) {
+        if (reviewType == null) {
+            reviewType = ReviewType.VIEW;
+        }
         return reviewRepository.findReviewMonthsByMemberId(memberId, reviewType);
     }
 
