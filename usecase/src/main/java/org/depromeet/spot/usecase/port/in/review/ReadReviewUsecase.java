@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 
@@ -29,9 +30,10 @@ public interface ReadReviewUsecase {
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            Integer size);
+            Integer size,
+            ReviewType reviewType);
 
-    List<ReviewYearMonth> findReviewMonths(Long memberId);
+    List<ReviewYearMonth> findReviewMonths(Long memberId, ReviewType reviewType);
 
     MyRecentReviewResult findLastReviewByMemberId(Long memberId);
 

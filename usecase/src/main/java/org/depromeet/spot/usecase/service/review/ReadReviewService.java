@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.keyword.Keyword;
@@ -114,15 +115,17 @@ public class ReadReviewService implements ReadReviewUsecase {
 
     @Override
     public MyReviewListResult findMyReviewsByUserId(
-            Long userId,
+            Long memberId,
             Integer year,
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            Integer size) {
+            Integer size,
+            ReviewType reviewType) {
 
         List<Review> reviews =
-                reviewRepository.findAllByUserId(userId, year, month, cursor, sortBy, size + 1);
+                reviewRepository.findAllByUserId(
+                        memberId, year, month, cursor, sortBy, size + 1, reviewType);
 
         boolean hasNext = reviews.size() > size;
         if (hasNext) {
@@ -133,19 +136,26 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
-        Member member = memberRepository.findById(userId);
+        if (reviewType.equals(ReviewType.VIEW)) {
+            // 유저의 리뷰 좋아요, 스크랩 여부
+            readReviewProcessor.setLikedAndScrappedStatus(reviewsWithKeywords, memberId);
+        }
+
+        Member member = memberRepository.findById(memberId);
 
         MemberInfoOnMyReviewResult memberInfo;
         if (member.getTeamId() == null) {
             memberInfo =
-                    MemberInfoOnMyReviewResult.of(member, reviewRepository.countByUserId(userId));
+                    MemberInfoOnMyReviewResult.of(member, reviewRepository.countByUserId(memberId));
 
         } else {
             BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
 
             memberInfo =
                     MemberInfoOnMyReviewResult.of(
-                            member, reviewRepository.countByUserId(userId), baseballTeam.getName());
+                            member,
+                            reviewRepository.countByUserId(memberId),
+                            baseballTeam.getName());
         }
 
         return MyReviewListResult.builder()
@@ -171,8 +181,8 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     @Override
-    public List<ReviewYearMonth> findReviewMonths(Long memberId) {
-        return reviewRepository.findReviewMonthsByMemberId(memberId);
+    public List<ReviewYearMonth> findReviewMonths(Long memberId, ReviewType reviewType) {
+        return reviewRepository.findReviewMonthsByMemberId(memberId, reviewType);
     }
 
     @Override
@@ -247,6 +257,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .keywords(mappedKeywords)
                         .likesCount(review.getLikesCount())
                         .scrapsCount(review.getScrapsCount())
+                        .reviewType(review.getReviewType())
                         .build();
 
         mappedReview.setKeywordMap(keywordMap);
@@ -293,6 +304,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .keywords(mappedKeywords) // 리뷰 키워드 담당
                         .likesCount(review.getLikesCount())
                         .scrapsCount(review.getScrapsCount())
+                        .reviewType(review.getReviewType())
                         .build();
 
         // Keyword 정보를 Review 객체에 추가
