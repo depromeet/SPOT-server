@@ -7,6 +7,7 @@ import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFound
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
@@ -53,6 +54,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public long countByUserId(Long id) {
         return reviewJpaRepository.countByMemberIdAndDeletedAtIsNull(id);
+    }
+
+    @Override
+    public ReviewCount countAndSumLikesByUserId(Long id) {
+        return reviewJpaRepository.countAndSumLikesByMemberId(id);
     }
 
     @Override

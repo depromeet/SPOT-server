@@ -5,6 +5,7 @@ import java.util.List;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 
@@ -18,6 +19,8 @@ public interface ReviewRepository {
     Review findById(Long id);
 
     long countByUserId(Long userId);
+
+    ReviewCount countAndSumLikesByUserId(Long id);
 
     List<Review> findByStadiumIdAndBlockCode(
             Long stadiumId,
