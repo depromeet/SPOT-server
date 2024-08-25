@@ -10,9 +10,11 @@ import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @Transactional
 @RequiredArgsConstructor
 public class ReviewLikeService implements ReviewLikeUsecase {
