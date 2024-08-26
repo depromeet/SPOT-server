@@ -19,6 +19,8 @@ import org.depromeet.spot.usecase.port.in.review.page.PageCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase.MyScrapCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase.MyScrapListResult;
 import org.depromeet.spot.usecase.service.fake.FakeReviewScrapRepository;
+import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
+import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.depromeet.spot.usecase.service.review.scrap.ReviewScrapService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,8 @@ class ReviewScrapServiceTest {
     @Mock private ReadReviewUsecase readReviewUsecase;
     @Mock private UpdateReviewUsecase updateReviewUsecase;
     @Mock private ReadReviewService readReviewService;
+    @Mock private ReadReviewProcessor readReviewProcessor;
+    @Mock private PaginationProcessor paginationProcessor;
 
     @BeforeEach
     void init() {
@@ -43,7 +47,9 @@ class ReviewScrapServiceTest {
                         readReviewUsecase,
                         updateReviewUsecase,
                         fakeReviewScrapRepository,
-                        readReviewService);
+                        readReviewService,
+                        readReviewProcessor,
+                        paginationProcessor);
     }
 
     @Test

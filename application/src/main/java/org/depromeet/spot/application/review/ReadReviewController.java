@@ -11,9 +11,11 @@ import org.depromeet.spot.application.review.dto.request.BlockReviewRequest;
 import org.depromeet.spot.application.review.dto.request.MyReviewRequest;
 import org.depromeet.spot.application.review.dto.response.BaseReviewResponse;
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse;
+import org.depromeet.spot.application.review.dto.response.MemberInfoOnMyReviewResponse;
 import org.depromeet.spot.application.review.dto.response.MyRecentReviewResponse;
 import org.depromeet.spot.application.review.dto.response.MyReviewListResponse;
 import org.depromeet.spot.application.review.dto.response.ReviewMonthsResponse;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockReviewListResult;
@@ -41,6 +43,7 @@ public class ReadReviewController {
     @GetMapping("/stadiums/{stadiumId}/blocks/{blockCode}/reviews")
     @Operation(summary = "특정 야구장의 특정 블록에 대한 리뷰 목록을 조회한다.")
     public BlockReviewListResponse findReviewsByBlockId(
+            @Parameter(hidden = true) Long memberId,
             @PathVariable("stadiumId")
                     @NotNull
                     @Positive
@@ -52,6 +55,7 @@ public class ReadReviewController {
 
         BlockReviewListResult result =
                 readReviewUsecase.findReviewsByStadiumIdAndBlockCode(
+                        memberId,
                         stadiumId,
                         blockCode,
                         request.rowNumber(),
@@ -67,12 +71,34 @@ public class ReadReviewController {
 
     @CurrentMember
     @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/reviews/recentReview")
+    @Operation(summary = "자신이 작성한 가장 최근 리뷰 1개를 조회한다.")
+    public MyRecentReviewResponse findMyRecentReview(@Parameter(hidden = true) Long memberId) {
+
+        MyRecentReviewResult result = readReviewUsecase.findLastReviewByMemberId(memberId);
+        return MyRecentReviewResponse.from(result);
+    }
+
+    @CurrentMember
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/reviews/months")
     @Operation(summary = "리뷰가 작성된 년도와 월 정보를 조회한다.")
-    public ReviewMonthsResponse findReviewMonths(@Parameter(hidden = true) Long memberId) {
+    public ReviewMonthsResponse findReviewMonths(
+            @Parameter(hidden = true) Long memberId,
+            @Parameter(description = "리뷰 타입: VIEW/FEED") ReviewType reviewType) {
 
-        List<ReviewYearMonth> yearMonths = readReviewUsecase.findReviewMonths(memberId);
+        List<ReviewYearMonth> yearMonths = readReviewUsecase.findReviewMonths(memberId, reviewType);
         return ReviewMonthsResponse.from(yearMonths);
+    }
+
+    @CurrentMember
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/reviews/userInfo")
+    @Operation(summary = "사용자의 리뷰 관련 정보를 조회한다.")
+    public MemberInfoOnMyReviewResponse findMemberInfoOnMyReview(
+            @Parameter(hidden = true) Long memberId) {
+        return MemberInfoOnMyReviewResponse.from(
+                readReviewUsecase.findMemberInfoOnMyReview(memberId));
     }
 
     @CurrentMember
@@ -92,18 +118,9 @@ public class ReadReviewController {
                         request.month(),
                         request.cursor(),
                         request.sortBy(),
-                        request.size());
+                        request.size(),
+                        request.reviewType());
         return MyReviewListResponse.from(result, request.year(), request.month());
-    }
-
-    @CurrentMember
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/reviews/recentReview")
-    @Operation(summary = "자신이 작성한 가장 최근 리뷰 1개를 조회한다.")
-    public MyRecentReviewResponse findMyRecentReview(@Parameter(hidden = true) Long memberId) {
-
-        MyRecentReviewResult result = readReviewUsecase.findLastReviewByMemberId(memberId);
-        return MyRecentReviewResponse.from(result);
     }
 
     @CurrentMember
