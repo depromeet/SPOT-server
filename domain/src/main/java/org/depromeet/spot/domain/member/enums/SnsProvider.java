@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum SnsProvider {
-    KAKAO("KAKAO");
+    KAKAO("KAKAO"),
+    GOOGLE("GOOGLE");
 
     private final String value;
 }

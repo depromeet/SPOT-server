@@ -54,7 +54,7 @@ jobs:
                           -e SPRING_DATASOURCE_USERNAME=${{ secrets.PROD_DB_USERNAME }} \
                           -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PROD_DB_PASSWORD }} \
                           -e SPRING_JWT_SECRET=${{ secrets.JWT_SECRET }} \
-                          -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
+                          -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
                           -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
                           -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
                           -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
