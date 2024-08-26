@@ -32,6 +32,12 @@ dependencies {
     // aop
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    // test container
+    testImplementation("org.testcontainers:testcontainers:_")
+    testImplementation("org.testcontainers:junit-jupiter:_")
+    testImplementation("org.testcontainers:mysql:_")
+    testImplementation("org.testcontainers:jdbc:_")
+
 }
 
 // spring boot main application이므로 실행 가능한 jar를 생성한다.
