@@ -25,7 +25,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+// @Transactional(readOnly = true) // viewsCount 추가로 인해 readOnly가 안됨.
+@Transactional
 public class ReadReviewService implements ReadReviewUsecase {
 
     private final ReviewRepository reviewRepository;
@@ -170,6 +171,11 @@ public class ReadReviewService implements ReadReviewUsecase {
         Review review = reviewRepository.findById(reviewId);
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
 
+        // viewsCount++
+        review.addViews();
+        // viewsCount 증가로 인해 readOnly 불가능..
+        reviewRepository.save(review);
+
         return ReadReviewResult.builder().review(reviewWithKeywords).build();
     }
 
@@ -236,6 +242,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .images(review.getImages())
                         .keywords(mappedKeywords)
                         .likesCount(review.getLikesCount())
+                        .viewsCount(review.getViewsCount())
                         .build();
 
         mappedReview.setKeywordMap(keywordMap);
@@ -281,6 +288,7 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .images(review.getImages())
                         .keywords(mappedKeywords) // 리뷰 키워드 담당
                         .likesCount(review.getLikesCount())
+                        .viewsCount(review.getViewsCount())
                         .build();
 
         // Keyword 정보를 Review 객체에 추가

@@ -49,6 +49,7 @@ public class Review {
     private int likesCount;
     private int scrapsCount;
     private final ReviewType reviewType;
+    private long viewsCount;
 
     public static final int DEFAULT_LIKE_COUNT = 0;
     public static final int DEFAULT_SCRAPS_COUNT = 0;
@@ -69,7 +70,8 @@ public class Review {
             List<ReviewKeyword> keywords,
             int likesCount,
             int scrapsCount,
-            ReviewType reviewType) {
+            ReviewType reviewType,
+            long viewsCount) {
         if (likesCount < 0) {
             throw new InvalidReviewLikesException();
         }
@@ -89,6 +91,7 @@ public class Review {
         this.likesCount = likesCount;
         this.scrapsCount = scrapsCount;
         this.reviewType = reviewType;
+        this.viewsCount = viewsCount;
     }
 
     public void addKeyword(ReviewKeyword keyword) {
@@ -138,6 +141,10 @@ public class Review {
         }
     }
 
+    public void addViews() {
+        this.viewsCount++;
+    }
+
     public void setDeletedAt(LocalDateTime now) {
         this.deletedAt = now;
     }
@@ -160,6 +167,7 @@ public class Review {
                 this.keywords,
                 this.likesCount,
                 this.scrapsCount,
-                this.reviewType);
+                this.reviewType,
+                this.viewsCount);
     }
 }
