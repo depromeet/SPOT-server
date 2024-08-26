@@ -9,7 +9,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
@@ -63,6 +65,11 @@ public class FakeReviewRepositoryV2 implements ReviewRepository {
     }
 
     @Override
+    public ReviewCount countAndSumLikesByUserId(Long id) {
+        return null;
+    }
+
+    @Override
     public List<Review> findByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,
@@ -83,12 +90,13 @@ public class FakeReviewRepositoryV2 implements ReviewRepository {
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            Integer size) {
+            Integer size,
+            ReviewType reviewType) {
         return null;
     }
 
     @Override
-    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId) {
+    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId, ReviewType reviewType) {
         return null;
     }
 
