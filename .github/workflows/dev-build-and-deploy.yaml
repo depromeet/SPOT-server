@@ -120,6 +120,15 @@ jobs:
                           -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
                           -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
                           -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
+                          -e OAUTH_KAKAOCLIENTID=${{ secrets.OAUTH_KAKAOCLIENTID }} \
+                          -e OAUTH_KAKAOAUTHTOKENURLHOST=${{ secrets.KAKAOAUTHTOKENURLHOST }} \
+                          -e OAUTH_KAKAOAUTHUSERURLHOST=${{ secrets.KAKAOAUTHUSERURLHOST }} \
+                          -e OAUTH_KAKAOREDIRECTURL=${{ secrets.KAKAOREDIRECTURL }} \
+                          -e OAUTH_GOOGLECLIENTID=${{ secrets.GOOGLECLIENTID }} \
+                          -e OAUTH_GOOGLECLIENTSECRET=${{ secrets.GOOGLECLIENTSECRET }} \
+                          -e OAUTH_GOOGLEREDIRECTURL=${{ secrets.GOOGLEREDIRECTURL }} \
+                          -e OAUTH_GOOGLEAUTHTOKENURLHOST=${{ secrets.GOOGLEAUTHTOKENURLHOST }} \
+                          -e OAUTH_GOOGLEUSERURLHOST=${{ secrets.GOOGLEUSERURLHOST }} \
                           -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
                           -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
                           -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \
