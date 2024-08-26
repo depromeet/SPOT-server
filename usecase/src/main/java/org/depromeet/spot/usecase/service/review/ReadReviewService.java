@@ -18,6 +18,8 @@ import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
+import org.depromeet.spot.usecase.service.util.MixpanelUtil;
+import org.depromeet.spot.usecase.service.util.MixpanelUtil.MixpanelEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,7 @@ public class ReadReviewService implements ReadReviewUsecase {
     private final KeywordRepository keywordRepository;
     private final MemberRepository memberRepository;
     private final BaseballTeamRepository baseballTeamRepository;
+    private final MixpanelUtil mixpanelUtil;
 
     private static final int TOP_KEYWORDS_LIMIT = 5;
     private static final int TOP_IMAGES_LIMIT = 5;
@@ -166,9 +169,12 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     @Override
-    public ReadReviewResult findReviewById(Long reviewId) {
+    public ReadReviewResult findReviewById(Long reviewId, Long memberId) {
         Review review = reviewRepository.findById(reviewId);
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
+
+        // 믹스패널 이벤트(조회수) 발생
+        mixpanelUtil.track(MixpanelEvent.REVIEW_OPEN_COUNT, String.valueOf(memberId));
 
         return ReadReviewResult.builder().review(reviewWithKeywords).build();
     }

@@ -1,5 +1,7 @@
 package org.depromeet.spot.application.mixpanel;
 
+import org.depromeet.spot.usecase.service.util.MixpanelUtil;
+import org.depromeet.spot.usecase.service.util.MixpanelUtil.MixpanelEvent;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

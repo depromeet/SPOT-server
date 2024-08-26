@@ -34,7 +34,7 @@ public interface ReadReviewUsecase {
 
     MyRecentReviewResult findLastReviewByMemberId(Long memberId);
 
-    ReadReviewResult findReviewById(Long reviewId);
+    ReadReviewResult findReviewById(Long reviewId, Long memberId);
 
     long countByIdByMemberId(Long memberId);
 

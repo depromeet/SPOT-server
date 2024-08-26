@@ -10,6 +10,8 @@ import org.depromeet.spot.usecase.port.in.review.page.PageCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.service.review.ReadReviewService;
+import org.depromeet.spot.usecase.service.util.MixpanelUtil;
+import org.depromeet.spot.usecase.service.util.MixpanelUtil.MixpanelEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ public class ReviewScrapService implements ReviewScrapUsecase {
     private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewScrapRepository scrapRepository;
     private final ReadReviewService readReviewService;
+    private final MixpanelUtil mixpanelUtil;
 
     @Override
     public MyScrapListResult findMyScrappedReviews(
@@ -79,6 +82,10 @@ public class ReviewScrapService implements ReviewScrapUsecase {
         }
 
         addScrap(memberId, reviewId, review);
+
+        // 믹스패널 이벤트(스크랩 수) 발생
+        mixpanelUtil.track(MixpanelEvent.REVIEW_SCRAP_COUNT, String.valueOf(memberId));
+
         return true;
     }
 
