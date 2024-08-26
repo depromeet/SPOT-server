@@ -22,10 +22,8 @@ public class FakeReviewRepositoryV2 implements ReviewRepository {
 
     @Override
     public void updateLikesCount(Long reviewId, int likesCount) {
-        synchronized (reviewData) {
-            reviewData.removeIf(item -> Objects.equals(item.getId(), reviewId));
-            save(reviewId, likesCount);
-        }
+        reviewData.removeIf(item -> Objects.equals(item.getId(), reviewId));
+        save(reviewId, likesCount);
     }
 
     private void save(long reviewId, int likesCount) {
