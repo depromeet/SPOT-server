@@ -17,9 +17,10 @@ public class MixpanelController {
     private final MixpanelUtil mixpanelUtil;
 
     @PostMapping("/trackEvent")
-    public String trackEvent(@RequestParam String eventName, @RequestParam String distinctId) {
+    public String trackEvent(
+            @RequestParam MixpanelEvent mixpanelEvent, @RequestParam String distinctId) {
         log.info("trackEvent");
-        mixpanelUtil.track(eventName, distinctId);
-        return "Event tracked: " + eventName;
+        mixpanelUtil.track(mixpanelEvent, distinctId);
+        return "Event tracked: " + mixpanelEvent.getValue();
     }
 }

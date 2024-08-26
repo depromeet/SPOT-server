@@ -19,30 +19,22 @@ public class MixpanelUtil {
     @Value("${mixpanel.token}")
     private String mixpanelToken;
 
-    public void track(String eventName, String distinctId) {
+    public void track(MixpanelEvent mixpanelEvent, String distinctId) {
         try {
 
             // 믹스패널 이벤트 메시지 생성
             MessageBuilder messageBuilder = new MessageBuilder(mixpanelToken);
             // 이벤트 생성
-            JSONObject sentEvent = messageBuilder.event(distinctId, eventName, null);
-
-            // 원하는 항목으로 이벤트 생성하는 방법
-            JSONObject props = new JSONObject();
-            props.put("Test1", "Text1");
-            props.put("Test2", "Text2");
-
-            JSONObject planEvent = messageBuilder.event(distinctId, "Plan Selected", props);
+            JSONObject sentEvent = messageBuilder.event(distinctId, mixpanelEvent.getValue(), null);
 
             // 만든 여러 이벤트를 delivery
             ClientDelivery delivery = new ClientDelivery();
             delivery.addMessage(sentEvent);
-            delivery.addMessage(planEvent);
 
             // Mixpanel로 데이터 전송
             MixpanelAPI mixpanel = new MixpanelAPI();
             mixpanel.deliver(delivery);
-            log.info("정상 동작 완료");
+            log.info("{} 정상 동작 완료", mixpanelEvent.getValue());
         } catch (IOException e) {
             e.printStackTrace();
         }
