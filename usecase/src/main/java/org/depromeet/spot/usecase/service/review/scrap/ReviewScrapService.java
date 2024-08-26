@@ -10,6 +10,7 @@ import org.depromeet.spot.usecase.port.in.review.page.PageCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.service.review.ReadReviewService;
+import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class ReviewScrapService implements ReviewScrapUsecase {
     private final ReviewScrapRepository scrapRepository;
     private final ReadReviewService readReviewService;
     private final ReadReviewProcessor readReviewProcessor;
+    private final PaginationProcessor paginationProcessor;
 
     @Override
     public MyScrapListResult findMyScrappedReviews(
@@ -49,7 +51,7 @@ public class ReviewScrapService implements ReviewScrapUsecase {
 
         String nextCursor =
                 hasNext
-                        ? readReviewService.getCursor(
+                        ? paginationProcessor.getCursor(
                                 reviews.get(reviews.size() - 1), pageCommand.sortBy())
                         : null;
 
