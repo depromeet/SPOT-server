@@ -13,7 +13,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-// @Profile("!test")
 @RequiredArgsConstructor
 public class ObjectStorageConfig {
 
