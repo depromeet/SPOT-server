@@ -3,41 +3,33 @@ package org.depromeet.spot.infrastructure.jpa.oauth;
 import org.depromeet.spot.common.exception.oauth.OauthException.InternalOauthServerException;
 import org.depromeet.spot.common.exception.oauth.OauthException.InvalidAcessTokenException;
 import org.depromeet.spot.domain.member.Member;
+import org.depromeet.spot.infrastructure.jpa.oauth.config.OauthProperties;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.KakaoTokenEntity;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.KakaoUserInfoEntity;
 import org.depromeet.spot.usecase.port.out.oauth.OauthRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.netty.handler.codec.http.HttpHeaderValues;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 public class OauthRepositoryImpl implements OauthRepository {
 
     private final String BEARER = "Bearer";
-
-    // kakao에서 발급 받은 clientID
-    @Value("${oauth.clientId}")
-    private String CLIENT_ID;
-
-    @Value("${oauth.kauthTokenUrlHost}")
-    private String KAUTH_TOKEN_URL_HOST;
-
-    // 엑세스 토큰으로 카카오에서 유저 정보 받아오기
-    @Value("${oauth.kauthUserUrlHost}")
-    private String KAUTH_USER_URL_HOST;
+    private final OauthProperties properties;
 
     @Override
     public String getKakaoAccessToken(String idCode) {
         // Webflux의 WebClient
         KakaoTokenEntity kakaoTokenEntity =
-                WebClient.create(KAUTH_TOKEN_URL_HOST)
+                WebClient.create(properties.kAuthTokenUrlHost())
                         .post()
                         .uri(
                                 uriBuilder ->
@@ -45,7 +37,7 @@ public class OauthRepositoryImpl implements OauthRepository {
                                                 .scheme("https")
                                                 .path("/oauth/token")
                                                 .queryParam("grant_type", "authorization_code")
-                                                .queryParam("client_id", CLIENT_ID)
+                                                .queryParam("client_id", properties.clientId())
                                                 .queryParam("code", idCode)
                                                 .build(true))
                         .header(
@@ -90,7 +82,7 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     public KakaoUserInfoEntity getUserInfo(String accessToken) {
         KakaoUserInfoEntity userInfo =
-                WebClient.create(KAUTH_USER_URL_HOST)
+                WebClient.create(properties.kAuthUserUrlHost())
                         .get()
                         .uri(
                                 uriBuilder ->

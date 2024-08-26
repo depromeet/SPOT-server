@@ -16,7 +16,6 @@ import org.depromeet.spot.application.common.exception.CustomJwtException;
 import org.depromeet.spot.application.common.exception.JwtErrorCode;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -37,8 +36,7 @@ public class JwtTokenUtil {
     // JWT를 생성하고 관리하는 클래스
 
     // 토큰에 사용되는 시크릿 키
-    @Value("${spring.jwt.secret}")
-    private String SECRETKEY;
+    private final JwtProperties properties;
 
     public String getJWTToken(Member member) {
         // TODO 토큰 구현하기.
@@ -61,13 +59,13 @@ public class JwtTokenUtil {
                 .setClaims(createClaims(memberId, memberRole))
                 .setIssuedAt(current)
                 .setExpiration(expiredAt)
-                .signWith(SignatureAlgorithm.HS256, SECRETKEY.getBytes())
+                .signWith(SignatureAlgorithm.HS256, properties.secret().getBytes())
                 .compact();
     }
 
     public Long getIdFromJWT(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRETKEY.getBytes())
+                .setSigningKey(properties.secret().getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .get("memberId", Long.class);
@@ -75,7 +73,7 @@ public class JwtTokenUtil {
 
     public String getRoleFromJWT(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRETKEY.getBytes())
+                .setSigningKey(properties.secret().getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .get("role", String.class);
@@ -124,7 +122,7 @@ public class JwtTokenUtil {
     }
 
     private Key createSignature() {
-        byte[] apiKeySecretBytes = SECRETKEY.getBytes();
+        byte[] apiKeySecretBytes = properties.secret().getBytes();
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
