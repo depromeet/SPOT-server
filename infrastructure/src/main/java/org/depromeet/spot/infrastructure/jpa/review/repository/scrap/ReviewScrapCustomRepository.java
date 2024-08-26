@@ -12,9 +12,9 @@ import org.depromeet.spot.domain.review.Review.SortCriteria;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -35,27 +35,28 @@ public class ReviewScrapCustomRepository {
             SortCriteria sortBy,
             Integer size) {
 
-        JPAQuery<ReviewEntity> query =
-                queryFactory
-                        .selectDistinct(reviewEntity)
-                        .from(reviewEntity)
-                        .join(reviewScrapEntity)
-                        .on(reviewScrapEntity.reviewId.eq(reviewEntity.id))
-                        .leftJoin(reviewKeywordEntity)
-                        .on(reviewKeywordEntity.review.eq(reviewEntity))
-                        .leftJoin(keywordEntity)
-                        .on(keywordEntity.id.eq(reviewKeywordEntity.keywordId))
-                        .where(
-                                reviewScrapEntity.memberId.eq(memberId),
-                                stadiumIdEq(stadiumId),
-                                monthsIn(months),
-                                keywordsIn(good, true),
-                                keywordsIn(bad, false),
-                                cursorCondition(cursor, sortBy))
-                        .orderBy(getOrderSpecifiers(sortBy))
-                        .limit(size);
+        BooleanBuilder builder = buildConditions(memberId, stadiumId, months, good, bad);
 
-        return query.fetch();
+        OrderSpecifier<?>[] orderBy = getOrderBy(sortBy);
+        BooleanExpression cursorCondition = getCursorCondition(sortBy, cursor);
+
+        if (cursorCondition != null) {
+            builder.and(cursorCondition);
+        }
+
+        return queryFactory
+                .selectDistinct(reviewEntity)
+                .from(reviewEntity)
+                .join(reviewScrapEntity)
+                .on(reviewScrapEntity.reviewId.eq(reviewEntity.id))
+                .leftJoin(reviewKeywordEntity)
+                .on(reviewKeywordEntity.review.eq(reviewEntity))
+                .leftJoin(keywordEntity)
+                .on(keywordEntity.id.eq(reviewKeywordEntity.keywordId))
+                .where(builder)
+                .orderBy(orderBy)
+                .limit(size)
+                .fetch();
     }
 
     public Long getTotalCount(
@@ -64,6 +65,8 @@ public class ReviewScrapCustomRepository {
             List<Integer> months,
             List<String> good,
             List<String> bad) {
+
+        BooleanBuilder builder = buildConditions(memberId, stadiumId, months, good, bad);
 
         return queryFactory
                 .select(reviewEntity.countDistinct())
@@ -74,13 +77,25 @@ public class ReviewScrapCustomRepository {
                 .on(reviewKeywordEntity.review.eq(reviewEntity))
                 .leftJoin(keywordEntity)
                 .on(keywordEntity.id.eq(reviewKeywordEntity.keywordId))
-                .where(
-                        reviewScrapEntity.memberId.eq(memberId),
-                        stadiumIdEq(stadiumId),
-                        monthsIn(months),
-                        keywordsIn(good, true),
-                        keywordsIn(bad, false))
+                .where(builder)
                 .fetchOne();
+    }
+
+    private BooleanBuilder buildConditions(
+            Long memberId,
+            Long stadiumId,
+            List<Integer> months,
+            List<String> good,
+            List<String> bad) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(reviewScrapEntity.memberId.eq(memberId));
+        builder.and(stadiumIdEq(stadiumId));
+        builder.and(monthsIn(months));
+        builder.and(keywordsIn(good, true));
+        builder.and(keywordsIn(bad, false));
+
+        return builder;
     }
 
     private BooleanExpression stadiumIdEq(Long stadiumId) {
@@ -101,29 +116,29 @@ public class ReviewScrapCustomRepository {
         return keywordEntity.content.in(keywords).and(keywordEntity.isPositive.eq(isPositive));
     }
 
-    private BooleanExpression cursorCondition(String cursor, SortCriteria sortBy) {
+    private BooleanExpression getCursorCondition(SortCriteria sortBy, String cursor) {
         if (cursor == null) {
             return null;
         }
 
         String[] parts = cursor.split("_");
-        if (parts.length != 3) {
-            return null;
-        }
 
-        LocalDateTime dateTime = LocalDateTime.parse(parts[0]);
-        Integer likesCount = Integer.parseInt(parts[1]);
-        Long id = Long.parseLong(parts[2]);
+        LocalDateTime dateTime;
+        Long id;
 
         switch (sortBy) {
             case LIKES_COUNT:
+                if (parts.length != 3) return null;
+                int likeCount = Integer.parseInt(parts[0]);
+                dateTime = LocalDateTime.parse(parts[1]);
+                id = Long.parseLong(parts[2]);
                 return reviewEntity
                         .likesCount
-                        .lt(likesCount)
+                        .lt(likeCount)
                         .or(
                                 reviewEntity
                                         .likesCount
-                                        .eq(likesCount)
+                                        .eq(likeCount)
                                         .and(
                                                 reviewEntity
                                                         .dateTime
@@ -137,6 +152,9 @@ public class ReviewScrapCustomRepository {
                                                                                         id)))));
             case DATE_TIME:
             default:
+                if (parts.length != 2) return null;
+                dateTime = LocalDateTime.parse(parts[0]);
+                id = Long.parseLong(parts[1]);
                 return reviewEntity
                         .dateTime
                         .lt(dateTime)
@@ -144,7 +162,7 @@ public class ReviewScrapCustomRepository {
         }
     }
 
-    private OrderSpecifier<?>[] getOrderSpecifiers(SortCriteria sortBy) {
+    private OrderSpecifier<?>[] getOrderBy(SortCriteria sortBy) {
         switch (sortBy) {
             case LIKES_COUNT:
                 return new OrderSpecifier<?>[] {
