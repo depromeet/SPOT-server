@@ -10,6 +10,8 @@ import org.depromeet.spot.usecase.port.in.review.page.PageCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.service.review.ReadReviewService;
+import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
+import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.depromeet.spot.usecase.service.util.MixpanelUtil;
 import org.depromeet.spot.usecase.service.util.MixpanelUtil.MixpanelEvent;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class ReviewScrapService implements ReviewScrapUsecase {
     private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewScrapRepository scrapRepository;
     private final ReadReviewService readReviewService;
+    private final ReadReviewProcessor readReviewProcessor;
+    private final PaginationProcessor paginationProcessor;
     private final MixpanelUtil mixpanelUtil;
 
     @Override
@@ -50,11 +54,14 @@ public class ReviewScrapService implements ReviewScrapUsecase {
 
         String nextCursor =
                 hasNext
-                        ? readReviewService.getCursor(
+                        ? paginationProcessor.getCursor(
                                 reviews.get(reviews.size() - 1), pageCommand.sortBy())
                         : null;
 
         List<Review> reviewsWithKeywords = readReviewService.mapKeywordsToReviews(reviews);
+
+        // 유저의 리뷰 좋아요, 스크랩 여부
+        readReviewProcessor.setLikedAndScrappedStatus(reviewsWithKeywords, memberId);
 
         Long totalScrapCount =
                 scrapRepository.getTotalCount(

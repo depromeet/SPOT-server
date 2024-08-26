@@ -7,6 +7,7 @@ import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFound
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
@@ -56,6 +57,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public ReviewCount countAndSumLikesByUserId(Long id) {
+        return reviewJpaRepository.countAndSumLikesByMemberId(id, ReviewType.VIEW);
+    }
+
+    @Override
     public List<Review> findByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,
@@ -88,15 +94,17 @@ public class ReviewRepositoryImpl implements ReviewRepository {
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            Integer size) {
+            Integer size,
+            ReviewType reviewType) {
         List<ReviewEntity> reviewEntities =
-                reviewCustomRepository.findAllByUserId(userId, year, month, cursor, sortBy, size);
+                reviewCustomRepository.findAllByUserId(
+                        userId, year, month, cursor, sortBy, size, reviewType);
         return reviewEntities.stream().map(ReviewEntity::toDomain).toList();
     }
 
     @Override
-    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId) {
-        return reviewJpaRepository.findReviewMonthsByMemberId(memberId);
+    public List<ReviewYearMonth> findReviewMonthsByMemberId(Long memberId, ReviewType reviewType) {
+        return reviewJpaRepository.findReviewMonthsByMemberId(memberId, reviewType);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.depromeet.spot.infrastructure.jpa.review.repository.scrap;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
@@ -65,5 +67,13 @@ public class ReviewScrapRepositoryImpl implements ReviewScrapRepository {
     public void save(ReviewScrap scrap) {
         ReviewScrapEntity entity = ReviewScrapEntity.from(scrap);
         reviewScrapJpaRepository.save(entity);
+    }
+
+    @Override
+    public Map<Long, Boolean> existsByMemberIdAndReviewIds(Long memberId, List<Long> reviewIds) {
+        List<Long> scrappedReviewIds =
+                reviewScrapJpaRepository.findReviewIdsByMemberIdAndReviewIdIn(memberId, reviewIds);
+        return reviewIds.stream()
+                .collect(Collectors.toMap(reviewId -> reviewId, scrappedReviewIds::contains));
     }
 }
