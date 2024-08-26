@@ -11,9 +11,15 @@ aws:
         port: 6379
 
 oauth:
-    clientId: ${CLIENT_ID}
-    kauthTokenUrlHost: ${KAUTH_TOKEN_URL_HOST}
-    kauthUserUrlHost: ${KAUTH_USER_URL_HOST}
+    kakaoClientId: ${KAKAO_CLIENT_ID}
+    kakaoAuthTokenUrlHost: ${KAKAO_AUTH_TOKEN_URL_HOST}
+    kakaoAuthUserUrlHost: ${KAKAO_AUTH_USER_URL_HOST}
+    kakaoRedirectUrl: ${KAKAO_REDIRECT_URL}
+    googleClientId: ${GOOGLE_CLIENT_ID}
+    googleClientSecret: ${GOOGLE_CLIENT_SECRET}
+    googleRedirectUrl: ${GOOGLE_REDIRECT_URL}
+    googleAuthTokenUrlHost: ${GOOGLE_AUTH_TOKEN_URL_HOST}
+    googleUserUrlHost: ${GOOGLE_USER_URL_HOST}
 
 spring:
     datasource:

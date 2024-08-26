@@ -30,31 +30,11 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     private final String AUTHORIZATION_CODE = "authorization_code";
 
-    private String KAKAO_REDIRECT_URL = properties.kakaoRedirectUrl();
-
-    private String GOOGLE_REDIRECT_URL = properties.googleRedirectUrl();
-
-    // kakao에서 발급 받은 clientID
-    private String KAKAO_CLIENT_ID = properties.kakaoClientId();
-
-    private String GOOGLE_CLIENT_ID = properties.googleClientId();
-
-    private String GOOGLE_CLIENT_SECRET = properties.googleClientSecret();
-
-    private String KAKAO_AUTH_TOKEN_URL_HOST = properties.kakaoAuthTokenUrlHost();
-
-    private String GOOGLE_AUTH_TOKEN_URL_HOST = properties.googleAuthTokenUrlHost();
-
-    // 엑세스 토큰으로 카카오에서 유저 정보 받아오기
-    private String KAKAO_AUTH_USER_URL_HOST = properties.kakaoAuthUserUrlHost();
-
-    private String GOOGLE_AUTH_USER_URL_HOST = properties.googleUserUrlHost();
-
     @Override
     public String getKakaoAccessToken(String authorizationCode) {
         // Webflux의 WebClient
         KakaoTokenEntity kakaoTokenEntity =
-                WebClient.create(KAKAO_AUTH_TOKEN_URL_HOST)
+                WebClient.create(properties.kakaoAuthTokenUrlHost())
                         .post()
                         .uri(
                                 uriBuilder ->
@@ -62,7 +42,7 @@ public class OauthRepositoryImpl implements OauthRepository {
                                                 .scheme("https")
                                                 .path("/oauth/token")
                                                 .queryParam("grant_type", AUTHORIZATION_CODE)
-                                                .queryParam("client_id", KAKAO_CLIENT_ID)
+                                                .queryParam("client_id", properties.kakaoClientId())
                                                 .queryParam("code", authorizationCode)
                                                 .build(true))
                         .header(
@@ -93,10 +73,10 @@ public class OauthRepositoryImpl implements OauthRepository {
 
         switch (snsProvider) {
             case KAKAO:
-                authTokenUrlHost = KAKAO_AUTH_TOKEN_URL_HOST;
+                authTokenUrlHost = properties.kakaoAuthTokenUrlHost();
                 break;
             default:
-                authTokenUrlHost = GOOGLE_AUTH_TOKEN_URL_HOST;
+                authTokenUrlHost = properties.googleAuthTokenUrlHost();
                 break;
         }
 
@@ -111,8 +91,11 @@ public class OauthRepositoryImpl implements OauthRepository {
                                                     .scheme("https")
                                                     .path("/oauth/token")
                                                     .queryParam("grant_type", AUTHORIZATION_CODE)
-                                                    .queryParam("client_id", KAKAO_CLIENT_ID)
-                                                    .queryParam("redirect_uri", KAKAO_REDIRECT_URL)
+                                                    .queryParam(
+                                                            "client_id", properties.kakaoClientId())
+                                                    .queryParam(
+                                                            "redirect_uri",
+                                                            properties.kakaoRedirectUrl())
                                                     .queryParam("code", authorizationCode)
                                                     .build(true);
                                         default: // 기본적으로 GOOGLE 처리
@@ -120,10 +103,15 @@ public class OauthRepositoryImpl implements OauthRepository {
                                                     .scheme("https")
                                                     .path("/token")
                                                     .queryParam("grant_type", AUTHORIZATION_CODE)
-                                                    .queryParam("client_id", GOOGLE_CLIENT_ID)
                                                     .queryParam(
-                                                            "client_secret", GOOGLE_CLIENT_SECRET)
-                                                    .queryParam("redirect_uri", GOOGLE_REDIRECT_URL)
+                                                            "client_id",
+                                                            properties.googleClientId())
+                                                    .queryParam(
+                                                            "client_secret",
+                                                            properties.googleClientSecret())
+                                                    .queryParam(
+                                                            "redirect_uri",
+                                                            properties.googleRedirectUrl())
                                                     .queryParam("code", authorizationCode)
                                                     .build(true);
                                     }
@@ -184,7 +172,7 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     public KakaoUserInfoEntity getKakaoUserInfo(String accessToken) {
         KakaoUserInfoEntity userInfo =
-                WebClient.create(properties.kAuthUserUrlHost())
+                WebClient.create(properties.kakaoAuthUserUrlHost())
                         .get()
                         .uri(
                                 uriBuilder ->
@@ -210,7 +198,7 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     public GoogleUserInfoEntity getGoogleUserInfo(String accessToken) {
         GoogleUserInfoEntity userInfo =
-                WebClient.create(GOOGLE_AUTH_USER_URL_HOST)
+                WebClient.create(properties.googleUserUrlHost())
                         .get()
                         .uri(
                                 uriBuilder ->
