@@ -27,9 +27,11 @@ import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReadReviewService implements ReadReviewUsecase {

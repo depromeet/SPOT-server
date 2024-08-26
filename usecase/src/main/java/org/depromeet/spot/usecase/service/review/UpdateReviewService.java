@@ -21,10 +21,12 @@ import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Builder
 @Service
 @RequiredArgsConstructor
 @Transactional
