@@ -3,6 +3,7 @@ package org.depromeet.spot.usecase.service.fake;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -51,5 +52,10 @@ public class FakeReviewLikeRepository implements ReviewLikeRepository {
             likeData.removeIf(item -> Objects.equals(item.getId(), like.getId()));
             likeData.add(like);
         }
+    }
+
+    @Override
+    public Map<Long, Boolean> existsByMemberIdAndReviewIds(Long memberId, List<Long> reviewIds) {
+        return null;
     }
 }
