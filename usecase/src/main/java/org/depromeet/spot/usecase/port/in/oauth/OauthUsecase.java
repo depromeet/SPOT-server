@@ -12,7 +12,7 @@ public interface OauthUsecase {
 
     Member create(String accessToken, Member member);
 
-    Member login(SnsProvider snsProvider, String accessToken);
+    Member login(SnsProvider snsProvider, String token);
 
     String getOauthAccessToken(SnsProvider snsProvider, String authorizationCode);
 

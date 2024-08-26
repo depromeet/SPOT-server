@@ -13,7 +13,7 @@ public interface OauthRepository {
 
     Member getOauthRegisterUserInfo(String accessToken, Member member);
 
-    Member getLoginUserInfo(String accesstoken);
+    Member getLoginUserInfo(String accessToken);
 
-    Member getOauthLoginUserInfo(SnsProvider snsProvider, String accesstoken);
+    Member getOauthLoginUserInfo(SnsProvider snsProvider, String accessToken);
 }
