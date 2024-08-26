@@ -22,6 +22,7 @@ import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
+import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ public class ReadReviewService implements ReadReviewUsecase {
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewScrapRepository reviewScrapRepository;
     private final ReadReviewProcessor readReviewProcessor;
+    private final PaginationProcessor paginationProcessor;
 
     private static final int TOP_KEYWORDS_LIMIT = 5;
     private static final int TOP_IMAGES_LIMIT = 5;
@@ -80,7 +82,10 @@ public class ReadReviewService implements ReadReviewUsecase {
             reviews = reviews.subList(0, size);
         }
 
-        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
+        String nextCursor =
+                hasNext
+                        ? paginationProcessor.getCursor(reviews.get(reviews.size() - 1), sortBy)
+                        : null;
 
         //  stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 topKeywords를 조회
         List<BlockKeywordInfo> topKeywords =
@@ -150,7 +155,10 @@ public class ReadReviewService implements ReadReviewUsecase {
             reviews = reviews.subList(0, size);
         }
 
-        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
+        String nextCursor =
+                hasNext
+                        ? paginationProcessor.getCursor(reviews.get(reviews.size() - 1), sortBy)
+                        : null;
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
@@ -164,20 +172,6 @@ public class ReadReviewService implements ReadReviewUsecase {
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
                 .build();
-    }
-
-    public String getCursor(Review review, SortCriteria sortBy) {
-        switch (sortBy) {
-            case LIKES_COUNT:
-                return review.getLikesCount()
-                        + "_"
-                        + review.getDateTime().toString()
-                        + "_"
-                        + review.getId();
-            case DATE_TIME:
-            default:
-                return review.getDateTime().toString() + "_" + review.getId();
-        }
     }
 
     @Override
