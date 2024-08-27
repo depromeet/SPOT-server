@@ -101,16 +101,6 @@ subprojects {
             image = "openjdk:17-jdk-slim"
         }
         to {
-//            fun execCommand(command: String): String {
-//                val outputStream = ByteArrayOutputStream()
-//                project.exec {
-//                    commandLine = command.split(" ")
-//                    standardOutput = outputStream
-//                }
-//                return outputStream.toString().trim()
-//            }
-//            val gitHash = execCommand("git rev-parse --short HEAD")
-
             fun String.runCommand(): String =
                     ProcessBuilder(*this.split(" ").toTypedArray())
                             .redirectErrorStream(true)
@@ -121,8 +111,7 @@ subprojects {
                             .trim()
             val gitHash = "git rev-parse --short HEAD".runCommand()
 
-            image = "$dockerHubUsername/$dockerHubRepository"
-            tags = setOf("latest", gitHash)
+            image = "$dockerHubUsername/$dockerHubRepository:$gitHash"
 
             auth {
                 username = dockerHubUsername
@@ -138,7 +127,6 @@ subprojects {
                     "-jar",
                     "/app.jar"
             )
-            mainClass = "org.depromeet.spot.application.SpotApplication"
         }
     }
 }
