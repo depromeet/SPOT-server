@@ -4,11 +4,9 @@ on:
     push:
         branches:
             - main
-            - dev
     pull_request:
         branches:
             - main
-            - dev
 
 jobs:
     build-and-test:
@@ -145,27 +143,3 @@ jobs:
                           -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
                           ${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}
                         docker system prune -af
-
-#  create-release:
-#      needs: [ build-and-test, deploy ]  # deploy job이 성공적으로 완료된 후에만 실행
-##      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
-#      runs-on: ubuntu-latest
-#      permissions:
-#          contents: write
-#      steps:
-#          - name: Checkout code
-#            uses: actions/checkout@v4
-#
-#          - name: Bump version and push tag
-#            id: tag_version
-#            uses: mathieudutour/github-tag-action@v6.1
-#            with:
-#                github_token: ${{ secrets.GITHUB_TOKEN }}
-#
-#          - name: Create a GitHub release
-#            uses: ncipollo/release-action@v1
-#            with:
-#                tag: ${{ steps.tag_version.outputs.new_tag }}
-#                name: Release ${{ steps.tag_version.outputs.new_tag }}
-#                body: ${{ steps.tag_version.outputs.changelog }}
-
