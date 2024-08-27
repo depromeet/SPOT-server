@@ -84,6 +84,7 @@ public class ReviewCreationProcessorImpl implements ReviewCreationProcessor {
                 .seat(seat)
                 .dateTime(command.dateTime())
                 .content(command.content())
+                .reviewType(ReviewType.VIEW)
                 .build();
     }
 }
