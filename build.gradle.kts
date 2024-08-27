@@ -4,6 +4,7 @@ plugins {
     id("com.diffplug.spotless")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    id("com.google.cloud.tools.jib")
 }
 
 allprojects {
@@ -22,6 +23,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "io.sentry.jvm.gradle")
+    apply(plugin = "com.google.cloud.tools.jib")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
