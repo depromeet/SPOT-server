@@ -38,7 +38,7 @@ jobs:
             -   name: Create Gradle Properties
                 run: |
                     touch gradle.properties
-                    echo "${{ secrets.GRADLE_PROPERTIES }}"
+                    echo "${{ secrets.GRADLE_PROPERTIES }}" >> gradle.properties
 
             -   name: Build with Gradle
                 run: ./gradlew build -x test --stacktrace --parallel
@@ -88,7 +88,7 @@ jobs:
             -   name: Create Gradle Properties
                 run: |
                     touch gradle.properties
-                    echo "${{ secrets.GRADLE_PROPERTIES }}"
+                    echo "${{ secrets.GRADLE_PROPERTIES }}" >> gradle.properties
 
             -   name: Login to DockerHub
                 uses: docker/login-action@v2
