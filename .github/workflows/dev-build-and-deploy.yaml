@@ -82,20 +82,25 @@ jobs:
             -   name: Set up Docker Buildx
                 uses: docker/setup-buildx-action@v2
 
+            -   name: Create Gradle Properties
+                run: |
+                    touch gradle.properties
+                    echo "${{ secrets.GRADLE_PROPERTIES }}"
+
             -   name: Login to DockerHub
                 uses: docker/login-action@v2
                 with:
-                    username: ${{ secrets.DOCKERHUB_USERNAME }}
-                    password: ${{ secrets.DOCKERHUB_TOKEN }}
+                    username: ${{ secrets.SPOT_DOCKER_HUB_USERNAME }}
+                    password: ${{ secrets.SPOT_DOCKER_HUB_PASSWORD }}
 
-            -   name: Build and push Docker image
-                uses: docker/build-push-action@v4
-                with:
-                    context: .
-                    push: true
-                    tags: ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+            - name: Build with jib
+              run: |
+                  ./gradlew jib \
+                  -Djib.to.auth.username=${{ secrets.SPOT_DOCKER_HUB_USERNAME }} \
+                  -Djib.to.auth.password=${{ secrets.SPOT_DOCKER_HUB_PASSWORD }} \
+                  -Djib.to.image="${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}"
 
-            -   name: Deploy to Dev NCP Server
+            -   name: Deploy to Dev AWS Server
                 uses: appleboy/ssh-action@master
                 with:
                     host: ${{ secrets.DEV_SERVER_HOST }}
@@ -103,7 +108,7 @@ jobs:
                     password: ${{ secrets.DEV_SERVER_PASSWORD }}
                     port: ${{ secrets.DEV_SERVER_PORT }}
                     script: |
-                        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                        docker pull ${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}
                         docker stop spot-server-dev || true
                         docker rm spot-server-dev || true
                         docker run -d --name spot-server-dev \
@@ -138,7 +143,7 @@ jobs:
                           -e SENTRY_ENABLE_TRACING=true \
                           -e SENTRY_ENVIRONMENT=prod \
                           -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
-                          ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                          ${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}
                         docker system prune -af
 
 #  create-release:

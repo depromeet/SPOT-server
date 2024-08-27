@@ -1,6 +1,3 @@
-import org.gradle.tooling.internal.consumer.versioning.VersionDetails
-import java.io.ByteArrayOutputStream
-
 plugins {
     id("java")
     id("io.sentry.jvm.gradle")
@@ -18,8 +15,6 @@ allprojects {
         mavenCentral()
     }
 }
-
-
 
 subprojects {
     apply(plugin = "idea")
