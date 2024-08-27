@@ -1,3 +1,6 @@
+import org.gradle.tooling.internal.consumer.versioning.VersionDetails
+import java.io.ByteArrayOutputStream
+
 plugins {
     id("java")
     id("io.sentry.jvm.gradle")
@@ -89,7 +92,7 @@ subprojects {
         useJUnitPlatform()
     }
 
-    val dockerHubRegistry: String by project
+    val dockerHubRepository: String by project
     val dockerHubUsername: String by project
     val dockerHubPassword: String by project
 
@@ -98,8 +101,28 @@ subprojects {
             image = "openjdk:17-jdk-slim"
         }
         to {
-            image = "$dockerHubUsername/$dockerHubRegistry"
-            tags = setOf("latest", "1.0-SNAPSHOT")
+//            fun execCommand(command: String): String {
+//                val outputStream = ByteArrayOutputStream()
+//                project.exec {
+//                    commandLine = command.split(" ")
+//                    standardOutput = outputStream
+//                }
+//                return outputStream.toString().trim()
+//            }
+//            val gitHash = execCommand("git rev-parse --short HEAD")
+
+            fun String.runCommand(): String =
+                    ProcessBuilder(*this.split(" ").toTypedArray())
+                            .redirectErrorStream(true)
+                            .start()
+                            .inputStream
+                            .bufferedReader()
+                            .readText()
+                            .trim()
+            val gitHash = "git rev-parse --short HEAD".runCommand()
+
+            image = "$dockerHubUsername/$dockerHubRepository"
+            tags = setOf("latest", gitHash)
 
             auth {
                 username = dockerHubUsername
