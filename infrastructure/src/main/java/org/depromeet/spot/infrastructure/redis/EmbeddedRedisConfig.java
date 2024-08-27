@@ -7,29 +7,36 @@ import java.net.Socket;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import redis.embedded.RedisServer;
 
 @Slf4j
 @Configuration
 @Profile("local | test")
-@RequiredArgsConstructor
 public class EmbeddedRedisConfig {
 
-    private final RedisProperties redisProperties;
+    private static final String REDISSON_HOST_PREFIX = "redis://localhost:";
+    private static final int REDIS_DEFAULT_PORT = 6379;
 
     private RedisServer redisServer;
+    private final int embeddedRedisPort;
+
+    public EmbeddedRedisConfig() {
+        this.embeddedRedisPort =
+                isPortInUse(REDIS_DEFAULT_PORT) ? findAvailablePort() : REDIS_DEFAULT_PORT;
+        log.info("embedded redis port = {}", embeddedRedisPort);
+    }
 
     @PostConstruct
     public void redisServer() {
-        int port =
-                isPortInUse(redisProperties.port()) ? findAvailablePort() : redisProperties.port();
-        log.info("embedded redis port = {}", port);
-        redisServer = new RedisServer(port);
+        redisServer = new RedisServer(embeddedRedisPort);
         redisServer.start();
     }
 
@@ -38,6 +45,13 @@ public class EmbeddedRedisConfig {
         if (redisServer != null) {
             redisServer.stop();
         }
+    }
+
+    @Bean
+    public RedissonClient redissonClient() {
+        Config redissonConfig = new Config();
+        redissonConfig.useSingleServer().setAddress(REDISSON_HOST_PREFIX + embeddedRedisPort);
+        return Redisson.create(redissonConfig);
     }
 
     private boolean isPortInUse(final int port) {
