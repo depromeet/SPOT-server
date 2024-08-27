@@ -94,8 +94,6 @@ jobs:
             - name: Build with jib
               run: |
                   ./gradlew jib \
-                  -Djib.to.auth.username=${{ secrets.SPOT_DOCKER_HUB_USERNAME }} \
-                  -Djib.to.auth.password=${{ secrets.SPOT_DOCKER_HUB_PASSWORD }} \
                   -Djib.to.image="${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}"
 
             -   name: Deploy to Dev AWS Server
