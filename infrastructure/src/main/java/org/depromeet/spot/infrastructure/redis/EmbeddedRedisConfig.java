@@ -26,7 +26,8 @@ public class EmbeddedRedisConfig {
 
     @PostConstruct
     public void redisServer() {
-        int port = isRedisPortAvailable() ? findAvailablePort() : redisProperties.port();
+        int port =
+                isPortInUse(redisProperties.port()) ? findAvailablePort() : redisProperties.port();
         log.info("embedded redis port = {}", port);
         redisServer = new RedisServer(port);
         redisServer.start();
@@ -39,11 +40,7 @@ public class EmbeddedRedisConfig {
         }
     }
 
-    private boolean isRedisPortAvailable() {
-        return isAvailablePort(redisProperties.port());
-    }
-
-    private boolean isAvailablePort(final int port) {
+    private boolean isPortInUse(final int port) {
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress("localhost", port), 200);
             return true;
@@ -54,7 +51,7 @@ public class EmbeddedRedisConfig {
 
     private int findAvailablePort() {
         for (int port = 10000; port <= 65535; port++) {
-            if (!isAvailablePort(port)) {
+            if (!isPortInUse(port)) {
                 return port;
             }
         }
