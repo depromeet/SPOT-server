@@ -3,6 +3,8 @@ package org.depromeet.spot.infrastructure.jpa.review.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.depromeet.spot.domain.review.Review.ReviewType;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.infrastructure.jpa.review.entity.ReviewEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,9 +19,20 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
             "SELECT new org.depromeet.spot.domain.review.ReviewYearMonth(YEAR(r.dateTime), MONTH(r.dateTime)) "
                     + "FROM ReviewEntity r WHERE r.member.id = :memberId "
                     + "AND r.deletedAt IS NULL "
+                    + "AND r.reviewType = :reviewType "
                     + "GROUP BY YEAR(r.dateTime), MONTH(r.dateTime) "
                     + "ORDER BY YEAR(r.dateTime) DESC, MONTH(r.dateTime) DESC")
-    List<ReviewYearMonth> findReviewMonthsByMemberId(@Param("memberId") Long memberId);
+    List<ReviewYearMonth> findReviewMonthsByMemberId(
+            @Param("memberId") Long memberId, @Param("reviewType") ReviewType reviewType);
+
+    @Query(
+            "SELECT new org.depromeet.spot.domain.review.ReviewCount("
+                    + "COUNT(r), "
+                    + "COALESCE(SUM(CASE WHEN r.reviewType = :viewType THEN r.likesCount ELSE 0 END), 0)) "
+                    + "FROM ReviewEntity r "
+                    + "WHERE r.member.id = :memberId AND r.deletedAt IS NULL")
+    ReviewCount countAndSumLikesByMemberId(
+            @Param("memberId") Long memberId, @Param("viewType") ReviewType viewType);
 
     @Modifying
     @Query(

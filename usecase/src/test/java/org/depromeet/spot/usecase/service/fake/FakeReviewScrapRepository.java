@@ -3,6 +3,7 @@ package org.depromeet.spot.usecase.service.fake;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.review.Review;
@@ -88,6 +89,11 @@ public class FakeReviewScrapRepository implements ReviewScrapRepository {
     public void save(ReviewScrap scrap) {
         deleteBy(scrap.getMemberId(), scrap.getReviewId());
         scraps.add(scrap);
+    }
+
+    @Override
+    public Map<Long, Boolean> existsByMemberIdAndReviewIds(Long memberId, List<Long> reviewIds) {
+        return Map.of();
     }
 
     public void addReview(Review review) {

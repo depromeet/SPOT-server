@@ -5,15 +5,10 @@ import java.util.stream.Collectors;
 
 import org.depromeet.spot.application.review.dto.response.BlockReviewListResponse.BlockFilter;
 import org.depromeet.spot.domain.review.Review;
-import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MemberInfoOnMyReviewResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyReviewListResult;
 
 public record MyReviewListResponse(
-        MemberInfoOnMyReviewResult memberInfoOnMyReview,
-        List<MyReviewResponse> reviews,
-        String nextCursor,
-        boolean hasNext,
-        BlockFilter filter) {
+        List<MyReviewResponse> reviews, String nextCursor, boolean hasNext, BlockFilter filter) {
 
     public static MyReviewListResponse from(
             MyReviewListResult result, Integer year, Integer month) {
@@ -22,12 +17,7 @@ public record MyReviewListResponse(
                 result.reviews().stream().map(MyReviewResponse::from).collect(Collectors.toList());
         BlockFilter filter = new BlockFilter(null, null, year, month);
 
-        return new MyReviewListResponse(
-                result.memberInfoOnMyReviewResult(),
-                reviews,
-                result.nextCursor(),
-                result.hasNext(),
-                filter);
+        return new MyReviewListResponse(reviews, result.nextCursor(), result.hasNext(), filter);
     }
 
     public record MyReviewResponse(

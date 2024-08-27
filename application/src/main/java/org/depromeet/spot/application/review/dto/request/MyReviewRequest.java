@@ -3,6 +3,7 @@ package org.depromeet.spot.application.review.dto.request;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,4 +13,5 @@ public record MyReviewRequest(
         @Min(1) @Max(12) @Parameter(description = "월 (1-12)") Integer month,
         @Parameter(description = "다음 페이지 커서") String cursor,
         @Parameter(description = "정렬 기준", example = "DATE_TIME") SortCriteria sortBy,
-        @Parameter(description = "페이지 크기") Integer size) {}
+        @Parameter(description = "페이지 크기") Integer size,
+        @Parameter(description = "리뷰 타입: VIEW/FEED") ReviewType reviewType) {}

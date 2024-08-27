@@ -39,7 +39,7 @@ public class MemberService implements MemberUsecase {
         if (memberRepository.existsByNickname(member.getNickname())) {
             throw new MemberNicknameConflictException();
         }
-        Member memberResult = oauthRepository.getRegisterUserInfo(accessToken, member);
+        Member memberResult = oauthRepository.getKakaoRegisterUserInfo(accessToken, member);
         Level initialLevel = readLevelUsecase.findInitialLevel();
 
         // 이미 가입된 유저 재로그인
