@@ -88,36 +88,36 @@ subprojects {
     tasks.test {
         useJUnitPlatform()
     }
-//
-//    val dockerHubRegistry: String by project
-//    val dockerHubUsername: String by project
-//    val dockerHubPassword: String by project
-//
-//    jib {
-//        from {
-//            image = "openjdk:17-jdk-slim"
-//        }
-//        to {
-//            image = "$dockerHubUsername/$dockerHubRegistry"
-//            tags = setOf("latest", "1.0-SNAPSHOT")
-//
-//            auth {
-//                username = dockerHubUsername
-//                password = dockerHubPassword
-//            }
-//        }
-//        container {
-//            ports = listOf("8080")
-//            entrypoint = listOf(
-//                    "java",
-//                    "-Xms512m", "-Xmx512m",
-//                    "-Xminf0.4", "-Xmaxf0.7",
-//                    "-jar",
-//                    "/app.jar"
-//            )
-//            mainClass = "org.depromeet.spot.application.SpotApplication"
-//        }
-//    }
+
+    val dockerHubRegistry: String by project
+    val dockerHubUsername: String by project
+    val dockerHubPassword: String by project
+
+    jib {
+        from {
+            image = "openjdk:17-jdk-slim"
+        }
+        to {
+            image = "$dockerHubUsername/$dockerHubRegistry"
+            tags = setOf("latest", "1.0-SNAPSHOT")
+
+            auth {
+                username = dockerHubUsername
+                password = dockerHubPassword
+            }
+        }
+        container {
+            ports = listOf("8080")
+            entrypoint = listOf(
+                    "java",
+                    "-Xms512m", "-Xmx512m",
+                    "-Xminf0.4", "-Xmaxf0.7",
+                    "-jar",
+                    "/app.jar"
+            )
+            mainClass = "org.depromeet.spot.application.SpotApplication"
+        }
+    }
 }
 
 // root 모듈은 실행 파일이 없으므로 bootJar를 생성하지 않는다.
