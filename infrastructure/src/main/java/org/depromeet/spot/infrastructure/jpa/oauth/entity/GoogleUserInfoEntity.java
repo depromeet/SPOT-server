@@ -16,6 +16,9 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoogleUserInfoEntity extends BaseEntity {
 
+    private final String BASIC_PROFILE_IMAGE_URL =
+            "https://spot-image-bucket-v2.s3.ap-northeast-2.amazonaws.com/profile-images/%EA%B8%B0%EB%B3%B8+%ED%94%84%EB%A1%9C%ED%95%84+%EC%9D%B4%EB%AF%B8%EC%A7%80.png";
+
     //    구글 로그인은 sub라는 이름으로 id값을 줌.
     //    구글의 sub 값은 Long 타입을 넘어감.
     //    BigInteger로 처리하거나 String으로 처리해야함.
@@ -38,7 +41,7 @@ public class GoogleUserInfoEntity extends BaseEntity {
         return Member.builder()
                 .email(email)
                 .nickname(member.getNickname())
-                .profileImage(profileImageUrl)
+                .profileImage(BASIC_PROFILE_IMAGE_URL)
                 .snsProvider(SnsProvider.GOOGLE)
                 .idToken(idToken)
                 .role(MemberRole.ROLE_USER)

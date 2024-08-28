@@ -21,6 +21,9 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoUserInfoEntity extends BaseEntity {
 
+    private final String BASIC_PROFILE_IMAGE_URL =
+            "https://spot-image-bucket-v2.s3.ap-northeast-2.amazonaws.com/profile-images/%EA%B8%B0%EB%B3%B8+%ED%94%84%EB%A1%9C%ED%95%84+%EC%9D%B4%EB%AF%B8%EC%A7%80.png";
+
     // 서비스에 연결 완료된 시각. UTC
     @JsonProperty("connected_at")
     public Date connectedAt;
@@ -100,7 +103,7 @@ public class KakaoUserInfoEntity extends BaseEntity {
                 .name(kakaoAccount.name)
                 .nickname(member.getNickname())
                 .phoneNumber(kakaoAccount.phoneNumber)
-                .profileImage(kakaoAccount.profile.profileImageUrl)
+                .profileImage(BASIC_PROFILE_IMAGE_URL)
                 .snsProvider(SnsProvider.KAKAO)
                 .idToken(getId().toString())
                 .role(MemberRole.ROLE_USER)
