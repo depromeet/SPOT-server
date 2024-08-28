@@ -8,6 +8,7 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
 import org.depromeet.spot.infrastructure.jpa.common.entity.BaseEntity;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,8 +22,8 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoUserInfoEntity extends BaseEntity {
 
-    private final String BASIC_PROFILE_IMAGE_URL =
-            "https://spot-image-bucket-v2.s3.ap-northeast-2.amazonaws.com/profile-images/%EA%B8%B0%EB%B3%B8+%ED%94%84%EB%A1%9C%ED%95%84+%EC%9D%B4%EB%AF%B8%EC%A7%80.png";
+    @Value("${aws.s3.basicProfileImageUrl}")
+    private String BASIC_PROFILE_IMAGE_URL;
 
     // 서비스에 연결 완료된 시각. UTC
     @JsonProperty("connected_at")
