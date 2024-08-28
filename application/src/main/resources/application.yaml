@@ -9,22 +9,24 @@ spring:
         group:
             local:
                 - jpa
-                - aws
+                - aws-local
                 - jwt
                 - oauth
+                - datasource-local
             dev:
                 - jpa
-                - aws
+                - aws-dev
                 - jwt
                 - oauth
                 - monitoring
+                - datasource-dev
             prod:
                 - jpa
-                - aws
+                - aws-prod
                 - jwt
                 - oauth
                 - sentry
-                - monitoring
+                - datasource-prod
     servlet:
         multipart:
             max-file-size: 10MB
