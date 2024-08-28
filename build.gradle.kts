@@ -36,6 +36,10 @@ subprojects {
         testCompileOnly("org.projectlombok:lombok:_")
         testAnnotationProcessor("org.projectlombok:lombok:_")
 
+        // aws
+        implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:_")
+        implementation("org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:_")
+
         // configuration processor
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:_")
 
