@@ -57,7 +57,7 @@ jobs:
                           -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
                           -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
                           -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
-                          -e OAUTH_KAKAOCLIENTID=${{ secrets.OAUTH_KAKAOCLIENTID }} \
+                          -e OAUTH_KAKAOCLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
                           -e OAUTH_KAKAOAUTHTOKENURLHOST=${{ secrets.KAKAOAUTHTOKENURLHOST }} \
                           -e OAUTH_KAKAOAUTHUSERURLHOST=${{ secrets.KAKAOAUTHUSERURLHOST }} \
                           -e OAUTH_KAKAOREDIRECTURL=${{ secrets.KAKAOREDIRECTURL }} \
