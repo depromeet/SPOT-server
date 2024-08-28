@@ -40,7 +40,8 @@ public class AwsSecretsManagerConfig {
     @PostConstruct
     public void init() {
         String activeProfile = environment.getActiveProfiles()[0];
-        String secretName = "spot-secrets-" + activeProfile;
+        //        String secretName = "spot-secrets-" + activeProfile;
+        String secretName = "/secret/spot";
 
         try {
             String secretString = getSecret(secretName);
