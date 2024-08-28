@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api/v1/levels/info",
         "/kakao",
         "/api/v1/jwts",
+        "/google"
     };
 
     private static final Map<String, Set<String>> AUTH_METHOD_WHITELIST =
@@ -89,6 +90,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkMethodWhitelist(String requestURI, String requestMethod) {
+        log.info("requestURI: {}", requestURI);
+        log.info("requestMethod: {}", requestMethod);
         if (Arrays.stream(AUTH_WHITELIST).anyMatch(requestURI::startsWith)) {
             return true;
         }

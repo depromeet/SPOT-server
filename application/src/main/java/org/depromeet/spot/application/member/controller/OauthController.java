@@ -44,14 +44,14 @@ public class OauthController {
         return new JwtTokenResponse(jwtTokenUtil.getJWTToken(memberResult));
     }
 
-    @GetMapping("/api/v2/members/{snsProvider}/{token}")
+    @GetMapping("/api/v2/members/{snsProvider}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Member 로그인 API")
     public JwtTokenResponse login(
             @PathVariable("snsProvider")
                     @Parameter(name = "snsProvider", description = "KAKAO/GOOGLE", required = true)
                     SnsProvider snsProvider,
-            @PathVariable("token")
+            @RequestParam
                     @Parameter(
                             name = "token",
                             description = "sns 카카오는 accessToken, 구글은 authToken",
