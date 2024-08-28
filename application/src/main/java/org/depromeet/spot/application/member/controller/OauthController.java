@@ -53,20 +53,20 @@ public class OauthController {
                     SnsProvider snsProvider,
             @RequestParam
                     @Parameter(
-                            name = "token",
-                            description = "sns 카카오는 accessToken, 구글은 authToken",
+                            name = "accessToken",
+                            description = "sns 카카오는 accessToken",
                             required = true)
-                    String token) {
+                    String accessToken) {
 
-        Member member = oauthUsecase.login(snsProvider, token);
+        Member member = oauthUsecase.login(snsProvider, accessToken);
         return new JwtTokenResponse(jwtTokenUtil.getJWTToken(member));
     }
 
     //    TODO : /api/v2/members를 RequestMapping으로 빼면 구글 로그인에서 4xx Exception 발생
     @GetMapping("/api/v2/members/authorization/{snsProvider}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "(백엔드용)accessToken을 받아오기 위한 API")
-    public String getAccessToken2(
+    @Operation(summary = "accessToken을 받아오기 위한 API")
+    public String getAccessToken(
             @PathVariable("snsProvider") SnsProvider snsProvider, @RequestParam String code) {
         String token = oauthUsecase.getOauthAccessToken(snsProvider, code);
         log.info("snsProvider : {}", snsProvider);

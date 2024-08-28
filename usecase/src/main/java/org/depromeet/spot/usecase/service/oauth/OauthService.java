@@ -41,16 +41,8 @@ public class OauthService implements OauthUsecase {
     }
 
     @Override
-    public Member login(SnsProvider snsProvider, String token) {
-        String accessToken;
-        switch (snsProvider) {
-            case KAKAO:
-                accessToken = token;
-                break;
-            default:
-                accessToken = oauthRepository.getOauthAccessToken(snsProvider, token);
-                break;
-        }
+    public Member login(SnsProvider snsProvider, String accessToken) {
+
         Member memberResult = oauthRepository.getOauthLoginUserInfo(snsProvider, accessToken);
         Member existedMember =
                 memberRepository
