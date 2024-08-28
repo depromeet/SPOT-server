@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.depromeet.spot.common.exception.member.MemberException.InactiveMemberException;
+import org.depromeet.spot.common.exception.member.MemberException.MemberConflictException;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Level;
@@ -42,10 +43,13 @@ public class MemberService implements MemberUsecase {
         Member memberResult = oauthRepository.getKakaoRegisterUserInfo(accessToken, member);
         Level initialLevel = readLevelUsecase.findInitialLevel();
 
-        // 이미 가입된 유저 재로그인
-        Optional<Member> existedMember = memberRepository.findByIdToken(member.getIdToken());
+        // 이미 가입된 유저 Exception
+        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        if (existedMember.isPresent()) {
+            throw new MemberConflictException();
+        }
 
-        return existedMember.orElseGet(() -> memberRepository.save(memberResult, initialLevel));
+        return memberRepository.save(memberResult, initialLevel);
     }
 
     @Override
