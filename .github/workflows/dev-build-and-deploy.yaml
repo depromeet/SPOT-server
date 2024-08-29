@@ -133,6 +133,7 @@ jobs:
                           -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
                           -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \
                           -e AWS_S3_BUCKET_NAME=${{ secrets.DEV_AWS_S3_BUCKET_NAME }} \
+                          -e AWS_S3_BASICPROFILEIMAGEURL=${{ secrets.BASICPROFILEIMAGEURL }} \
                           -e TZ=Asia/Seoul \
                           -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
                           -e SENTRY_ENABLE_TRACING=true \
