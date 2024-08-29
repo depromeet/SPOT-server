@@ -24,6 +24,18 @@ jobs:
                     java-version: "17"
                     distribution: "corretto"
 
+            -   name: Configure AWS credentials
+                uses: aws-actions/configure-aws-credentials@v1
+                with:
+                    aws-access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY }}
+                    aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_KEY }}
+                    aws-region: ap-northeast-2
+
+            -   name: Get secrets from AWS Secrets Manager
+                run: |
+                    SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id spot --query SecretString --output text)
+                    echo "$SECRET_VALUE" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+
             -   name: Cache Gradle
                 uses: actions/cache@v3
                 with:
