@@ -48,6 +48,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Map.of(
                     "/api/v1/members",
                     Set.of("GET", "POST"),
+                    "/api/v2/members",
+                    Set.of("GET", "POST"),
+                    "/login/oauth2/code/google",
+                    Set.of("GET"),
                     "/api/v1/members/delete",
                     Set.of("DELETE"),
                     "/api/v1/baseball-teams",
@@ -66,7 +70,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         // header가 null이거나 빈 문자열이면 안됨.
         if (header == null || header.isEmpty()) {
             throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);

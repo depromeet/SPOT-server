@@ -32,6 +32,7 @@ public class SecurityConfig {
         "/favicon.ico/**",
         "/api/v1/members/**",
         "/actuator/**",
+        "/login/oauth2/code/google/**",
         "/trackEvent"
     };
 

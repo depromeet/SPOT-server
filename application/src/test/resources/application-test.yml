@@ -1,0 +1,45 @@
+loki:
+    url: ${LOKI_URL}
+
+aws:
+    s3:
+        accessKey: ${AWS_S3_ACCESS_KEY}
+        secretKey: ${AWS_S3_SECRET_KEY}
+        bucketName: ${AWS_S3_BUCKET_NAME}
+    redis:
+        host: localhost
+        port: 6379
+
+oauth:
+    kakaoClientId: ${KAKAO_CLIENT_ID}
+    kakaoAuthTokenUrlHost: ${KAKAO_AUTH_TOKEN_URL_HOST}
+    kakaoAuthUserUrlHost: ${KAKAO_AUTH_USER_URL_HOST}
+    kakaoRedirectUrl: ${KAKAO_REDIRECT_URL}
+    googleClientId: ${GOOGLE_CLIENT_ID}
+    googleClientSecret: ${GOOGLE_CLIENT_SECRET}
+    googleRedirectUrl: ${GOOGLE_REDIRECT_URL}
+    googleAuthTokenUrlHost: ${GOOGLE_AUTH_TOKEN_URL_HOST}
+    googleUserUrlHost: ${GOOGLE_USER_URL_HOST}
+
+spring:
+    datasource:
+        url: jdbc:tc:mysql:8.0.36:///testdb
+        username: testuser
+        password: testpassword
+        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+        hikari:
+            connection-timeout: 100000
+            maximum-pool-size: 300
+            max-lifetime: 100000
+    jpa:
+        database: mysql
+        hibernate:
+            ddl-auto: create
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        defer-datasource-initialization: true
+    jwt:
+        secret: ${JWT_SECRETKEY}
+
+
+server:
+    port: 8080

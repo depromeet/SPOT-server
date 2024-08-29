@@ -1,27 +1,20 @@
-package org.depromeet.spot.usecase.port.in.member;
+package org.depromeet.spot.usecase.port.in.oauth;
 
 import org.depromeet.spot.domain.member.Member;
+import org.depromeet.spot.domain.member.enums.SnsProvider;
 import org.depromeet.spot.domain.team.BaseballTeam;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-public interface MemberUsecase {
+public interface OauthUsecase {
 
     Member create(String accessToken, Member member);
 
-    Member login(String accessToken);
+    Member login(SnsProvider snsProvider, String token);
 
-    boolean duplicatedNickname(String nickname);
-
-    String getAccessToken(String idCode);
-
-    boolean deleteMember(String accessToken);
-
-    MemberInfo findMemberInfo(Long memberId);
-
-    void softDelete(Long memberId);
+    String getOauthAccessToken(SnsProvider snsProvider, String authorizationCode);
 
     @Getter
     @Builder

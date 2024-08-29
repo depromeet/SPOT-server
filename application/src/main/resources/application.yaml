@@ -11,20 +11,20 @@ spring:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
                 - mixpanel
             dev:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
                 - monitoring
                 - mixpanel
             prod:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
                 - sentry
                 - monitoring
                 - mixpanel

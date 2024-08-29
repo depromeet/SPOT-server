@@ -1,5 +1,6 @@
 package org.depromeet.spot.usecase.service.review.like;
 
+import org.depromeet.spot.common.annotation.DistributedLock;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.like.ReviewLike;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
@@ -11,9 +12,11 @@ import org.depromeet.spot.usecase.service.util.MixpanelUtil.MixpanelEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @Transactional
 @RequiredArgsConstructor
 public class ReviewLikeService implements ReviewLikeUsecase {
@@ -23,9 +26,9 @@ public class ReviewLikeService implements ReviewLikeUsecase {
     private final ReviewLikeRepository reviewLikeRepository;
     private final MixpanelUtil mixpanelUtil;
 
-    // TODO: 분산락 적용 예정
     @Override
-    public void toggleLike(final long memberId, final long reviewId) {
+    @DistributedLock(key = "#reviewId")
+    public void toggleLike(final Long memberId, final long reviewId) {
         Review review = readReviewUsecase.findById(reviewId);
 
         if (reviewLikeRepository.existsBy(memberId, reviewId)) {

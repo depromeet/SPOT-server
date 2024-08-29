@@ -1,0 +1,10 @@
+delete from members where id > 0;
+delete from reviews where id > 0;
+delete from review_likes where id > 0;
+delete from levels where id > 0;
+delete from stadiums where id > 0;
+delete from baseball_teams where id > 0;
+delete from sections where id > 0;
+delete from blocks where id > 0;
+delete from block_rows where id > 0;
+delete from seats where id > 0;
