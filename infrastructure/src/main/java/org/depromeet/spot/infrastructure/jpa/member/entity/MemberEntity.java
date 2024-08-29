@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class MemberEntity extends BaseEntity {
 
     // TODO : email 받아온 후 nullable = false로 바꿔야함.
-    @Column(name = "email", unique = true, length = 50)
+    @Column(name = "email", length = 50)
     private String email;
 
     // TODO : 이름 받아온 후 nullable = false로 바꿔야함.
@@ -36,7 +36,7 @@ public class MemberEntity extends BaseEntity {
     private String nickname;
 
     // TODO : phone_number 받아온 후 nullable = false로 바꿔야함.
-    @Column(name = "phone_number", unique = true, length = 13)
+    @Column(name = "phone_number", length = 13)
     private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,7 +52,7 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "sns_provider", nullable = false, length = 20)
     private String snsProvider;
 
-    @Column(name = "id_token", nullable = false, unique = true, length = 255)
+    @Column(name = "id_token", nullable = false, length = 255)
     private String idToken;
 
     @Column(name = "team_id", length = 10)
