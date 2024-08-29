@@ -1,6 +1,7 @@
 package org.depromeet.spot.infrastructure.jpa.member.repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Level;
@@ -37,11 +38,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Member findByIdToken(String idToken) {
-        return memberJpaRepository
-                .findByIdToken(idToken)
-                .map(MemberEntity::toDomain)
-                .orElseThrow(MemberNotFoundException::new);
+    public Optional<Member> findByIdToken(String idToken) {
+        return memberJpaRepository.findByIdToken(idToken).map(MemberEntity::toDomain);
     }
 
     @Override
