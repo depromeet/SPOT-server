@@ -13,6 +13,7 @@ spring:
                 - jwt
                 - oauth
                 - datasource-local
+                - aws-credentials
             dev:
                 - jpa
                 - aws-dev

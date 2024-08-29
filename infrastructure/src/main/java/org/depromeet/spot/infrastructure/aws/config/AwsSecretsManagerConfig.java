@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertiesPropertySource;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
+@Order(Integer.MIN_VALUE)
 public class AwsSecretsManagerConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(AwsSecretsManagerConfig.class);
@@ -61,7 +63,8 @@ public class AwsSecretsManagerConfig {
                                 properties.setProperty(key, value);
 
                                 // 콘솔에 키와 값 출력
-                                logger.info("Loaded secret - Key: {}, Value: {}", key, value);
+                                //                                logger.info("Loaded secret - Key:
+                                // {}, Value: {}", key, value);
                             });
 
             MutablePropertySources propertySources = environment.getPropertySources();
@@ -72,6 +75,7 @@ public class AwsSecretsManagerConfig {
             logger.info(
                     "Successfully loaded and applied {} secrets from AWS Secrets Manager",
                     properties.size());
+
         } catch (Exception e) {
             throw new RuntimeException("Could not load secrets from AWS Secrets Manager", e);
         }
