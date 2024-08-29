@@ -10,6 +10,7 @@ import org.depromeet.spot.infrastructure.jpa.oauth.entity.GoogleUserInfoEntity;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.KakaoTokenEntity;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.KakaoUserInfoEntity;
 import org.depromeet.spot.usecase.port.out.oauth.OauthRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Repository;
@@ -24,6 +25,9 @@ import reactor.core.publisher.Mono;
 @Repository
 @RequiredArgsConstructor
 public class OauthRepositoryImpl implements OauthRepository {
+
+    @Value("${aws.s3.basicProfileImageUrl}")
+    private String BASIC_PROFILE_IMAGE_URL;
 
     private final String BEARER = "Bearer";
     private final OauthProperties properties;
@@ -138,16 +142,17 @@ public class OauthRepositoryImpl implements OauthRepository {
         KakaoUserInfoEntity userInfo = getKakaoUserInfo(accessToken);
 
         // 회원가입 시 받은 정보를 바탕으로 member로 변환해서 리턴.
-        return userInfo.toKakaoDomain(member);
+        return userInfo.toKakaoDomain(member, BASIC_PROFILE_IMAGE_URL);
     }
 
     @Override
     public Member getOauthRegisterUserInfo(String accessToken, Member member) {
         switch (member.getSnsProvider()) {
             case KAKAO:
-                return getKakaoUserInfo(accessToken).toKakaoDomain(member);
+                return getKakaoUserInfo(accessToken).toKakaoDomain(member, BASIC_PROFILE_IMAGE_URL);
             default:
-                return getGoogleUserInfo(accessToken).toGoogleDomain(member);
+                return getGoogleUserInfo(accessToken)
+                        .toGoogleDomain(member, BASIC_PROFILE_IMAGE_URL);
         }
     }
 
