@@ -4,7 +4,6 @@ import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
 import org.depromeet.spot.infrastructure.jpa.common.entity.BaseEntity;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,9 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // 역직렬화를 위한 기본 생성자
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoogleUserInfoEntity extends BaseEntity {
-
-    @Value("${aws.s3.basicProfileImageUrl}")
-    private String BASIC_PROFILE_IMAGE_URL;
 
     //    구글 로그인은 sub라는 이름으로 id값을 줌.
     //    구글의 sub 값은 Long 타입을 넘어감.
@@ -38,11 +34,11 @@ public class GoogleUserInfoEntity extends BaseEntity {
     @JsonProperty("picture")
     public String profileImageUrl;
 
-    public Member toGoogleDomain(Member member) {
+    public Member toGoogleDomain(Member member, String basicProfileImageUrl) {
         return Member.builder()
                 .email(email)
                 .nickname(member.getNickname())
-                .profileImage(BASIC_PROFILE_IMAGE_URL)
+                .profileImage(basicProfileImageUrl)
                 .snsProvider(SnsProvider.GOOGLE)
                 .idToken(idToken)
                 .role(MemberRole.ROLE_USER)

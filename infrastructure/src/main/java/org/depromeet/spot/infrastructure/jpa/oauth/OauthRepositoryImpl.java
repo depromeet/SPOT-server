@@ -4,6 +4,7 @@ import org.depromeet.spot.common.exception.oauth.OauthException.InternalOauthSer
 import org.depromeet.spot.common.exception.oauth.OauthException.InvalidAcessTokenException;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
+import org.depromeet.spot.infrastructure.aws.property.ObjectStorageProperties;
 import org.depromeet.spot.infrastructure.jpa.oauth.config.OauthProperties;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.GoogleTokenEntity;
 import org.depromeet.spot.infrastructure.jpa.oauth.entity.GoogleUserInfoEntity;
@@ -27,6 +28,8 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     private final String BEARER = "Bearer";
     private final OauthProperties properties;
+
+    private final ObjectStorageProperties objectStorageProperties;
 
     private final String AUTHORIZATION_CODE = "authorization_code";
 
@@ -136,18 +139,21 @@ public class OauthRepositoryImpl implements OauthRepository {
     @Override
     public Member getKakaoRegisterUserInfo(String accessToken, Member member) {
         KakaoUserInfoEntity userInfo = getKakaoUserInfo(accessToken);
+        log.info("basicProfileImage : {}", objectStorageProperties.basicProfileImageUrl());
 
         // 회원가입 시 받은 정보를 바탕으로 member로 변환해서 리턴.
-        return userInfo.toKakaoDomain(member);
+        return userInfo.toKakaoDomain(member, objectStorageProperties.basicProfileImageUrl());
     }
 
     @Override
     public Member getOauthRegisterUserInfo(String accessToken, Member member) {
         switch (member.getSnsProvider()) {
             case KAKAO:
-                return getKakaoUserInfo(accessToken).toKakaoDomain(member);
+                return getKakaoUserInfo(accessToken)
+                        .toKakaoDomain(member, objectStorageProperties.basicProfileImageUrl());
             default:
-                return getGoogleUserInfo(accessToken).toGoogleDomain(member);
+                return getGoogleUserInfo(accessToken)
+                        .toGoogleDomain(member, objectStorageProperties.basicProfileImageUrl());
         }
     }
 
