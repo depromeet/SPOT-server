@@ -393,3 +393,5 @@ application-aws.yaml
 
 # 민성 레디스 바이너리 파일
 redis-server-7.2.3-mac-arm64
+
+gradle.properties

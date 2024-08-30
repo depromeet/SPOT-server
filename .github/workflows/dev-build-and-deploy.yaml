@@ -4,11 +4,9 @@ on:
     push:
         branches:
             - main
-            - dev
     pull_request:
         branches:
             - main
-            - dev
 
 jobs:
     build-and-test:
@@ -36,6 +34,11 @@ jobs:
 
             -   name: Grant execute permission for gradlew
                 run: chmod +x gradlew
+
+            -   name: Create Gradle Properties
+                run: |
+                    touch gradle.properties
+                    echo "${{ secrets.GRADLE_PROPERTIES }}" >> gradle.properties
 
             -   name: Build with Gradle
                 run: ./gradlew build -x test --stacktrace --parallel
@@ -82,20 +85,23 @@ jobs:
             -   name: Set up Docker Buildx
                 uses: docker/setup-buildx-action@v2
 
+            -   name: Create Gradle Properties
+                run: |
+                    touch gradle.properties
+                    echo "${{ secrets.GRADLE_PROPERTIES }}" >> gradle.properties
+
             -   name: Login to DockerHub
                 uses: docker/login-action@v2
                 with:
-                    username: ${{ secrets.DOCKERHUB_USERNAME }}
-                    password: ${{ secrets.DOCKERHUB_TOKEN }}
+                    username: ${{ secrets.SPOT_DOCKER_HUB_USERNAME }}
+                    password: ${{ secrets.SPOT_DOCKER_HUB_PASSWORD }}
 
-            -   name: Build and push Docker image
-                uses: docker/build-push-action@v4
-                with:
-                    context: .
-                    push: true
-                    tags: ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+            - name: Build with jib
+              run: |
+                  ./gradlew jib \
+                  -Djib.to.image="${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}"
 
-            -   name: Deploy to Dev NCP Server
+            -   name: Deploy to Dev AWS Server
                 uses: appleboy/ssh-action@master
                 with:
                     host: ${{ secrets.DEV_SERVER_HOST }}
@@ -103,7 +109,7 @@ jobs:
                     password: ${{ secrets.DEV_SERVER_PASSWORD }}
                     port: ${{ secrets.DEV_SERVER_PORT }}
                     script: |
-                        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                        docker pull ${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}
                         docker stop spot-server-dev || true
                         docker rm spot-server-dev || true
                         docker run -d --name spot-server-dev \
@@ -141,29 +147,5 @@ jobs:
                           -e SENTRY_ENABLE_TRACING=true \
                           -e SENTRY_ENVIRONMENT=prod \
                           -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
-                          ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
+                          ${{ secrets.SPOT_DOCKER_HUB_USERNAME }}/${{ secrets.SPOT_DOCKER_HUB_REPOSITORY }}:dev-${{ github.sha }}
                         docker system prune -af
-
-#  create-release:
-#      needs: [ build-and-test, deploy ]  # deploy job이 성공적으로 완료된 후에만 실행
-##      if: github.event.pull_request.merged == true # PR이 merge된 경우에만 실행
-#      runs-on: ubuntu-latest
-#      permissions:
-#          contents: write
-#      steps:
-#          - name: Checkout code
-#            uses: actions/checkout@v4
-#
-#          - name: Bump version and push tag
-#            id: tag_version
-#            uses: mathieudutour/github-tag-action@v6.1
-#            with:
-#                github_token: ${{ secrets.GITHUB_TOKEN }}
-#
-#          - name: Create a GitHub release
-#            uses: ncipollo/release-action@v1
-#            with:
-#                tag: ${{ steps.tag_version.outputs.new_tag }}
-#                name: Release ${{ steps.tag_version.outputs.new_tag }}
-#                body: ${{ steps.tag_version.outputs.changelog }}
-

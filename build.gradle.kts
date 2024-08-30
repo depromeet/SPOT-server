@@ -4,6 +4,7 @@ plugins {
     id("com.diffplug.spotless")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    id("com.google.cloud.tools.jib")
 }
 
 allprojects {
@@ -22,6 +23,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "io.sentry.jvm.gradle")
+    apply(plugin = "com.google.cloud.tools.jib")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -83,6 +85,44 @@ subprojects {
 
     tasks.test {
         useJUnitPlatform()
+    }
+
+    val dockerHubRepository: String by project
+    val dockerHubUsername: String by project
+    val dockerHubPassword: String by project
+
+    jib {
+        from {
+            image = "openjdk:17-jdk-slim"
+        }
+        to {
+            fun String.runCommand(): String =
+                    ProcessBuilder(*this.split(" ").toTypedArray())
+                            .redirectErrorStream(true)
+                            .start()
+                            .inputStream
+                            .bufferedReader()
+                            .readText()
+                            .trim()
+            val gitHash = "git rev-parse --short HEAD".runCommand()
+
+            image = "$dockerHubUsername/$dockerHubRepository:$gitHash"
+
+            auth {
+                username = dockerHubUsername
+                password = dockerHubPassword
+            }
+        }
+        container {
+            ports = listOf("8080")
+            entrypoint = listOf(
+                    "java",
+                    "-Xms512m", "-Xmx512m",
+                    "-Xminf0.4", "-Xmaxf0.7",
+                    "-jar",
+                    "/app.jar"
+            )
+        }
     }
 }
 
