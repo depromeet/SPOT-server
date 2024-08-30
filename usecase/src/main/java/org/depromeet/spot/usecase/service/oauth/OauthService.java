@@ -1,7 +1,11 @@
 package org.depromeet.spot.usecase.service.oauth;
 
+import java.util.Optional;
+
 import org.depromeet.spot.common.exception.member.MemberException.InactiveMemberException;
+import org.depromeet.spot.common.exception.member.MemberException.MemberConflictException;
 import org.depromeet.spot.common.exception.member.MemberException.MemberNicknameConflictException;
+import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
 import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.SnsProvider;
@@ -31,22 +35,23 @@ public class OauthService implements OauthUsecase {
         Member memberResult = oauthRepository.getOauthRegisterUserInfo(accessToken, member);
         Level initialLevel = readLevelUsecase.findInitialLevel();
 
-        return memberRepository.save(memberResult, initialLevel);
+        // 이미 가입된 유저일 경우 Exception
+        Optional<Member> existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        if (existedMember.isPresent()) {
+            throw new MemberConflictException();
+        }
+
+        return existedMember.orElseGet(() -> memberRepository.save(memberResult, initialLevel));
     }
 
     @Override
-    public Member login(SnsProvider snsProvider, String token) {
-        String accessToken;
-        switch (snsProvider) {
-            case KAKAO:
-                accessToken = token;
-                break;
-            default:
-                accessToken = oauthRepository.getOauthAccessToken(snsProvider, token);
-                break;
-        }
+    public Member login(SnsProvider snsProvider, String accessToken) {
+
         Member memberResult = oauthRepository.getOauthLoginUserInfo(snsProvider, accessToken);
-        Member existedMember = memberRepository.findByIdToken(memberResult.getIdToken());
+        Member existedMember =
+                memberRepository
+                        .findByIdToken(memberResult.getIdToken())
+                        .orElseThrow(MemberNotFoundException::new);
 
         // 회원 탈퇴 유저일 경우 재가입
         if (existedMember.getDeletedAt() != null) {

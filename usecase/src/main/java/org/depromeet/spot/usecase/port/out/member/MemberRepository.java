@@ -1,6 +1,7 @@
 package org.depromeet.spot.usecase.port.out.member;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
@@ -13,7 +14,7 @@ public interface MemberRepository {
 
     Member updateLevel(Member member);
 
-    Member findByIdToken(String idToken);
+    Optional<Member> findByIdToken(String idToken);
 
     boolean existsByNickname(String nickname);
 
