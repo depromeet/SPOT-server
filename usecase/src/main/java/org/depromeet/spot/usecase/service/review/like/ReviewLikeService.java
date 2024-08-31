@@ -7,8 +7,6 @@ import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.like.ReviewLikeUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
-import org.depromeet.spot.usecase.service.util.MixpanelUtil;
-import org.depromeet.spot.usecase.service.util.MixpanelUtil.MixpanelEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +22,9 @@ public class ReviewLikeService implements ReviewLikeUsecase {
     private final ReadReviewUsecase readReviewUsecase;
     private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewLikeRepository reviewLikeRepository;
-    private final MixpanelUtil mixpanelUtil;
+
+    // TODO : Service 코드와 분리하기
+    //    private final MixpanelRepository mixpanelRepository;
 
     @Override
     @DistributedLock(key = "#reviewId")
@@ -38,8 +38,10 @@ public class ReviewLikeService implements ReviewLikeUsecase {
 
         addLike(memberId, reviewId, review);
 
+        // TODO : 테스트 시에도 이벤트 발생함.
         // 믹스패널 이벤트(좋아요 수) 발생
-        mixpanelUtil.track(MixpanelEvent.REVIEW_LIKE_COUNT, String.valueOf(memberId));
+        //        mixpanelRepository.eventTrack(MixpanelEvent.REVIEW_LIKE_COUNT,
+        // String.valueOf(memberId));
     }
 
     public void cancelLike(final long memberId, final long reviewId, Review review) {

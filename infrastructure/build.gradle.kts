@@ -39,6 +39,9 @@ dependencies {
 
     // caffeine cache
     implementation("com.github.ben-manes.caffeine:caffeine:_")
+
+    // Mixpanel
+    implementation("com.mixpanel:mixpanel-java:_")
 }
 
 tasks.bootJar { enabled = false }
