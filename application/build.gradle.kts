@@ -32,6 +32,9 @@ dependencies {
     // aop
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    // Mixpanel
+    implementation("com.mixpanel:mixpanel-java:_")
+
     // test container
     testImplementation("org.testcontainers:testcontainers:_")
     testImplementation("org.testcontainers:junit-jupiter:_")

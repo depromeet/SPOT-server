@@ -23,6 +23,9 @@ public class ReviewLikeService implements ReviewLikeUsecase {
     private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewLikeRepository reviewLikeRepository;
 
+    // TODO : Service 코드와 분리하기
+    //    private final MixpanelRepository mixpanelRepository;
+
     @Override
     @DistributedLock(key = "#reviewId")
     public void toggleLike(final Long memberId, final long reviewId) {
@@ -34,6 +37,11 @@ public class ReviewLikeService implements ReviewLikeUsecase {
         }
 
         addLike(memberId, reviewId, review);
+
+        // TODO : 테스트 시에도 이벤트 발생함.
+        // 믹스패널 이벤트(좋아요 수) 발생
+        //        mixpanelRepository.eventTrack(MixpanelEvent.REVIEW_LIKE_COUNT,
+        // String.valueOf(memberId));
     }
 
     public void cancelLike(final long memberId, final long reviewId, Review review) {
