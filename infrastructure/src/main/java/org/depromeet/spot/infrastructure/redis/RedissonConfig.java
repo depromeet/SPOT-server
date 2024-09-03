@@ -24,9 +24,9 @@ public class RedissonConfig {
                 .useSingleServer()
                 .setAddress(
                         REDISSON_HOST_PREFIX
-                                + redisProperties.host()
+                                + redisProperties.getHost()
                                 + ":"
-                                + redisProperties.port());
+                                + redisProperties.getPort());
         return Redisson.create(redissonConfig);
     }
 }
