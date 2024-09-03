@@ -56,21 +56,39 @@ management:
         web:
             exposure:
                 include: "*"
+
+# secret manager
+aws:
+    secretsmanager:
+        name: spot
+cloud:
+    aws:
+        region:
+            static: ap-northeast-2
 ---
 spring:
     config:
         activate:
             on-profile: local
+aws:
+    secretsmanager:
+        name: spot
 ---
 spring:
     config:
         activate:
             on-profile: dev
+aws:
+    secretsmanager:
+        name: spot-dev-secrets
 ---
 spring:
     config:
         activate:
             on-profile: prod
+aws:
+    secretsmanager:
+        name: spot-prod-secrets
 
 decorator:
     datasource:
