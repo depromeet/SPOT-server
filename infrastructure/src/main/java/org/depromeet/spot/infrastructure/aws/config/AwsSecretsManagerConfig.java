@@ -60,6 +60,7 @@ public class AwsSecretsManagerConfig {
                             entry -> {
                                 String key = entry.getKey();
                                 String value = entry.getValue().asText();
+                                String camelCaseKey = toCamelCase(key);
                                 properties.setProperty(key, value);
 
                                 // 콘솔에 키와 값 출력
@@ -95,5 +96,15 @@ public class AwsSecretsManagerConfig {
         GetSecretValueResult getSecretValueResult = client.getSecretValue(getSecretValueRequest);
 
         return getSecretValueResult.getSecretString();
+    }
+
+    private String toCamelCase(String input) {
+        String[] parts = input.split("\\.");
+        StringBuilder camelCaseString = new StringBuilder(parts[0]);
+        for (int i = 1; i < parts.length; i++) {
+            camelCaseString.append(Character.toUpperCase(parts[i].charAt(0)));
+            camelCaseString.append(parts[i].substring(1).replace("-", ""));
+        }
+        return camelCaseString.toString();
     }
 }
