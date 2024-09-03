@@ -58,7 +58,7 @@ public class PresignedUrlGenerator implements CreatePresignedUrlPort {
 
     private GeneratePresignedUrlRequest createGeneratePreSignedUrlRequest(final String fileName) {
         log.info("presigned url generator: createGeneratePreSignedUrlRequest");
-        final String bucketName = objectStorageProperties.bucketName();
+        final String bucketName = objectStorageProperties.getBucketName();
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
                 new GeneratePresignedUrlRequest(bucketName, fileName)
                         .withMethod(HttpMethod.PUT)

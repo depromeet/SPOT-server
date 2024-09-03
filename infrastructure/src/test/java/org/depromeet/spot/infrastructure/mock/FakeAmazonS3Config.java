@@ -20,6 +20,17 @@ public class FakeAmazonS3Config extends ObjectStorageConfig {
 
     @Bean
     @Primary
+    public ObjectStorageProperties objectStorageProperties() {
+        return ObjectStorageProperties.builder()
+                .accessKey("accessKey")
+                .secretKey("secretKey")
+                .bucketName("bucketName")
+                .basicProfileImageUrl("basicProfileImageUrl")
+                .build();
+    }
+
+    @Bean
+    @Primary
     @Override
     public AmazonS3 getAmazonS3() {
         return Mockito.mock(AmazonS3.class);

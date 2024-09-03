@@ -18,7 +18,8 @@ public class ObjectStorageConfig {
 
     private final ObjectStorageProperties objectStorageProperties;
     private final Regions clientRegion = Regions.AP_NORTHEAST_2;
-    private static final String REGION = "kr-standard";
+
+    //    private static final String REGION = "kr-standard";
 
     @Bean
     public AmazonS3 getAmazonS3() {
@@ -27,8 +28,8 @@ public class ObjectStorageConfig {
                 .withCredentials(
                         new AWSStaticCredentialsProvider(
                                 new BasicAWSCredentials(
-                                        objectStorageProperties.accessKey(),
-                                        objectStorageProperties.secretKey())))
+                                        objectStorageProperties.getAccessKey(),
+                                        objectStorageProperties.getSecretKey())))
                 .build();
     }
 }
