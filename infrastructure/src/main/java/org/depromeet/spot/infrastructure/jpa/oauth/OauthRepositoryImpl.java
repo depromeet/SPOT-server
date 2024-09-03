@@ -37,7 +37,7 @@ public class OauthRepositoryImpl implements OauthRepository {
     public String getKakaoAccessToken(String authorizationCode) {
         // Webflux의 WebClient
         KakaoTokenEntity kakaoTokenEntity =
-                WebClient.create(properties.kakaoAuthTokenUrlHost())
+                WebClient.create(properties.getKakaoAuthTokenUrlHost())
                         .post()
                         .uri(
                                 uriBuilder ->
@@ -45,7 +45,8 @@ public class OauthRepositoryImpl implements OauthRepository {
                                                 .scheme("https")
                                                 .path("/oauth/token")
                                                 .queryParam("grant_type", AUTHORIZATION_CODE)
-                                                .queryParam("client_id", properties.kakaoClientId())
+                                                .queryParam(
+                                                        "client_id", properties.getKakaoClientId())
                                                 .queryParam("code", authorizationCode)
                                                 .build(true))
                         .header(
@@ -76,10 +77,10 @@ public class OauthRepositoryImpl implements OauthRepository {
 
         switch (snsProvider) {
             case KAKAO:
-                authTokenUrlHost = properties.kakaoAuthTokenUrlHost();
+                authTokenUrlHost = properties.getKakaoAuthTokenUrlHost();
                 break;
             default:
-                authTokenUrlHost = properties.googleAuthTokenUrlHost();
+                authTokenUrlHost = properties.getGoogleAuthTokenUrlHost();
                 break;
         }
 
@@ -95,10 +96,11 @@ public class OauthRepositoryImpl implements OauthRepository {
                                                     .path("/oauth/token")
                                                     .queryParam("grant_type", AUTHORIZATION_CODE)
                                                     .queryParam(
-                                                            "client_id", properties.kakaoClientId())
+                                                            "client_id",
+                                                            properties.getKakaoClientId())
                                                     .queryParam(
                                                             "redirect_uri",
-                                                            properties.kakaoRedirectUrl())
+                                                            properties.getKakaoRedirectUrl())
                                                     .queryParam("code", authorizationCode)
                                                     .build(true);
                                         default: // 기본적으로 GOOGLE 처리
@@ -108,13 +110,13 @@ public class OauthRepositoryImpl implements OauthRepository {
                                                     .queryParam("grant_type", AUTHORIZATION_CODE)
                                                     .queryParam(
                                                             "client_id",
-                                                            properties.googleClientId())
+                                                            properties.getGoogleClientId())
                                                     .queryParam(
                                                             "client_secret",
-                                                            properties.googleClientSecret())
+                                                            properties.getGoogleClientSecret())
                                                     .queryParam(
                                                             "redirect_uri",
-                                                            properties.googleRedirectUrl())
+                                                            properties.getGoogleRedirectUrl())
                                                     .queryParam("code", authorizationCode)
                                                     .build(true);
                                     }
@@ -139,10 +141,10 @@ public class OauthRepositoryImpl implements OauthRepository {
     @Override
     public Member getKakaoRegisterUserInfo(String accessToken, Member member) {
         KakaoUserInfoEntity userInfo = getKakaoUserInfo(accessToken);
-        log.info("basicProfileImage : {}", objectStorageProperties.basicProfileImageUrl());
+        log.info("basicProfileImage : {}", objectStorageProperties.getBasicProfileImageUrl());
 
         // 회원가입 시 받은 정보를 바탕으로 member로 변환해서 리턴.
-        return userInfo.toKakaoDomain(member, objectStorageProperties.basicProfileImageUrl());
+        return userInfo.toKakaoDomain(member, objectStorageProperties.getBasicProfileImageUrl());
     }
 
     @Override
@@ -150,10 +152,10 @@ public class OauthRepositoryImpl implements OauthRepository {
         switch (member.getSnsProvider()) {
             case KAKAO:
                 return getKakaoUserInfo(accessToken)
-                        .toKakaoDomain(member, objectStorageProperties.basicProfileImageUrl());
+                        .toKakaoDomain(member, objectStorageProperties.getBasicProfileImageUrl());
             default:
                 return getGoogleUserInfo(accessToken)
-                        .toGoogleDomain(member, objectStorageProperties.basicProfileImageUrl());
+                        .toGoogleDomain(member, objectStorageProperties.getBasicProfileImageUrl());
         }
     }
 
@@ -178,7 +180,7 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     public KakaoUserInfoEntity getKakaoUserInfo(String accessToken) {
         KakaoUserInfoEntity userInfo =
-                WebClient.create(properties.kakaoAuthUserUrlHost())
+                WebClient.create(properties.getKakaoAuthUserUrlHost())
                         .get()
                         .uri(
                                 uriBuilder ->
@@ -204,7 +206,7 @@ public class OauthRepositoryImpl implements OauthRepository {
 
     public GoogleUserInfoEntity getGoogleUserInfo(String accessToken) {
         GoogleUserInfoEntity userInfo =
-                WebClient.create(properties.googleUserUrlHost())
+                WebClient.create(properties.getGoogleAuthUserUrlHost())
                         .get()
                         .uri(
                                 uriBuilder ->
