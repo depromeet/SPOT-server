@@ -13,7 +13,7 @@
 
     <appender name="LOKI_APPENDER" class="com.github.loki4j.logback.Loki4jAppender">
         <http>
-            <url>http://${LOKI_URL}:3100/loki/api/v1/push</url>
+            <url>http://${loki.url}:3100/loki/api/v1/push</url>
         </http>
         <format>
             <label>
