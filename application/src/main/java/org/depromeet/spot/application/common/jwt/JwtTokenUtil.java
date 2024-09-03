@@ -59,13 +59,13 @@ public class JwtTokenUtil {
                 .setClaims(createClaims(memberId, memberRole))
                 .setIssuedAt(current)
                 .setExpiration(expiredAt)
-                .signWith(SignatureAlgorithm.HS256, properties.secret().getBytes())
+                .signWith(SignatureAlgorithm.HS256, properties.getSecret().getBytes())
                 .compact();
     }
 
     public Long getIdFromJWT(String token) {
         return Jwts.parser()
-                .setSigningKey(properties.secret().getBytes())
+                .setSigningKey(properties.getSecret().getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .get("memberId", Long.class);
@@ -73,7 +73,7 @@ public class JwtTokenUtil {
 
     public String getRoleFromJWT(String token) {
         return Jwts.parser()
-                .setSigningKey(properties.secret().getBytes())
+                .setSigningKey(properties.getSecret().getBytes())
                 .parseClaimsJws(token)
                 .getBody()
                 .get("role", String.class);
