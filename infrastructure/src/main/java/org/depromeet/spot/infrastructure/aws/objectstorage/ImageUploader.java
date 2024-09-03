@@ -37,7 +37,7 @@ public class ImageUploader implements ImageUploadPort {
         final String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         checkValidExtension(fileExtension, property);
 
-        final String bucketName = objectStorageProperties.bucketName();
+        final String bucketName = objectStorageProperties.getBucketName();
         final String fileName = createFileName(targetName, property.getFolderName(), fileExtension);
         ObjectMetadata objectMetadata = createObjectMetadata(file);
 
