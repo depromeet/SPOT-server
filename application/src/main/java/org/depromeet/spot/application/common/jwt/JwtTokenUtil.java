@@ -122,7 +122,7 @@ public class JwtTokenUtil {
     }
 
     private Key createSignature() {
-        byte[] apiKeySecretBytes = properties.secret().getBytes();
+        byte[] apiKeySecretBytes = properties.getSecret().getBytes();
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
