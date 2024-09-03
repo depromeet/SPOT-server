@@ -36,4 +36,11 @@ public abstract class MemberException extends BusinessException {
             super(MemberErrorCode.INACTIVE_MEMBER);
         }
     }
+
+    public static class MemberConflictException extends MemberException {
+
+        public MemberConflictException() {
+            super(MemberErrorCode.MEMBER_CONFLICT);
+        }
+    }
 }

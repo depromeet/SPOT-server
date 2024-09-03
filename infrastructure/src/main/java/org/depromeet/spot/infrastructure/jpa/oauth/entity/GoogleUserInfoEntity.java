@@ -34,11 +34,11 @@ public class GoogleUserInfoEntity extends BaseEntity {
     @JsonProperty("picture")
     public String profileImageUrl;
 
-    public Member toGoogleDomain(Member member) {
+    public Member toGoogleDomain(Member member, String basicProfileImageUrl) {
         return Member.builder()
                 .email(email)
                 .nickname(member.getNickname())
-                .profileImage(profileImageUrl)
+                .profileImage(basicProfileImageUrl)
                 .snsProvider(SnsProvider.GOOGLE)
                 .idToken(idToken)
                 .role(MemberRole.ROLE_USER)

@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api/v1/levels/info",
         "/kakao",
         "/api/v1/jwts",
+        "/google/callback"
     };
 
     private static final Map<String, Set<String>> AUTH_METHOD_WHITELIST =
@@ -54,6 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     "/api/v1/members/delete",
                     Set.of("DELETE"),
                     "/api/v1/baseball-teams",
+                    Set.of("GET"),
+                    "/api/v2/GOOGLE",
+                    Set.of("GET"),
+                    "/api/v2/KAKAO",
                     Set.of("GET"));
 
     @Override

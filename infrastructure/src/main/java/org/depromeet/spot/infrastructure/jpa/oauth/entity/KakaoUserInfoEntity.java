@@ -15,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @NoArgsConstructor // 역직렬화를 위한 기본 생성자
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -94,13 +96,13 @@ public class KakaoUserInfoEntity extends BaseEntity {
         }
     }
 
-    public Member toKakaoDomain(Member member) {
+    public Member toKakaoDomain(Member member, String basicProfileImageUrl) {
         return Member.builder()
                 .email(kakaoAccount.email)
                 .name(kakaoAccount.name)
                 .nickname(member.getNickname())
                 .phoneNumber(kakaoAccount.phoneNumber)
-                .profileImage(kakaoAccount.profile.profileImageUrl)
+                .profileImage(basicProfileImageUrl)
                 .snsProvider(SnsProvider.KAKAO)
                 .idToken(getId().toString())
                 .role(MemberRole.ROLE_USER)
