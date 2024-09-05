@@ -2,16 +2,22 @@ package org.depromeet.spot.infrastructure.aws.config;
 
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
 import jakarta.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -23,7 +29,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-@Order(Integer.MIN_VALUE)
+@Profile("!test")
 public class AwsSecretsManagerConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(AwsSecretsManagerConfig.class);
@@ -39,18 +45,29 @@ public class AwsSecretsManagerConfig {
     @Value("${aws.region.static}")
     private String region;
 
+    @Value("${aws.secretsmanager.name}")
+    private String secretsManagerName;
+
     public AwsSecretsManagerConfig(ConfigurableEnvironment environment) {
         this.environment = environment;
     }
 
+    @Bean
+    @Primary
+    @ConditionalOnProperty(name = "spring.profiles.active", havingValue = "!test")
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setUrl(environment.getProperty("spring.datasource.url"));
+        dataSource.setUsername(environment.getProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getProperty("spring.datasource.password"));
+        return dataSource;
+    }
+
     @PostConstruct
     public void init() {
-        String activeProfile = environment.getActiveProfiles()[0];
-        //        String secretName = "spot-secrets-" + activeProfile;
-        String secretName = "/secret/spot";
 
         try {
-            String secretString = getSecret(secretName);
+            String secretString = getSecret(secretsManagerName);
             JsonNode secretJson = new ObjectMapper().readTree(secretString);
 
             Properties properties = new Properties();
@@ -61,11 +78,11 @@ public class AwsSecretsManagerConfig {
                                 String key = entry.getKey();
                                 String value = entry.getValue().asText();
                                 String camelCaseKey = toCamelCase(key);
-                                properties.setProperty(key, value);
+                                properties.setProperty(camelCaseKey, value);
 
                                 // 콘솔에 키와 값 출력
-                                //                                logger.info("Loaded secret - Key:
-                                // {}, Value: {}", key, value);
+                                logger.info(
+                                        "Loaded secret - Key:{}, Value: {}", camelCaseKey, value);
                             });
 
             MutablePropertySources propertySources = environment.getPropertySources();
@@ -82,7 +99,7 @@ public class AwsSecretsManagerConfig {
         }
     }
 
-    private String getSecret(String secretName) {
+    public String getSecret(String secretName) {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 
         AWSSecretsManager client =
@@ -100,11 +117,23 @@ public class AwsSecretsManagerConfig {
 
     private String toCamelCase(String input) {
         String[] parts = input.split("\\.");
-        StringBuilder camelCaseString = new StringBuilder(parts[0]);
-        for (int i = 1; i < parts.length; i++) {
-            camelCaseString.append(Character.toUpperCase(parts[i].charAt(0)));
-            camelCaseString.append(parts[i].substring(1).replace("-", ""));
+        if (parts.length == 1) {
+            return input;
         }
-        return camelCaseString.toString();
+
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < parts.length - 1; i++) {
+            result.append(parts[i]).append(".");
+        }
+        String lastPart = parts[parts.length - 1];
+        String[] words = lastPart.split("[-_]");
+        result.append(words[0].toLowerCase());
+        for (int i = 1; i < words.length; i++) {
+            if (!words[i].isEmpty()) {
+                result.append(Character.toUpperCase(words[i].charAt(0)))
+                        .append(words[i].substring(1).toLowerCase());
+            }
+        }
+        return result.toString();
     }
 }
