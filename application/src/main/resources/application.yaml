@@ -9,25 +9,13 @@ spring:
         group:
             local:
                 - jpa
-                - aws-local
-                - jwt
-                - oauth
-                - datasource-local
                 - aws-credentials
             dev:
                 - jpa
-                - aws-dev
-                - jwt
-                - oauth
                 - monitoring
-                - datasource-dev
             prod:
                 - jpa
-                - aws-prod
-                - jwt
-                - oauth
                 - sentry
-                - datasource-prod
     servlet:
         multipart:
             max-file-size: 10MB
@@ -60,11 +48,13 @@ management:
 # secret manager
 aws:
     secretsmanager:
-        name: spot
+        name: spot-local-secrets
 cloud:
     aws:
         region:
             static: ap-northeast-2
+        stack:
+            auto: false
 ---
 spring:
     config:
@@ -72,7 +62,7 @@ spring:
             on-profile: local
 aws:
     secretsmanager:
-        name: spot
+        name: spot-local-secrets
 ---
 spring:
     config:
