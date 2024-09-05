@@ -13,6 +13,7 @@ import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.member.MemberUsecase;
 import org.depromeet.spot.usecase.port.in.member.ReadMemberUsecase;
 import org.depromeet.spot.usecase.port.in.member.level.ReadLevelUsecase;
+import org.depromeet.spot.usecase.port.in.review.DeleteReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.in.team.ReadBaseballTeamUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
@@ -32,6 +33,7 @@ public class MemberService implements MemberUsecase {
     private final ReadMemberUsecase readMemberUsecase;
     private final ReadLevelUsecase readLevelUsecase;
     private final ReadBaseballTeamUsecase readBaseballTeamUsecase;
+    private final DeleteReviewUsecase deleteReviewUsecase;
 
     private final ReadReviewUsecase readReviewUsecase;
 
@@ -106,8 +108,13 @@ public class MemberService implements MemberUsecase {
         return MemberInfo.of(member, baseballTeam, reviewCntToLevelUp);
     }
 
+    @Transactional
     @Override
     public void softDelete(Long memberId) {
+
+        //        멤버 삭제 전 리뷰 삭제가 우선이 되어야함!
+        deleteReviewUsecase.deleteAllReviewOwnedByMemberId(memberId);
+
         memberRepository.updateDeletedAt(memberId, LocalDateTime.now());
     }
 }

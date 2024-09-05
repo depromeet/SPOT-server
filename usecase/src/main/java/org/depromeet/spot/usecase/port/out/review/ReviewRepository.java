@@ -46,6 +46,8 @@ public interface ReviewRepository {
 
     Long softDeleteByIdAndMemberId(Long reviewId, Long memberId);
 
+    void softDeleteAllReviewOwnedByMemberId(Long memberId);
+
     LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode);
 
     Review findLastReviewByMemberId(Long memberId);

@@ -119,6 +119,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public void softDeleteAllReviewOwnedByMemberId(Long memberId) {
+        reviewJpaRepository.softDeleteAllReviewOwnedByMemberId(memberId, LocalDateTime.now());
+    }
+
+    @Override
     public LocationInfo findLocationInfoByStadiumIdAndBlockCode(Long stadiumId, String blockCode) {
         return reviewCustomRepository.findLocationInfoByStadiumIdAndBlockCode(stadiumId, blockCode);
     }
