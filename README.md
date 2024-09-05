@@ -22,8 +22,6 @@
 
 ## 🧑‍💻 팀원 소개
 
----
-
 <div align=center>
 
 |      신은지      |                                                           정준원                                                           |                                                            박민성                                                            |
@@ -37,8 +35,6 @@
 
 ## 🛠️ 백엔드 사용 기술
 
----
-
 <div align=center>
 
 <img src="./images/BE_use_skill.jpeg">
@@ -49,8 +45,6 @@
 
 ## ⚙️ 인프라 & DevOps 사용 기술
 
----
-
 <div align=center>
 
 <img src="./images/infra_use_skill.jpeg">
@@ -60,8 +54,6 @@
 <br/>
 
 ## 📁️ 프로젝트 설계
-
----
 
 ### 🧩 설계 원칙
 
@@ -91,8 +83,6 @@
 
 ### 🖥️ 시스템 아키텍처
 
----
-
 <div align=center>
 
 <img src="./images/시스템아키텍처.jpeg">
@@ -103,23 +93,17 @@
 
 ## 🤔 기술적 의사결정
 
----
-
 - github wiki에 작성하고 링크 걸어주세용
 
 <br/>
 
 ## 📚 트러블슈팅
 
----
-
 - 개인 블로그 등 링크 걸어주세용
 
 <br/>
 
 ## 📬 SPOT! 관련 문의는 아래 연락처로 부탁드려요!
-
----
 
 - 문의사항 | [6jihaeng@gmail.com](mailto:6jihaeng@gmail.com)
 - 인스타그램 | [@spot_baseballview](https://www.instagram.com/spot_baseballview/)
