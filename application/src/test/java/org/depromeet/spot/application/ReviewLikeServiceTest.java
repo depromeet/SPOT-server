@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.depromeet.spot.application.common.jwt.JwtProperties;
+import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -35,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("test")
-@TestPropertySource("classpath:application-test.yml")
+@TestPropertySource({"classpath:application-test.yml"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @SqlGroup({
     @Sql(
@@ -46,6 +49,10 @@ import lombok.extern.slf4j.Slf4j;
             executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
 })
 class ReviewLikeServiceTest {
+
+    @MockBean private JwtTokenUtil jwtTokenUtil;
+
+    @MockBean private JwtProperties jwtProperties;
 
     @Autowired private ReviewLikeService reviewLikeService;
 
