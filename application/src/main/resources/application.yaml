@@ -5,17 +5,19 @@ server:
 spring:
     # 서브모듈 profile
     profiles:
-        active: local
+        active: dev
         group:
             local:
                 - jpa
                 - aws-credentials
+                - mixpanel
             dev:
                 - jpa
-                - monitoring
+                - mixpanel
             prod:
                 - jpa
                 - sentry
+                - mixpanel
     servlet:
         multipart:
             max-file-size: 10MB

@@ -33,7 +33,8 @@ public class SecurityConfig {
         "/api/v1/members/**",
         "/actuator/**",
         "/login/oauth2/code/google/**",
-        "/google/**"
+        "/google/**",
+        "/trackEvent"
     };
 
     @Bean

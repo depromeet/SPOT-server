@@ -131,7 +131,7 @@ public class ReadReviewController {
             @Parameter(hidden = true) Long memberId,
             @PathVariable("reviewId") @NotNull @Parameter(description = "리뷰 PK", required = true)
                     Long reviewId) {
-        ReadReviewResult readReviewResult = readReviewUsecase.findReviewById(reviewId);
+        ReadReviewResult readReviewResult = readReviewUsecase.findReviewById(reviewId, memberId);
         return BaseReviewResponse.from(readReviewResult.review());
     }
 }

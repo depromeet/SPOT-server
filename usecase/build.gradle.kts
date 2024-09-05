@@ -8,6 +8,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:_") {
         because("@Transactional을 위해 추가")
     }
+
+    // Mixpanel
+    implementation("com.mixpanel:mixpanel-java:_")
+
 }
 
 tasks.bootJar { enabled = false }
