@@ -1,4 +1,3 @@
 sentry:
-    dsn: ${SENTRY_DSN}
     enable-tracing: true
     environment: prod
