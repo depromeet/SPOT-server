@@ -49,6 +49,8 @@ jobs:
                           -p 3100:3100 \
                           -e SPRING_PROFILES_ACTIVE=prod \
                           -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
+                          -e SPRING_CREDENTIALS_ACCESS_KEY=${{secrets.AWS_S3_ACCESS_KEY}} \
+                          -e SPRING_CREDENTIALS_SECRET_KEY=${{secrets.AWS_S3_SECRET_KEY}} \
                           -e TZ=Asia/Seoul \
                           ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:prod-${{ github.event.inputs.tag }}
                         docker system prune -af
