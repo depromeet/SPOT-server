@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.depromeet.spot.application.common.jwt.JwtProperties;
-import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
@@ -50,8 +49,8 @@ import lombok.extern.slf4j.Slf4j;
 })
 class ReviewLikeServiceTest {
 
-    @MockBean private JwtTokenUtil jwtTokenUtil;
-
+    //    @MockBean private JwtTokenUtil jwtTokenUtil;
+    //
     @MockBean private JwtProperties jwtProperties;
 
     @Autowired private ReviewLikeService reviewLikeService;
