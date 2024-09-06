@@ -5,6 +5,9 @@ import jakarta.validation.constraints.Positive;
 
 import org.depromeet.spot.application.common.annotation.CurrentMember;
 import org.depromeet.spot.usecase.port.in.review.like.ReviewLikeUsecase;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent.MixpanelEventName;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/reviews")
 public class ReviewLikeController {
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final ReviewLikeUsecase reviewLikeUsecase;
 
     @CurrentMember
@@ -32,6 +37,12 @@ public class ReviewLikeController {
     public void toggleLike(
             @PathVariable @Positive @NotNull final Long reviewId,
             @Parameter(hidden = true) Long memberId) {
-        reviewLikeUsecase.toggleLike(memberId, reviewId);
+        boolean result = reviewLikeUsecase.toggleLike(memberId, reviewId);
+        if (result) {
+            // 리뷰 공감 추이 이벤트 발생
+            applicationEventPublisher.publishEvent(
+                    new MixpanelEvent(
+                            MixpanelEventName.REVIEW_LIKE_COUNT, String.valueOf(memberId)));
+        }
     }
 }

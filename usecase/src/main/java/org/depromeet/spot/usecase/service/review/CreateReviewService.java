@@ -9,13 +9,10 @@ import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
-import org.depromeet.spot.usecase.service.event.MixpanelEvent;
-import org.depromeet.spot.usecase.service.event.MixpanelEvent.MixpanelEventName;
 import org.depromeet.spot.usecase.service.member.processor.MemberLevelProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewCreationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewImageProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewKeywordProcessor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class CreateReviewService implements CreateReviewUsecase {
-
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
@@ -50,10 +45,6 @@ public class CreateReviewService implements CreateReviewUsecase {
         savedReview.setKeywordMap(keywordMap);
 
         Member levelUpdateMember = memberLevelProcessor.calculateAndUpdateMemberLevel(member);
-
-        // 믹스패널 이벤트(후기 등록 완료) 호출
-        applicationEventPublisher.publishEvent(
-                new MixpanelEvent(MixpanelEventName.REVIEW_REGISTER, String.valueOf(memberId)));
 
         return new CreateReviewResult(savedReview, levelUpdateMember, review.getSeat());
     }

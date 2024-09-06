@@ -22,11 +22,8 @@ import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
-import org.depromeet.spot.usecase.service.event.MixpanelEvent;
-import org.depromeet.spot.usecase.service.event.MixpanelEvent.MixpanelEventName;
 import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +35,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReadReviewService implements ReadReviewUsecase {
-
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final ReviewRepository reviewRepository;
     private final ReviewImageRepository reviewImageRepository;
@@ -193,10 +188,6 @@ public class ReadReviewService implements ReadReviewUsecase {
     public ReadReviewResult findReviewById(Long reviewId, Long memberId) {
         Review review = reviewRepository.findById(reviewId);
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
-
-        // 믹스패널 이벤트(조회수) 발생
-        applicationEventPublisher.publishEvent(
-                new MixpanelEvent(MixpanelEventName.REVIEW_OPEN_COUNT, String.valueOf(memberId)));
 
         return ReadReviewResult.builder().review(reviewWithKeywords).build();
     }
