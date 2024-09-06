@@ -2,18 +2,19 @@ package org.depromeet.spot.usecase.service.review.scrap;
 
 import java.util.List;
 
-import org.depromeet.spot.domain.mixpanel.MixpanelEvent;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.scrap.ReviewScrap;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.page.PageCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
-import org.depromeet.spot.usecase.port.out.mixpanel.MixpanelRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent.MixpanelEventName;
 import org.depromeet.spot.usecase.service.review.ReadReviewService;
 import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +25,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewScrapService implements ReviewScrapUsecase {
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final ReadReviewUsecase readReviewUsecase;
     private final UpdateReviewUsecase updateReviewUsecase;
     private final ReviewScrapRepository scrapRepository;
     private final ReadReviewService readReviewService;
     private final ReadReviewProcessor readReviewProcessor;
     private final PaginationProcessor paginationProcessor;
-
-    private final MixpanelRepository mixpanelRepository;
 
     @Override
     public MyScrapListResult findMyScrappedReviews(
@@ -92,7 +93,8 @@ public class ReviewScrapService implements ReviewScrapUsecase {
         addScrap(memberId, reviewId, review);
 
         // 믹스패널 이벤트(스크랩 수) 발생
-        mixpanelRepository.eventTrack(MixpanelEvent.REVIEW_SCRAP_COUNT, String.valueOf(memberId));
+        applicationEventPublisher.publishEvent(
+                new MixpanelEvent(MixpanelEventName.REVIEW_SCRAP_COUNT, String.valueOf(memberId)));
 
         return true;
     }

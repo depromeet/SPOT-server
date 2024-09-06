@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.domain.mixpanel.MixpanelEvent;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
@@ -16,7 +15,6 @@ import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
 import org.depromeet.spot.domain.team.BaseballTeam;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
-import org.depromeet.spot.usecase.port.out.mixpanel.MixpanelRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
@@ -24,8 +22,11 @@ import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent.MixpanelEventName;
 import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class ReadReviewService implements ReadReviewUsecase {
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final ReviewRepository reviewRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final BlockTopKeywordRepository blockTopKeywordRepository;
@@ -48,7 +51,6 @@ public class ReadReviewService implements ReadReviewUsecase {
     private final ReviewScrapRepository reviewScrapRepository;
     private final ReadReviewProcessor readReviewProcessor;
     private final PaginationProcessor paginationProcessor;
-    private final MixpanelRepository mixpanelRepository;
 
     private static final int TOP_KEYWORDS_LIMIT = 5;
     private static final int TOP_IMAGES_LIMIT = 5;
@@ -193,7 +195,8 @@ public class ReadReviewService implements ReadReviewUsecase {
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
 
         // 믹스패널 이벤트(조회수) 발생
-        mixpanelRepository.eventTrack(MixpanelEvent.REVIEW_OPEN_COUNT, String.valueOf(memberId));
+        applicationEventPublisher.publishEvent(
+                new MixpanelEvent(MixpanelEventName.REVIEW_OPEN_COUNT, String.valueOf(memberId)));
 
         return ReadReviewResult.builder().review(reviewWithKeywords).build();
     }
