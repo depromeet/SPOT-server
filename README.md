@@ -93,7 +93,7 @@
 
 ## 🤔 기술적 의사결정
 
-- SPOT! 서버 팀의 무한 스크롤링 구현방법 [>> Link](https://giant-minsung.tech/spot-pagination)
+- SPOT! 서버 팀의 무한 스크롤링 구현방법 [>> Link](https://github.com/depromeet/SPOT-server/wiki/%EB%AC%B4%ED%95%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4%EB%A7%81%EA%B3%BC-%ED%8E%98%EC%9D%B4%EC%A7%80%EB%84%A4%EC%9D%B4%EC%85%98)
 
 <br/>
 
