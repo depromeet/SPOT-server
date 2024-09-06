@@ -19,7 +19,6 @@ public class MixpanelEventListener {
     @Async
     @EventListener
     public void eventTrack(MixpanelEvent mixpanelEvent) {
-        log.info("이벤트 실행 : {}", mixpanelEvent.getMixpanelEventName());
         mixpanelRepository.eventTrack(mixpanelEvent);
     }
 }

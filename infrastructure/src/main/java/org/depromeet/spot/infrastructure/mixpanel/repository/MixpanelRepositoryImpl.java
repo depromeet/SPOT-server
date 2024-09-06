@@ -22,13 +22,6 @@ public class MixpanelRepositoryImpl implements MixpanelRepository {
 
     private final MixpanelProperties mixpanelProperties;
 
-    // TODO : 믹스 패널 코드를 비즈니스 로직과 분리하기
-    //    1. 동시성 제어는 할 필요가 없는가?
-    //        -> 어차피 믹스 패널에서 알아서 동시성에 대한 처리를 해 놨을 것이기 때문에 필요 없지 않은가?
-    //    2. 굳이 실시간 처리가 필요한가?
-    //        -> 메시지큐를 사용하거나, Redis 등에 저장해서 한 번에 처리하는 방법도 괜찮지 않을까?
-    //    3. 이벤트 요청에 실패했을 경우에는 어떻게 처리할 것인가?
-
     // mixpanelEvent는 eventName(이 단위로 이벤트가 묶임)
     // distinctId는 사용자를 구분하는 데 사용됨.
     @Override
