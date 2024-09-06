@@ -99,7 +99,8 @@
 
 ## 📚 트러블슈팅
 
-- 개인 블로그 등 링크 걸어주세용
+- Nginx http 301 redirection 설정 버그 픽스 [Issue #118](https://github.com/depromeet/SPOT-server/issues/118)
+- M1 ARM Mac에서 Embedded Redis 실행 오류 버그 픽스 [Issue #173](https://github.com/depromeet/SPOT-server/issues/173)
 
 <br/>
 
