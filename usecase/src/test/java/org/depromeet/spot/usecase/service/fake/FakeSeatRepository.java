@@ -69,12 +69,12 @@ public class FakeSeatRepository implements SeatRepository {
     }
 
     @Override
-    public Seat findByIdWith(Long seatId) {
+    public Seat findByBlockIdAndSeatNumber(Long seatId) {
         return getById(seatId).orElseThrow(SeatNotFoundException::new);
     }
 
     @Override
-    public Seat findByIdWith(Long blockId, Integer seatNumber) {
+    public Seat findByBlockIdAndSeatNumber(Long blockId, Integer seatNumber) {
         return getByBlockAndSeatNum(seatNumber, blockId).orElseThrow(SeatNotFoundException::new);
     }
 

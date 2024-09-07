@@ -28,7 +28,7 @@ public class ReviewDataProcessorImpl implements ReviewDataProcessor {
         if (seatNumber == null) {
             return null;
         }
-        return seatRepository.findByIdWith(blockId, seatNumber);
+        return seatRepository.findByBlockIdAndSeatNumber(blockId, seatNumber);
     }
 
     @Override

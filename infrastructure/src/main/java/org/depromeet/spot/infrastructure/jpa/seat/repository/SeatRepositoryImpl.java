@@ -34,14 +34,14 @@ public class SeatRepositoryImpl implements SeatRepository {
     }
 
     @Override
-    public Seat findByIdWith(Long seatId) {
+    public Seat findByBlockIdAndSeatNumber(Long seatId) {
         SeatEntity entity =
                 seatJpaRepository.findByIdWith(seatId).orElseThrow(SeatNotFoundException::new);
         return entity.toDomain();
     }
 
     @Override
-    public Seat findByIdWith(Long blockId, Integer seatNumber) {
+    public Seat findByBlockIdAndSeatNumber(Long blockId, Integer seatNumber) {
         SeatEntity entity =
                 seatJpaRepository
                         .findByIdWith(blockId, seatNumber)
