@@ -56,19 +56,24 @@ management:
         web:
             exposure:
                 include: "*"
+
+
 ---
 spring:
     config:
+        import: 'aws-secretsmanager:spot-local-secrets'
         activate:
             on-profile: local
 ---
 spring:
     config:
+        import: 'aws-secretsmanager:spot-dev-secrets'
         activate:
             on-profile: dev
 ---
 spring:
     config:
+        import: 'aws-secretsmanager:spot-prod-secrets'
         activate:
             on-profile: prod
 
