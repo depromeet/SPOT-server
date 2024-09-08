@@ -1,0 +1,2 @@
+loki:
+    url: ${LOKI_URL}
