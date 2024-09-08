@@ -31,7 +31,13 @@ public class BlockRowRepositoryImpl implements BlockRowRepository {
     @Override
     public BlockRow findBy(long stadiumId, String blockCode, int rowNumber) {
         BlockRowEntity entity =
-                blockRowJpaRepository.findByBlockAndNumber(stadiumId, blockCode, rowNumber);
+                blockRowJpaRepository.findByCodeAndNumber(stadiumId, blockCode, rowNumber);
+        return entity.toDomain();
+    }
+
+    @Override
+    public BlockRow findBy(Long blockId, Integer rowNumber) {
+        BlockRowEntity entity = blockRowJpaRepository.findByBlockIdAndNumber(blockId, rowNumber);
         return entity.toDomain();
     }
 }
