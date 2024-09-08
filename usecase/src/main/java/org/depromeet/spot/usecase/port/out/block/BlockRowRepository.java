@@ -11,4 +11,6 @@ public interface BlockRowRepository {
     List<BlockRow> findAllByBlock(Long blockId);
 
     BlockRow findBy(long stadiumId, String blockCode, int rowNumber);
+
+    BlockRow findBy(Long blockId, Integer rowNumber);
 }

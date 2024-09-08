@@ -3,6 +3,8 @@ package org.depromeet.spot.usecase.service.review.processor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.keyword.Keyword;
@@ -53,6 +55,32 @@ public class ReviewKeywordProcessor {
         for (ReviewKeyword reviewKeyword : review.getKeywords()) {
             blockTopKeywordRepository.updateKeywordCount(
                     review.getBlock().getId(), reviewKeyword.getKeywordId());
+        }
+    }
+
+    public void updateBlockTopKeywords(Review oldReview, Review newReview) {
+        Set<Long> oldKeywordIds =
+                oldReview.getKeywords().stream()
+                        .map(ReviewKeyword::getKeywordId)
+                        .collect(Collectors.toSet());
+        Set<Long> newKeywordIds =
+                newReview.getKeywords().stream()
+                        .map(ReviewKeyword::getKeywordId)
+                        .collect(Collectors.toSet());
+
+        List<Long> decrementIds =
+                oldKeywordIds.stream()
+                        .filter(id -> !newKeywordIds.contains(id))
+                        .collect(Collectors.toList());
+
+        List<Long> incrementIds =
+                newKeywordIds.stream()
+                        .filter(id -> !oldKeywordIds.contains(id))
+                        .collect(Collectors.toList());
+
+        if (!decrementIds.isEmpty() || !incrementIds.isEmpty()) {
+            blockTopKeywordRepository.batchUpdateCounts(
+                    newReview.getBlock().getId(), incrementIds, decrementIds);
         }
     }
 }

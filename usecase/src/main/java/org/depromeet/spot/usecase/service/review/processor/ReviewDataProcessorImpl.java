@@ -2,9 +2,12 @@ package org.depromeet.spot.usecase.service.review.processor;
 
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
+import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.ReviewLocationInfo;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
+import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase.UpdateReviewCommand;
 import org.depromeet.spot.usecase.port.out.block.BlockRepository;
 import org.depromeet.spot.usecase.port.out.block.BlockRowRepository;
 import org.depromeet.spot.usecase.port.out.seat.SeatRepository;
@@ -28,7 +31,7 @@ public class ReviewDataProcessorImpl implements ReviewDataProcessor {
         if (seatNumber == null) {
             return null;
         }
-        return seatRepository.findByIdWith(blockId, seatNumber);
+        return seatRepository.findByBlockIdAndSeatNumber(blockId, seatNumber);
     }
 
     @Override
@@ -67,6 +70,17 @@ public class ReviewDataProcessorImpl implements ReviewDataProcessor {
     }
 
     @Override
+    public BlockRow getBlockRow(Long blockId, Integer rowNumber) {
+        if (rowNumber == null) {
+            return null;
+        }
+        return blockRowRepository.findBy(blockId, rowNumber);
+        // TODO: 예외처리 어떻게 할 건지 논의
+        //            .orElseThrow(() -> new IllegalArgumentException("BlockRow not found with
+        // stadiumId: " + stadiumId + ", blockCode: " + blockCode + ", rowNumber: " + rowNumber));
+    }
+
+    @Override
     public Seat getSeatWithDetails(Long blockId, Integer seatNumber) {
         Seat seat = getSeat(blockId, seatNumber);
         if (seat == null) {
@@ -86,5 +100,64 @@ public class ReviewDataProcessorImpl implements ReviewDataProcessor {
                 .row(blockRow)
                 .seatNumber(seat.getSeatNumber())
                 .build();
+    }
+
+    @Override
+    public ReviewLocationInfo getUpdatedLocationInfo(
+            Review existingReview, UpdateReviewCommand command) {
+        Block block = existingReview.getBlock();
+        Section section = existingReview.getSection();
+        BlockRow row = existingReview.getRow();
+        Seat seat = existingReview.getSeat();
+
+        boolean blockChanged = !existingReview.getBlock().getId().equals(command.blockId());
+        boolean rowChanged = isRowChanged(existingReview.getRow(), command.rowNumber());
+        boolean seatChanged = isSeatChanged(existingReview.getSeat(), command.seatNumber());
+
+        if (command.seatNumber() != null) {
+            if (seatChanged || blockChanged) {
+                seat = getSeatWithDetails(command.blockId(), command.seatNumber());
+                block = seat.getBlock();
+                section = seat.getSection();
+                row = seat.getRow();
+            }
+        } else {
+            if (rowChanged || blockChanged) {
+                if (command.rowNumber() != null) {
+                    row = getBlockRow(command.blockId(), command.rowNumber());
+                    block = row.getBlock();
+                } else {
+                    row = null;
+                    if (blockChanged) {
+                        block = getBlock(command.blockId());
+                    }
+                }
+                section = getSection(block.getSectionId());
+            }
+            seat = null;
+        }
+
+        return new ReviewLocationInfo(section, block, row, seat);
+    }
+
+    private boolean isRowChanged(BlockRow existingRow, Integer newRowNumber) {
+        return (newRowNumber != null
+                        && (existingRow == null || !existingRow.getNumber().equals(newRowNumber)))
+                || (newRowNumber == null && existingRow != null);
+    }
+
+    private boolean isSeatChanged(Seat existingSeat, Integer newSeatNumber) {
+        return (newSeatNumber != null
+                        && (existingSeat == null
+                                || !existingSeat.getSeatNumber().equals(newSeatNumber)))
+                || (newSeatNumber == null && existingSeat != null);
+    }
+
+    @Override
+    public Stadium getStadiumIfChanged(Review existingReview, Long newStadiumId) {
+        if (!existingReview.getStadium().getId().equals(newStadiumId)) {
+            return stadiumRepository.findById(newStadiumId);
+        }
+        return existingReview.getStadium();
     }
 }

@@ -10,27 +10,34 @@ import jakarta.validation.constraints.Size;
 
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewDateTimeFormatException;
 import org.depromeet.spot.common.exception.review.ReviewException.InvalidReviewKeywordsException;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase.UpdateReviewCommand;
 
 public record UpdateReviewRequest(
+        @NotNull Long stadiumId,
         @NotNull Long blockId,
-        @NotNull Integer seatNumber,
+        Integer rowNumber,
+        Integer seatNumber,
         @Size(min = 1, max = 3) List<String> images,
         List<String> good,
         List<String> bad,
         String content,
-        @NotNull String dateTime) {
+        @NotNull String dateTime,
+        ReviewType reviewType) {
 
     public UpdateReviewCommand toCommand() {
         validateGoodAndBad();
         return UpdateReviewCommand.builder()
+                .stadiumId(stadiumId)
                 .blockId(blockId)
+                .rowNumber(rowNumber)
                 .seatNumber(seatNumber)
                 .images(images)
                 .good(good)
                 .bad(bad)
                 .content(content)
                 .dateTime(toLocalDateTime(dateTime))
+                .reviewType(reviewType)
                 .build();
     }
 
