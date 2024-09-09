@@ -13,6 +13,7 @@ public enum ImageExtension {
     JPG("jpg"),
     JPEG("jpeg"),
     PNG("png"),
+    HEIC("heic"),
     ;
 
     private final String value;
