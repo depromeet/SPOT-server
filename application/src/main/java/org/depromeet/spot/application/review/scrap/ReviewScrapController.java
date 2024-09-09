@@ -10,6 +10,9 @@ import org.depromeet.spot.application.review.dto.request.scrap.MyScrapRequest;
 import org.depromeet.spot.application.review.dto.response.scrap.MyScrapListResponse;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase.MyScrapListResult;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent;
+import org.depromeet.spot.usecase.service.event.MixpanelEvent.MixpanelEventName;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/reviews")
 public class ReviewScrapController {
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final ReviewScrapUsecase reviewScrapUsecase;
 
     @CurrentMember
@@ -38,7 +43,13 @@ public class ReviewScrapController {
     public boolean toggleScrap(
             @PathVariable @Positive @NotNull final Long reviewId,
             @Parameter(hidden = true) Long memberId) {
-        return reviewScrapUsecase.toggleScrap(memberId, reviewId);
+        boolean result = reviewScrapUsecase.toggleScrap(memberId, reviewId);
+
+        // 믹스패널 이벤트(스크랩 수) 발생
+        applicationEventPublisher.publishEvent(
+                new MixpanelEvent(MixpanelEventName.REVIEW_SCRAP_COUNT, String.valueOf(memberId)));
+
+        return result;
     }
 
     @CurrentMember

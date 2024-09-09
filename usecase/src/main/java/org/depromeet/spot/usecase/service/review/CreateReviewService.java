@@ -3,12 +3,10 @@ package org.depromeet.spot.usecase.service.review;
 import java.util.Map;
 
 import org.depromeet.spot.domain.member.Member;
-import org.depromeet.spot.domain.mixpanel.MixpanelEvent;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase;
 import org.depromeet.spot.usecase.port.out.member.MemberRepository;
-import org.depromeet.spot.usecase.port.out.mixpanel.MixpanelRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
 import org.depromeet.spot.usecase.service.member.processor.MemberLevelProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewCreationProcessor;
@@ -31,7 +29,6 @@ public class CreateReviewService implements CreateReviewUsecase {
     private final ReviewImageProcessor reviewImageProcessor;
     private final ReviewKeywordProcessor reviewKeywordProcessor;
     private final MemberLevelProcessor memberLevelProcessor;
-    private final MixpanelRepository mixpanelRepository;
 
     @Override
     @Transactional
@@ -48,9 +45,6 @@ public class CreateReviewService implements CreateReviewUsecase {
         savedReview.setKeywordMap(keywordMap);
 
         Member levelUpdateMember = memberLevelProcessor.calculateAndUpdateMemberLevel(member);
-
-        // 믹스패널 이벤트(후기 등록 완료) 호출
-        mixpanelRepository.eventTrack(MixpanelEvent.REVIEW_REGISTER, String.valueOf(memberId));
 
         return new CreateReviewResult(savedReview, levelUpdateMember, review.getSeat());
     }

@@ -18,7 +18,6 @@ import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.in.review.page.PageCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase.MyScrapCommand;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase.MyScrapListResult;
-import org.depromeet.spot.usecase.port.out.mixpanel.MixpanelRepository;
 import org.depromeet.spot.usecase.service.fake.FakeReviewScrapRepository;
 import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
@@ -38,7 +37,6 @@ class ReviewScrapServiceTest {
     @Mock private ReadReviewService readReviewService;
     @Mock private ReadReviewProcessor readReviewProcessor;
     @Mock private PaginationProcessor paginationProcessor;
-    @Mock private MixpanelRepository mixpanelRepository;
 
     @BeforeEach
     void init() {
@@ -51,8 +49,7 @@ class ReviewScrapServiceTest {
                         fakeReviewScrapRepository,
                         readReviewService,
                         readReviewProcessor,
-                        paginationProcessor,
-                        mixpanelRepository);
+                        paginationProcessor);
     }
 
     @Test
