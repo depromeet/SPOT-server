@@ -7,6 +7,7 @@ import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
+import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewCreationProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewDataProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewKeywordProcessor;
@@ -28,6 +29,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
     private final ReviewDataProcessor reviewDataProcessor;
     private final ReviewKeywordProcessor reviewKeywordProcessor;
     private final ReviewCreationProcessor reviewCreationProcessor;
+    private final ReadReviewProcessor readReviewProcessor;
 
     public UpdateReviewResult updateReview(
             Long memberId, Long reviewId, UpdateReviewCommand command) {
@@ -48,6 +50,9 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         Review savedReview = reviewRepository.save(updatedReview);
         reviewKeywordProcessor.updateBlockTopKeywords(existingReview, savedReview);
         savedReview.setKeywordMap(keywordMap);
+
+        // 유저의 리뷰 좋아요, 스크랩 여부
+        readReviewProcessor.setLikedAndScrappedStatus(savedReview, memberId);
 
         return new UpdateReviewResult(savedReview);
     }
