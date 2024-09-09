@@ -318,20 +318,4 @@ public class ReadReviewService implements ReadReviewUsecase {
 
         return mappedReview;
     }
-
-    private void setLikedAndScrappedStatus(List<Review> reviews, Long memberId) {
-        List<Long> reviewIds = reviews.stream().map(Review::getId).collect(Collectors.toList());
-
-        Map<Long, Boolean> likedMap =
-                reviewLikeRepository.existsByMemberIdAndReviewIds(memberId, reviewIds);
-        Map<Long, Boolean> scrappedMap =
-                reviewScrapRepository.existsByMemberIdAndReviewIds(memberId, reviewIds);
-
-        reviews.forEach(
-                review -> {
-                    boolean isLiked = likedMap.getOrDefault(review.getId(), false);
-                    boolean isScrapped = scrappedMap.getOrDefault(review.getId(), false);
-                    review.setLikedAndScrapped(isLiked, isScrapped);
-                });
-    }
 }
