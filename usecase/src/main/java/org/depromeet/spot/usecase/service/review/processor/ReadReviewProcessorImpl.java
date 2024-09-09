@@ -33,4 +33,11 @@ public class ReadReviewProcessorImpl implements ReadReviewProcessor {
                     review.setLikedAndScrapped(isLiked, isScrapped);
                 });
     }
+
+    @Override
+    public void setLikedAndScrappedStatus(Review review, Long memberId) {
+        boolean isLiked = reviewLikeRepository.existsBy(memberId, review.getId());
+        boolean isScrapped = reviewScrapRepository.existsBy(memberId, review.getId());
+        review.setLikedAndScrapped(isLiked, isScrapped);
+    }
 }
