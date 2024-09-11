@@ -42,6 +42,12 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
             @Param("memberId") Long memberId,
             @Param("deletedAt") LocalDateTime deletedAt);
 
+    @Modifying
+    @Query(
+            "UPDATE ReviewEntity r SET r.deletedAt = :deletedAt WHERE r.member.id = :memberId AND r.deletedAt IS NULL")
+    void softDeleteAllReviewOwnedByMemberId(
+            @Param("memberId") Long memberId, @Param("deletedAt") LocalDateTime deletedAt);
+
     @Query(
             "SELECT r FROM ReviewEntity r WHERE r.member.id = :memberId "
                     + "AND r.deletedAt IS NULL "
