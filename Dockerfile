@@ -12,8 +12,8 @@ EXPOSE 8080
 
 # JVM 튜닝 옵션 추가
 ENTRYPOINT ["java", \
-            "-Xms512m", \
-            "-Xmx512m", \
+            "-Xms2048m", \
+            "-Xmx2048m", \
             "-Xminf0.4", \
             "-Xmaxf0.7", \
             "-jar", "app.jar"]
