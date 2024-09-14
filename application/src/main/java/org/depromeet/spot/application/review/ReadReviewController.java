@@ -22,9 +22,6 @@ import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockReviewLi
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyRecentReviewResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyReviewListResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.ReadReviewResult;
-import org.depromeet.spot.usecase.service.event.MixpanelEvent;
-import org.depromeet.spot.usecase.service.event.MixpanelEvent.MixpanelEventName;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1")
 public class ReadReviewController {
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+    //    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final ReadReviewUsecase readReviewUsecase;
 
@@ -138,9 +135,10 @@ public class ReadReviewController {
                     Long reviewId) {
         ReadReviewResult readReviewResult = readReviewUsecase.findReviewById(reviewId, memberId);
 
-        // 믹스패널 이벤트(조회수) 발생
-        applicationEventPublisher.publishEvent(
-                new MixpanelEvent(MixpanelEventName.REVIEW_OPEN_COUNT, String.valueOf(memberId)));
+        //        // 믹스패널 이벤트(조회수) 발생
+        //        applicationEventPublisher.publishEvent(
+        //                new MixpanelEvent(MixpanelEventName.REVIEW_OPEN_COUNT,
+        // String.valueOf(memberId)));
 
         return BaseReviewResponse.from(readReviewResult.review());
     }
