@@ -5,7 +5,7 @@ spring:
         password: ${DB_PASSWORD}
         driver-class-name: com.mysql.cj.jdbc.Driver
         hikari:
-            maximum-pool-size: 300
+            maximum-pool-size: 50
 
     jpa:
         database: mysql
