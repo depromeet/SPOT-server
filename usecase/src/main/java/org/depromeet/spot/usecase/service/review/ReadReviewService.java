@@ -25,8 +25,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-// @Transactional(readOnly = true) // viewsCount 추가로 인해 readOnly가 안됨.
-@Transactional
+@Transactional(readOnly = true) // viewsCount 추가로 인해 readOnly가 안됨.
+// @Transactional
 public class ReadReviewService implements ReadReviewUsecase {
 
     private final ReviewRepository reviewRepository;

@@ -20,6 +20,7 @@ import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.BlockReviewLi
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyRecentReviewResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.MyReviewListResult;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.ReadReviewResult;
+import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,8 @@ import lombok.RequiredArgsConstructor;
 public class ReadReviewController {
 
     private final ReadReviewUsecase readReviewUsecase;
+
+    private final UpdateReviewUsecase updateReviewUsecase;
 
     @CurrentMember
     @ResponseStatus(HttpStatus.OK)
@@ -116,5 +119,14 @@ public class ReadReviewController {
                     Long reviewId) {
         ReadReviewResult readReviewResult = readReviewUsecase.findReviewById(reviewId);
         return BaseReviewResponse.from(readReviewResult.review());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/reviews/{reviewId}")
+    @Operation(summary = "리뷰 id(pk)로 특정 리뷰의 조회수를 증가시킨다.")
+    public void updateReviewReadCountByReviewId(
+            @PathVariable("reviewId") @NotNull @Parameter(description = "리뷰 PK", required = true)
+                    Long reviewId) {
+        updateReviewUsecase.updateviewCount(reviewId);
     }
 }

@@ -73,6 +73,13 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         reviewRepository.updateScrapsCount(review.getId(), review.getScrapsCount());
     }
 
+    @Override
+    public void updateviewCount(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId);
+        review.getViewsCount();
+        reviewRepository.updateViewCount(reviewId, review.getViewsCount());
+    }
+
     private Review createUpdatedReview(
             Long reviewId,
             Member member,

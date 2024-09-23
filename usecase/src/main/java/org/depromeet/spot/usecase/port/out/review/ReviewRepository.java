@@ -18,6 +18,8 @@ public interface ReviewRepository {
 
     long countByUserId(Long userId);
 
+    void updateViewCount(Long reviewId, Long viewCount);
+
     List<Review> findByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,

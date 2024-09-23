@@ -56,6 +56,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public void updateViewCount(Long reviewId, Long viewCount) {
+        reviewJpaRepository.updateViewsCount(reviewId, viewCount);
+    }
+
+    @Override
     public List<Review> findByStadiumIdAndBlockCode(
             Long stadiumId,
             String blockCode,
