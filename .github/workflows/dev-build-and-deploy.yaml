@@ -24,6 +24,13 @@ jobs:
                     java-version: "17"
                     distribution: "corretto"
 
+            -   name: Configure AWS credentials
+                uses: aws-actions/configure-aws-credentials@v1
+                with:
+                    aws-access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY }}
+                    aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_KEY }}
+                    aws-region: ap-northeast-2
+
             -   name: Cache Gradle
                 uses: actions/cache@v3
                 with:
@@ -111,24 +118,13 @@ jobs:
                           -p 9292:9292 \
                           -p 3100:3100 \
                           -e SPRING_PROFILES_ACTIVE=dev \
-                              -e AWS_REDIS_HOST=${{ secrets.DEV_REDIS_HOST }} \
-                              -e AWS_REDIS_PORT=${{ secrets.DEV_REDIS_PORT }}  \
-                          -e SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }} \
-                          -e SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
-                          -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
-                          -e SPRING_JWT_SECRET=${{ secrets.JWT_SECRET }} \
-                          -e OAUTH_CLIENTID=${{ secrets.KAKAO_CLIENT_ID }} \
-                          -e OAUTH_KAUTHTOKENURLHOST=${{ secrets.KAUTH_TOKEN_URL_HOST }} \
-                          -e OAUTH_KAUTHUSERURLHOST=${{ secrets.KAUTH_USER_URL_HOST }} \
+                          -e SPRING_SERVLET_MULTIPART_MAX-FILE-SIZE=30MB \
+                          -e SPRING_SERVLET_MULTIPART_MAX-REQUEST-SIZE=30MB \
                           -e SPRING_JPA_HIBERNATE_DDL_AUTO=validate \
-                          -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
-                          -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \
-                          -e AWS_S3_BUCKET_NAME=${{ secrets.DEV_AWS_S3_BUCKET_NAME }} \
                           -e TZ=Asia/Seoul \
-                          -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
                           -e SENTRY_ENABLE_TRACING=true \
                           -e SENTRY_ENVIRONMENT=prod \
-                          -e LOKI_URL=${{ secrets.LOKI_SERVER_URL }} \
+                          -e LOKI_URL=${{secrets.LOKI_SERVER_URL}} \
                           ${{ secrets.DOCKERHUB_USERNAME }}/spot-server:dev-${{ github.sha }}
                         docker system prune -af
 

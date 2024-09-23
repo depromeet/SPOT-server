@@ -1,0 +1,9 @@
+aws:
+    s3:
+        accessKey: ${AWS_ACCESS_KEY}
+        secretKey: ${AWS_SECRET_KEY}
+        bucketName: ${S3_BUCKET_NAME}
+        basicProfileImageUrl: ${S3_BASIC_PROFILE_IMAGE_URL}
+    redis:
+        host: ${REDIS_HOST}
+        port: ${REDIS_PORT}

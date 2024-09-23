@@ -5,26 +5,29 @@ server:
 spring:
     # 서브모듈 profile
     profiles:
-        active: dev
+        active: local
         group:
             local:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
+                - mixpanel
             dev:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
                 - monitoring
+                - mixpanel
             prod:
                 - jpa
                 - aws
                 - jwt
-                - kakao
+                - oauth
                 - sentry
                 - monitoring
+                - mixpanel
     servlet:
         multipart:
             max-file-size: 10MB
@@ -53,19 +56,24 @@ management:
         web:
             exposure:
                 include: "*"
+
+
 ---
 spring:
     config:
+        import: 'aws-secretsmanager:spot-local-secrets'
         activate:
             on-profile: local
 ---
 spring:
     config:
+        import: 'aws-secretsmanager:spot-dev-secrets'
         activate:
             on-profile: dev
 ---
 spring:
     config:
+        import: 'aws-secretsmanager:spot-prod-secrets'
         activate:
             on-profile: prod
 

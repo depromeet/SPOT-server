@@ -15,7 +15,7 @@ public interface BlockRowJpaRepository extends JpaRepository<BlockRowEntity, Lon
             "select r from BlockRowEntity r "
                     + "join fetch r.block b "
                     + "where b.stadiumId = :stadiumId and b.code = :blockCode and r.number = :rowNumber")
-    BlockRowEntity findByBlockAndNumber(
+    BlockRowEntity findByCodeAndNumber(
             @Param("stadiumId") Long stadiumId,
             @Param("blockCode") String blockCode,
             @Param("rowNumber") int rowNumber);
@@ -28,4 +28,6 @@ public interface BlockRowJpaRepository extends JpaRepository<BlockRowEntity, Lon
                     + "order by r.number asc")
     List<BlockRowEntity> findAllByStadiumAndBlock(
             @Param("stadiumId") Long stadiumId, @Param("code") String code);
+
+    BlockRowEntity findByBlockIdAndNumber(Long blockId, Integer number);
 }

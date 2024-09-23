@@ -43,6 +43,9 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test:_")
         testImplementation(platform("org.junit:junit-bom:_"))
         testImplementation("org.junit.jupiter:junit-jupiter")
+
+        // secret manager
+        implementation("io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:_")
     }
 
     // 코드 포맷터 spotless

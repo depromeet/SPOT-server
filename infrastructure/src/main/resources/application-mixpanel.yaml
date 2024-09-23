@@ -1,0 +1,2 @@
+mixpanel:
+    token: ${MIXPANEL_TOKEN}

@@ -28,6 +28,11 @@ public class DeleteReviewService implements DeleteReviewUsecase {
         return deletedReviewId;
     }
 
+    @Override
+    public void deleteAllReviewOwnedByMemberId(Long memberId) {
+        reviewRepository.softDeleteAllReviewOwnedByMemberId(memberId);
+    }
+
     public void updateMemberLevel(Long memberId) {
         Member member = readMemberUsecase.findById(memberId);
         long reviewCnt = readReviewUsecase.countByMember(memberId);

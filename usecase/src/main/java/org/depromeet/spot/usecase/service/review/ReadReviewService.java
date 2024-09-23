@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
+import org.depromeet.spot.domain.review.Review.ReviewType;
 import org.depromeet.spot.domain.review.Review.SortCriteria;
+import org.depromeet.spot.domain.review.ReviewCount;
 import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.review.keyword.ReviewKeyword;
@@ -16,14 +18,20 @@ import org.depromeet.spot.usecase.port.out.member.MemberRepository;
 import org.depromeet.spot.usecase.port.out.review.BlockTopKeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.KeywordRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewImageRepository;
+import org.depromeet.spot.usecase.port.out.review.ReviewLikeRepository;
 import org.depromeet.spot.usecase.port.out.review.ReviewRepository;
+import org.depromeet.spot.usecase.port.out.review.ReviewScrapRepository;
 import org.depromeet.spot.usecase.port.out.team.BaseballTeamRepository;
+import org.depromeet.spot.usecase.service.review.processor.PaginationProcessor;
+import org.depromeet.spot.usecase.service.review.processor.ReadReviewProcessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 @Transactional(readOnly = true) // viewsCount 추가로 인해 readOnly가 안됨.
 // @Transactional
@@ -35,12 +43,17 @@ public class ReadReviewService implements ReadReviewUsecase {
     private final KeywordRepository keywordRepository;
     private final MemberRepository memberRepository;
     private final BaseballTeamRepository baseballTeamRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final ReviewScrapRepository reviewScrapRepository;
+    private final ReadReviewProcessor readReviewProcessor;
+    private final PaginationProcessor paginationProcessor;
 
     private static final int TOP_KEYWORDS_LIMIT = 5;
     private static final int TOP_IMAGES_LIMIT = 5;
 
     @Override
     public BlockReviewListResult findReviewsByStadiumIdAndBlockCode(
+            Long memberId,
             Long stadiumId,
             String blockCode,
             Integer rowNumber,
@@ -72,7 +85,10 @@ public class ReadReviewService implements ReadReviewUsecase {
             reviews = reviews.subList(0, size);
         }
 
-        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
+        String nextCursor =
+                hasNext
+                        ? paginationProcessor.getCursor(reviews.get(reviews.size() - 1), sortBy)
+                        : null;
 
         //  stadiumId랑 blockCode로 blockId를 조회 후 이걸 통해 topKeywords를 조회
         List<BlockKeywordInfo> topKeywords =
@@ -87,6 +103,9 @@ public class ReadReviewService implements ReadReviewUsecase {
         List<Review> topReviewImagesWithKeywords = mapKeywordsToReviews(topReviewImages);
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
+
+        // 유저의 리뷰 좋아요, 스크랩 여부
+        readReviewProcessor.setLikedAndScrappedStatus(reviewsWithKeywords, memberId);
 
         long totalElements =
                 reviewRepository.countByStadiumIdAndBlockCode(
@@ -104,70 +123,70 @@ public class ReadReviewService implements ReadReviewUsecase {
     }
 
     @Override
+    public MemberInfoOnMyReviewResult findMemberInfoOnMyReview(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+        ReviewCount reviewCount = reviewRepository.countAndSumLikesByUserId(memberId);
+
+        if (member.getTeamId() == null) {
+            return MemberInfoOnMyReviewResult.of(member, reviewCount);
+        } else {
+            BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
+            return MemberInfoOnMyReviewResult.of(member, reviewCount, baseballTeam.getName());
+        }
+    }
+
+    @Override
     public MyReviewListResult findMyReviewsByUserId(
-            Long userId,
+            Long memberId,
             Integer year,
             Integer month,
             String cursor,
             SortCriteria sortBy,
-            Integer size) {
+            Integer size,
+            ReviewType reviewType) {
+
+        if (reviewType == null) {
+            reviewType = ReviewType.VIEW;
+        }
 
         List<Review> reviews =
-                reviewRepository.findAllByUserId(userId, year, month, cursor, sortBy, size + 1);
+                reviewRepository.findAllByUserId(
+                        memberId, year, month, cursor, sortBy, size + 1, reviewType);
 
         boolean hasNext = reviews.size() > size;
         if (hasNext) {
             reviews = reviews.subList(0, size);
         }
 
-        String nextCursor = hasNext ? getCursor(reviews.get(reviews.size() - 1), sortBy) : null;
+        String nextCursor =
+                hasNext
+                        ? paginationProcessor.getCursor(reviews.get(reviews.size() - 1), sortBy)
+                        : null;
 
         List<Review> reviewsWithKeywords = mapKeywordsToReviews(reviews);
 
-        Member member = memberRepository.findById(userId);
-
-        MemberInfoOnMyReviewResult memberInfo;
-        if (member.getTeamId() == null) {
-            memberInfo =
-                    MemberInfoOnMyReviewResult.of(member, reviewRepository.countByUserId(userId));
-
-        } else {
-            BaseballTeam baseballTeam = baseballTeamRepository.findById(member.getTeamId());
-
-            memberInfo =
-                    MemberInfoOnMyReviewResult.of(
-                            member, reviewRepository.countByUserId(userId), baseballTeam.getName());
+        if (reviewType.equals(ReviewType.VIEW)) {
+            // 유저의 리뷰 좋아요, 스크랩 여부
+            readReviewProcessor.setLikedAndScrappedStatus(reviewsWithKeywords, memberId);
         }
 
         return MyReviewListResult.builder()
-                .memberInfoOnMyReviewResult(memberInfo)
                 .reviews(reviewsWithKeywords)
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
                 .build();
     }
 
-    public String getCursor(Review review, SortCriteria sortBy) {
-        switch (sortBy) {
-            case LIKES_COUNT:
-                return review.getLikesCount()
-                        + "_"
-                        + review.getDateTime().toString()
-                        + "_"
-                        + review.getId();
-            case DATE_TIME:
-            default:
-                return review.getDateTime().toString() + "_" + review.getId();
+    @Override
+    public List<ReviewYearMonth> findReviewMonths(Long memberId, ReviewType reviewType) {
+        if (reviewType == null) {
+            reviewType = ReviewType.VIEW;
         }
+        return reviewRepository.findReviewMonthsByMemberId(memberId, reviewType);
     }
 
     @Override
-    public List<ReviewYearMonth> findReviewMonths(Long memberId) {
-        return reviewRepository.findReviewMonthsByMemberId(memberId);
-    }
-
-    @Override
-    public ReadReviewResult findReviewById(Long reviewId) {
+    public ReadReviewResult findReviewById(Long reviewId, Long memberId) {
         Review review = reviewRepository.findById(reviewId);
         Review reviewWithKeywords = mapKeywordsToSingleReview(review);
 
@@ -242,6 +261,8 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .images(review.getImages())
                         .keywords(mappedKeywords)
                         .likesCount(review.getLikesCount())
+                        .scrapsCount(review.getScrapsCount())
+                        .reviewType(review.getReviewType())
                         .viewsCount(review.getViewsCount())
                         .build();
 
@@ -288,6 +309,8 @@ public class ReadReviewService implements ReadReviewUsecase {
                         .images(review.getImages())
                         .keywords(mappedKeywords) // 리뷰 키워드 담당
                         .likesCount(review.getLikesCount())
+                        .scrapsCount(review.getScrapsCount())
+                        .reviewType(review.getReviewType())
                         .viewsCount(review.getViewsCount())
                         .build();
 

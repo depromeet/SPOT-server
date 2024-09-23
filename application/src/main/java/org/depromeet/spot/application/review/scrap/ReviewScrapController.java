@@ -12,10 +12,8 @@ import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase;
 import org.depromeet.spot.usecase.port.in.review.scrap.ReviewScrapUsecase.MyScrapListResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/reviews")
 public class ReviewScrapController {
 
+    //    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final ReviewScrapUsecase reviewScrapUsecase;
 
     @CurrentMember
@@ -40,7 +40,14 @@ public class ReviewScrapController {
     public boolean toggleScrap(
             @PathVariable @Positive @NotNull final Long reviewId,
             @Parameter(hidden = true) Long memberId) {
-        return reviewScrapUsecase.toggleScrap(memberId, reviewId);
+        boolean result = reviewScrapUsecase.toggleScrap(memberId, reviewId);
+
+        //        // 믹스패널 이벤트(스크랩 수) 발생
+        //        applicationEventPublisher.publishEvent(
+        //                new MixpanelEvent(MixpanelEventName.REVIEW_SCRAP_COUNT,
+        // String.valueOf(memberId)));
+
+        return result;
     }
 
     @CurrentMember
@@ -51,8 +58,8 @@ public class ReviewScrapController {
             description = "stadiumId,  months, good, bad로 필터링 가능하다.")
     public MyScrapListResponse findMyReviews(
             @Parameter(hidden = true) Long memberId,
-            @RequestBody @Valid MyScrapRequest request,
-            @ModelAttribute @Valid PageRequest pageRequest) {
+            @Valid MyScrapRequest request,
+            @Valid PageRequest pageRequest) {
 
         MyScrapListResult result =
                 reviewScrapUsecase.findMyScrappedReviews(

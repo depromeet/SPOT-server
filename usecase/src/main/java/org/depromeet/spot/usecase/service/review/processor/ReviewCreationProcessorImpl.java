@@ -1,15 +1,21 @@
 package org.depromeet.spot.usecase.service.review.processor;
 
+import java.util.List;
+import java.util.Map;
+
 import org.depromeet.spot.domain.block.Block;
 import org.depromeet.spot.domain.block.BlockRow;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
+import org.depromeet.spot.domain.review.ReviewLocationInfo;
+import org.depromeet.spot.domain.review.keyword.Keyword;
 import org.depromeet.spot.domain.seat.Seat;
 import org.depromeet.spot.domain.section.Section;
 import org.depromeet.spot.domain.stadium.Stadium;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateAdminReviewCommand;
 import org.depromeet.spot.usecase.port.in.review.CreateReviewUsecase.CreateReviewCommand;
+import org.depromeet.spot.usecase.port.in.review.UpdateReviewUsecase.UpdateReviewCommand;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewCreationProcessorImpl implements ReviewCreationProcessor {
     private final ReviewDataProcessor reviewDataProcessor;
+    private final ReviewKeywordProcessor reviewKeywordProcessor;
+    private final ReviewImageProcessor reviewImageProcessor;
 
     @Override
     public Review createReview(Long blockId, Member member, CreateReviewCommand command) {
@@ -84,6 +92,59 @@ public class ReviewCreationProcessorImpl implements ReviewCreationProcessor {
                 .seat(seat)
                 .dateTime(command.dateTime())
                 .content(command.content())
+                .reviewType(ReviewType.VIEW)
+                .build();
+    }
+
+    @Override
+    public Map<Long, Keyword> processReviewDetails(Review review, CreateReviewCommand command) {
+        Map<Long, Keyword> keywordMap =
+                reviewKeywordProcessor.processKeywords(review, command.good(), command.bad());
+        review.setKeywordMap(keywordMap);
+        reviewImageProcessor.processImages(review, command.images());
+        return keywordMap;
+    }
+
+    @Override
+    public Map<Long, Keyword> processReviewDetails(Review review, UpdateReviewCommand command) {
+        Map<Long, Keyword> keywordMap =
+                reviewKeywordProcessor.processKeywords(review, command.good(), command.bad());
+        review.setKeywordMap(keywordMap);
+        reviewImageProcessor.processImages(review, command.images());
+        return keywordMap;
+    }
+
+    @Override
+    public Map<Long, Keyword> processAdminReviewDetails(
+            Review review, CreateAdminReviewCommand command) {
+        Map<Long, Keyword> keywordMap =
+                reviewKeywordProcessor.processKeywords(review, command.good(), command.bad());
+        review.setKeywordMap(keywordMap);
+        List<String> imageUrls = reviewImageProcessor.getImageUrl(command.images());
+        reviewImageProcessor.processImages(review, imageUrls);
+        return keywordMap;
+    }
+
+    @Override
+    public Review updateReviewData(Review existingReview, UpdateReviewCommand command) {
+        Stadium stadium =
+                reviewDataProcessor.getStadiumIfChanged(existingReview, command.stadiumId());
+        ReviewLocationInfo locationInfo =
+                reviewDataProcessor.getUpdatedLocationInfo(existingReview, command);
+
+        return Review.builder()
+                .id(existingReview.getId())
+                .member(existingReview.getMember())
+                .stadium(stadium)
+                .section(locationInfo.section())
+                .block(locationInfo.block())
+                .row(locationInfo.row())
+                .seat(locationInfo.seat())
+                .dateTime(command.dateTime())
+                .content(command.content())
+                .likesCount(existingReview.getLikesCount())
+                .scrapsCount(existingReview.getScrapsCount())
+                .reviewType(command.reviewType())
                 .build();
     }
 }

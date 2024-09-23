@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
-    Optional<MemberEntity> findByIdToken(String idToken);
+    @Query("select m from MemberEntity m where m.idToken = :idToken and m.deletedAt is null")
+    Optional<MemberEntity> findByIdToken(@Param("idToken") String idToken);
 
     @Query("select m from MemberEntity m " + "join fetch m.level l " + "where m.id = :id")
     Optional<MemberEntity> findByIdWithLevel(@Param("id") Long id);

@@ -40,8 +40,3 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-
-*.application-jwt.yml
-
-### loki ###
-**/application-monitoring.yml

@@ -36,6 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1")
 public class CreateReviewController {
 
+    //    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final CreateReviewUsecase createReviewUsecase;
 
     @CurrentMember
@@ -49,6 +51,12 @@ public class CreateReviewController {
 
         CreateReviewResult result =
                 createReviewUsecase.create(blockId, memberId, request.toCommand());
+
+        //        // 믹스패널 이벤트(후기 등록 완료) 호출
+        //        applicationEventPublisher.publishEvent(
+        //                new MixpanelEvent(MixpanelEventName.REVIEW_REGISTER,
+        // String.valueOf(memberId)));
+
         return BaseReviewResponse.from(result);
     }
 

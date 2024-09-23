@@ -30,6 +30,8 @@ public record BaseReviewResponse(
         int likesCount,
         int scrapsCount,
         ReviewType reviewType,
+        boolean isLiked,
+        boolean isScrapped,
         long viewsCount) {
 
     public static BaseReviewResponse from(CreateReviewResult result) {
@@ -61,6 +63,8 @@ public record BaseReviewResponse(
                 review.getLikesCount(),
                 review.getScrapsCount(),
                 review.getReviewType(),
+                review.isLiked(),
+                review.isScrapped(),
                 review.getViewsCount());
     }
 
@@ -92,6 +96,8 @@ public record BaseReviewResponse(
                 review.getLikesCount(),
                 review.getScrapsCount(),
                 review.getReviewType(),
+                review.isLiked(),
+                review.isScrapped(),
                 review.getViewsCount());
     }
 

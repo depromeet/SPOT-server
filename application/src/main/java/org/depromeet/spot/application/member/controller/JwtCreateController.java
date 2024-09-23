@@ -4,6 +4,7 @@ import org.depromeet.spot.application.common.jwt.JwtTokenUtil;
 import org.depromeet.spot.application.member.dto.response.JwtTokenResponse;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.domain.member.enums.MemberRole;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "Jwt 생성용")
 @RequestMapping("/api/v1/jwts")
+@Profile("!prod")
 public class JwtCreateController {
 
     private final JwtTokenUtil jwtTokenUtil;

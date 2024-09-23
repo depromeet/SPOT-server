@@ -41,15 +41,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api/v1/levels/info",
         "/kakao",
         "/api/v1/jwts",
+        "/google/callback",
+        "/trackEvent",
     };
 
     private static final Map<String, Set<String>> AUTH_METHOD_WHITELIST =
             Map.of(
                     "/api/v1/members",
                     Set.of("GET", "POST"),
+                    "/api/v2/members",
+                    Set.of("GET", "POST"),
+                    "/login/oauth2/code/google",
+                    Set.of("GET"),
                     "/api/v1/members/delete",
                     Set.of("DELETE"),
                     "/api/v1/baseball-teams",
+                    Set.of("GET"),
+                    "/api/v2/GOOGLE",
+                    Set.of("GET"),
+                    "/api/v2/KAKAO",
                     Set.of("GET"));
 
     @Override
@@ -65,7 +75,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         // header가 null이거나 빈 문자열이면 안됨.
         if (header == null || header.isEmpty()) {
             throw new CustomJwtException(JwtErrorCode.NONEXISTENT_TOKEN);

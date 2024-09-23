@@ -11,7 +11,7 @@ public interface MemberUsecase {
 
     Member create(String accessToken, Member member);
 
-    Member login(String idCode);
+    Member login(String accessToken);
 
     boolean duplicatedNickname(String nickname);
 
