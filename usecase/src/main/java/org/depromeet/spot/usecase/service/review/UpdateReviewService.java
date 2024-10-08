@@ -12,6 +12,7 @@ import org.depromeet.spot.usecase.service.review.processor.ReviewCreationProcess
 import org.depromeet.spot.usecase.service.review.processor.ReviewDataProcessor;
 import org.depromeet.spot.usecase.service.review.processor.ReviewKeywordProcessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Builder;
@@ -67,6 +68,7 @@ public class UpdateReviewService implements UpdateReviewUsecase {
         reviewRepository.updateScrapsCount(review.getId(), review.getScrapsCount());
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public void updateviewCount(Long reviewId) {
         Review review = reviewRepository.findById(reviewId);
