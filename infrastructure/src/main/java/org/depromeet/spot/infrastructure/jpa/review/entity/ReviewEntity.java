@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
@@ -113,6 +114,8 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "views_count")
     private Long viewsCount;
 
+    @Version private Long version;
+
     public static ReviewEntity from(Review review) {
         SeatEntity seatEntity =
                 review.getSeat() != null ? SeatEntity.withSeat(review.getSeat()) : null;
@@ -134,7 +137,8 @@ public class ReviewEntity extends BaseEntity {
                         review.getLikesCount(),
                         review.getScrapsCount(),
                         review.getReviewType(),
-                        review.getViewsCount());
+                        review.getViewsCount(),
+                        review.getVersion());
 
         entity.setId(review.getId()); // ID 설정 추가
 

@@ -50,6 +50,7 @@ public class Review {
     private int scrapsCount;
     private final ReviewType reviewType;
     private long viewsCount;
+    private long version;
 
     public static final int DEFAULT_LIKE_COUNT = 0;
     public static final int DEFAULT_SCRAPS_COUNT = 0;

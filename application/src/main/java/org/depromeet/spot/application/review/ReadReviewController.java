@@ -147,7 +147,7 @@ public class ReadReviewController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/reviews/{reviewId}")
+    @PutMapping("/reviews/viewsCount/{reviewId}")
     @Operation(summary = "리뷰 id(pk)로 특정 리뷰의 조회수를 증가시킨다.")
     public void updateReviewReadCountByReviewId(
             @PathVariable("reviewId") @NotNull @Parameter(description = "리뷰 PK", required = true)
