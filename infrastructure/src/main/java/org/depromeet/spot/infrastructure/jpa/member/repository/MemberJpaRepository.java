@@ -43,4 +43,7 @@ public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
             "update MemberEntity m set m.deletedAt = null, m.updatedAt = :updatedAt where m.id = :memberId")
     void updateDeletedAtAndUpdatedAt(
             @Param("memberId") Long memberId, @Param("updatedAt") LocalDateTime updatedAt);
+
+    @Query("select count(*) from MemberEntity m")
+    Optional<Integer> findMemberCount();
 }

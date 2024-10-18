@@ -117,4 +117,11 @@ public class MemberController {
     public void softDelete(@Parameter(hidden = true) Long memberId) {
         memberUsecase.softDelete(memberId);
     }
+
+    @GetMapping("/admin/membersCount")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "(admin) 가입 멤버 수 조회 API")
+    public int membersCount() {
+        return memberUsecase.membersCount();
+    }
 }

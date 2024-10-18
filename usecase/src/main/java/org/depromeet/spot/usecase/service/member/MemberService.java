@@ -117,4 +117,9 @@ public class MemberService implements MemberUsecase {
 
         memberRepository.updateDeletedAt(memberId, LocalDateTime.now());
     }
+
+    @Override
+    public int membersCount() {
+        return memberRepository.membersCount();
+    }
 }
