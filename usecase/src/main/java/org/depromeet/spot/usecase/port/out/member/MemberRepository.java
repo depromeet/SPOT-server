@@ -25,4 +25,6 @@ public interface MemberRepository {
     void updateDeletedAt(Long memberId, LocalDateTime deletedAt);
 
     void updateDeletedAtAndUpdatedAt(Long memberId, LocalDateTime updatedAt);
+
+    int membersCount();
 }

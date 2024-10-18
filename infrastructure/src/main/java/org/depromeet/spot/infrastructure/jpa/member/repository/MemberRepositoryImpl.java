@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.depromeet.spot.common.exception.member.MemberException.MemberNotFoundException;
+import org.depromeet.spot.common.exception.member.MemberException.MembersNotExistException;
 import org.depromeet.spot.domain.member.Level;
 import org.depromeet.spot.domain.member.Member;
 import org.depromeet.spot.infrastructure.jpa.member.entity.MemberEntity;
@@ -69,5 +70,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public void updateDeletedAtAndUpdatedAt(Long memberId, LocalDateTime updatedAt) {
         memberJpaRepository.updateDeletedAtAndUpdatedAt(memberId, updatedAt);
+    }
+
+    @Override
+    public int membersCount() {
+        return memberJpaRepository.findMemberCount().orElseThrow(MembersNotExistException::new);
     }
 }
