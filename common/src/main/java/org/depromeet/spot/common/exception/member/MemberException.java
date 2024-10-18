@@ -24,6 +24,16 @@ public abstract class MemberException extends BusinessException {
         }
     }
 
+    public static class MembersNotExistException extends MemberException {
+        public MembersNotExistException() {
+            super(MemberErrorCode.MEMBERS_NOT_EXIST);
+        }
+
+        public MembersNotExistException(Object o) {
+            super(MemberErrorCode.MEMBERS_NOT_EXIST.appended(o));
+        }
+    }
+
     public static class InvalidLevelException extends MemberException {
         public InvalidLevelException() {
             super(MemberErrorCode.INVALID_LEVEL);
