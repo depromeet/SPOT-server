@@ -119,7 +119,7 @@ public class MemberService implements MemberUsecase {
     }
 
     @Override
-    public int memberCount() {
+    public int membersCount() {
         return memberRepository.membersCount();
     }
 }

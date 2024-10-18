@@ -118,10 +118,10 @@ public class MemberController {
         memberUsecase.softDelete(memberId);
     }
 
-    @GetMapping("/admin/memberCount")
+    @GetMapping("/admin/membersCount")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "(admin) 가입 멤버 수 조회 API")
-    public int memberCount() {
-        return memberUsecase.memberCount();
+    public int membersCount() {
+        return memberUsecase.membersCount();
     }
 }

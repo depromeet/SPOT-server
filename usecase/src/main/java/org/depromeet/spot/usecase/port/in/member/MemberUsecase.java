@@ -23,7 +23,7 @@ public interface MemberUsecase {
 
     void softDelete(Long memberId);
 
-    int memberCount();
+    int membersCount();
 
     @Getter
     @Builder
