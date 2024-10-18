@@ -121,7 +121,11 @@ public class MemberController {
     @GetMapping("/admin/membersCount")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "(admin) 가입 멤버 수 조회 API")
-    public int membersCount() {
-        return memberUsecase.membersCount();
+    public String membersCount() {
+        String message =
+                "현재 가입된 유저 수는 <font size=6 style='color:red'><b>"
+                        + Integer.toString(memberUsecase.membersCount())
+                        + "</b></font>명입니다.";
+        return message.toString();
     }
 }
