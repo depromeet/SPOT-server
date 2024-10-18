@@ -60,6 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     "/api/v2/GOOGLE",
                     Set.of("GET"),
                     "/api/v2/KAKAO",
+                    Set.of("GET"),
+                    "/api/v1/admin/memberCount",
                     Set.of("GET"));
 
     @Override
