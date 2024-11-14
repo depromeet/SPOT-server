@@ -11,13 +11,14 @@ import org.depromeet.spot.common.annotation.DistributedLock;
 import org.depromeet.spot.infrastructure.common.util.SpringELParser;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Aspect
-// @Component
+@Component
 @RequiredArgsConstructor
 public class DistributedLockAop {
 
