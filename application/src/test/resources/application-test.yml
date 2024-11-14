@@ -6,9 +6,9 @@ aws:
         accessKey: ${AWS_S3_ACCESS_KEY}
         secretKey: ${AWS_S3_SECRET_KEY}
         bucketName: ${AWS_S3_BUCKET_NAME}
-    redis:
-        host: localhost
-        port: 6379
+#    redis:
+#        host: localhost
+#        port: 6379
 
 oauth:
     kakaoClientId: ${KAKAO_CLIENT_ID}
