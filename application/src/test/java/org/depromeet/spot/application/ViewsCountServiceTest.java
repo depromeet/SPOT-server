@@ -110,7 +110,8 @@ public class ViewsCountServiceTest {
 
         // then
         Review review = readReviewUsecase.findById(reviewId);
-        System.out.println("버전 : " + review.getViewsCount());
+        System.out.println("스레드 : " + NUMBER_OF_THREAD);
+        System.out.println("좋아요 카운트 : " + review.getViewsCount());
         assertEquals(NUMBER_OF_THREAD, review.getViewsCount());
     }
 }
