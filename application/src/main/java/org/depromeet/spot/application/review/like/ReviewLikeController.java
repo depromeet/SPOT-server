@@ -31,10 +31,10 @@ public class ReviewLikeController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "특정 리뷰에 공감한다. 만약 이전에 공감했던 리뷰라면, 공감을 취소한다.")
     @PostMapping("/{reviewId}/like")
-    public void toggleLike(
+    public boolean toggleLike(
             @PathVariable @Positive @NotNull final Long reviewId,
             @Parameter(hidden = true) Long memberId) {
-        boolean result = reviewLikeUsecase.toggleLike(memberId, reviewId);
+        return reviewLikeUsecase.toggleLike(memberId, reviewId);
         //        if (result) {
         //            // 리뷰 공감 추이 이벤트 발생
         //            applicationEventPublisher.publishEvent(
