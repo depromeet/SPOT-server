@@ -32,16 +32,20 @@ import org.depromeet.spot.infrastructure.jpa.section.entity.SectionEntity;
 import org.depromeet.spot.infrastructure.jpa.stadium.entity.StadiumEntity;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "reviews")
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
 @Getter
+@Setter
 public class ReviewEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -114,14 +118,6 @@ public class ReviewEntity extends BaseEntity {
     @ColumnDefault("0L")
     @Column(name = "version")
     private Long version;
-
-    public void incrementLikesCount() {
-        this.likesCount++;
-    }
-
-    public void decrementLikesCount() {
-        this.likesCount--;
-    }
 
     public static ReviewEntity from(Review review) {
         SeatEntity seatEntity =

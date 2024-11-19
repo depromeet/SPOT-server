@@ -44,9 +44,9 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                         .orElseThrow(() -> new ReviewNotFoundException(reviewId));
 
         if (isLiking) {
-            entity.incrementLikesCount();
+            entity.setLikesCount(entity.getLikesCount() + 1);
         } else {
-            entity.decrementLikesCount();
+            entity.setLikesCount(entity.getLikesCount() - 1);
         }
     }
 
