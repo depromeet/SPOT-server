@@ -3,6 +3,8 @@ package org.depromeet.spot.infrastructure.jpa.review.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.transaction.Transactional;
+
 import org.depromeet.spot.common.exception.review.ReviewException.ReviewNotFoundException;
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
@@ -26,8 +28,26 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     private final ReviewCustomRepository reviewCustomRepository;
 
     @Override
-    public void updateLikesCount(Long reviewId, int likesCount) {
-        reviewJpaRepository.updateLikesCount(reviewId, likesCount);
+    public Review findReviewByIdWithLock(Long id) {
+        return reviewJpaRepository
+                .findByIdWithOptimistic(id)
+                .orElseThrow(() -> new ReviewNotFoundException(id))
+                .toDomain();
+    }
+
+    @Override
+    @Transactional
+    public void updateLikesCount(Long reviewId, boolean isLiking) {
+        ReviewEntity entity =
+                reviewJpaRepository
+                        .findByIdWithOptimistic(reviewId)
+                        .orElseThrow(() -> new ReviewNotFoundException(reviewId));
+
+        if (isLiking) {
+            entity.incrementLikesCount();
+        } else {
+            entity.decrementLikesCount();
+        }
     }
 
     @Override
@@ -45,9 +65,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public Review findById(Long id) {
         ReviewEntity entity =
-                reviewJpaRepository
-                        .findById(id)
-                        .orElseThrow(() -> new ReviewNotFoundException("요청한 리뷰를 찾을 수 없습니다." + id));
+                reviewJpaRepository.findById(id).orElseThrow(() -> new ReviewNotFoundException(id));
         return entity.toDomain();
     }
 

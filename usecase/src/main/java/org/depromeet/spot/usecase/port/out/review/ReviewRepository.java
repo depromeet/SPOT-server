@@ -10,7 +10,10 @@ import org.depromeet.spot.domain.review.ReviewYearMonth;
 import org.depromeet.spot.usecase.port.in.review.ReadReviewUsecase.LocationInfo;
 
 public interface ReviewRepository {
-    void updateLikesCount(Long reviewId, int likesCount);
+
+    Review findReviewByIdWithLock(Long id);
+
+    void updateLikesCount(Long reviewId, boolean isLiking);
 
     void updateScrapsCount(Long reviewId, int likesCount);
 
