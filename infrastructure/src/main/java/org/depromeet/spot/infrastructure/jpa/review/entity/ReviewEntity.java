@@ -110,7 +110,10 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "review_type", nullable = false)
     private ReviewType reviewType;
 
-    @Version private Long version;
+    @Version
+    @ColumnDefault("0L")
+    @Column(name = "version")
+    private Long version;
 
     public void incrementLikesCount() {
         this.likesCount++;
