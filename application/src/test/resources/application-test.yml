@@ -34,9 +34,13 @@ spring:
     jpa:
         database: mysql
         hibernate:
-            ddl-auto: create
+            ddl-auto: create-drop
+        properties:
+            hibernate:
+                format_sql: true
         database-platform: org.hibernate.dialect.MySQL8Dialect
         defer-datasource-initialization: true
+
     jwt:
         secret: ${JWT_SECRETKEY}
 
