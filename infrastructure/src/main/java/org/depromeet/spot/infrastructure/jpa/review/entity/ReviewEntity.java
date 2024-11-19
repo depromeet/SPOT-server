@@ -112,6 +112,14 @@ public class ReviewEntity extends BaseEntity {
 
     @Version private Long version;
 
+    public void incrementLikesCount() {
+        this.likesCount++;
+    }
+
+    public void decrementLikesCount() {
+        this.likesCount--;
+    }
+
     public static ReviewEntity from(Review review) {
         SeatEntity seatEntity =
                 review.getSeat() != null ? SeatEntity.withSeat(review.getSeat()) : null;
