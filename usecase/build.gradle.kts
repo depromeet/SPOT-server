@@ -9,6 +9,11 @@ dependencies {
         because("@Transactional을 위해 추가")
     }
 
+    // spring retry
+    implementation("org.springframework.retry:spring-retry")
+    implementation("org.springframework:spring-aspects")
+
+
     // Mixpanel
     implementation("com.mixpanel:mixpanel-java:_")
 
