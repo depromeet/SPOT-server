@@ -18,7 +18,7 @@ public class ReviewLikeRepositoryImpl implements ReviewLikeRepository {
     private final ReviewLikeJpaRepository reviewLikeJpaRepository;
 
     @Override
-    public boolean existsBy(final long memberId, final long reviewId) {
+    public boolean existsBy(final Long memberId, final Long reviewId) {
         return reviewLikeJpaRepository.existsByMemberIdAndReviewId(memberId, reviewId);
     }
 
@@ -28,14 +28,13 @@ public class ReviewLikeRepositoryImpl implements ReviewLikeRepository {
     }
 
     @Override
-    public void deleteBy(final long memberId, final long reviewId) {
+    public void deleteBy(final Long memberId, final Long reviewId) {
         reviewLikeJpaRepository.deleteByMemberIdAndReviewId(memberId, reviewId);
     }
 
     @Override
     public void save(ReviewLike like) {
-        ReviewLikeEntity entity = ReviewLikeEntity.from(like);
-        reviewLikeJpaRepository.save(entity);
+        reviewLikeJpaRepository.save(ReviewLikeEntity.from(like));
     }
 
     @Override

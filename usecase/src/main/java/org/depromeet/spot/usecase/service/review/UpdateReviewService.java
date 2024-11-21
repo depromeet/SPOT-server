@@ -58,11 +58,6 @@ public class UpdateReviewService implements UpdateReviewUsecase {
     }
 
     @Override
-    public void updateLikesCount(Review review) {
-        reviewRepository.updateLikesCount(review.getId(), review.getLikesCount());
-    }
-
-    @Override
     public void updateScrapsCount(Review review) {
         reviewRepository.updateScrapsCount(review.getId(), review.getScrapsCount());
     }

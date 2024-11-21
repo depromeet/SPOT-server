@@ -12,8 +12,8 @@ public abstract class ReviewException extends BusinessException {
             super(ReviewErrorCode.REVIEW_NOT_FOUND);
         }
 
-        public ReviewNotFoundException(String s) {
-            super(ReviewErrorCode.REVIEW_NOT_FOUND.appended(s));
+        public ReviewNotFoundException(Long s) {
+            super(ReviewErrorCode.REVIEW_NOT_FOUND.appended("요청한 리뷰를 찾을 수 없습니다." + s));
         }
     }
 

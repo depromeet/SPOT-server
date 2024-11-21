@@ -7,11 +7,11 @@ import org.depromeet.spot.domain.review.like.ReviewLike;
 
 public interface ReviewLikeRepository {
 
-    boolean existsBy(long memberId, long reviewId);
+    boolean existsBy(Long memberId, Long reviewId);
 
     long countByReview(long reviewId);
 
-    void deleteBy(long memberId, long reviewId);
+    void deleteBy(Long memberId, Long reviewId);
 
     void save(ReviewLike like);
 

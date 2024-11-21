@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 import org.depromeet.spot.domain.review.Review;
 import org.depromeet.spot.domain.review.Review.ReviewType;
@@ -31,16 +32,20 @@ import org.depromeet.spot.infrastructure.jpa.section.entity.SectionEntity;
 import org.depromeet.spot.infrastructure.jpa.stadium.entity.StadiumEntity;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "reviews")
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
 @Getter
+@Setter
 public class ReviewEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -109,6 +114,11 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "review_type", nullable = false)
     private ReviewType reviewType;
 
+    @Version
+    @ColumnDefault("0L")
+    @Column(name = "version")
+    private Long version;
+
     public static ReviewEntity from(Review review) {
         SeatEntity seatEntity =
                 review.getSeat() != null ? SeatEntity.withSeat(review.getSeat()) : null;
@@ -129,7 +139,8 @@ public class ReviewEntity extends BaseEntity {
                         new ArrayList<>(),
                         review.getLikesCount(),
                         review.getScrapsCount(),
-                        review.getReviewType());
+                        review.getReviewType(),
+                        review.getVersion());
 
         entity.setId(review.getId()); // ID 설정 추가
 
